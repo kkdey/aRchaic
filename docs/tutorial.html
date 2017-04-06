@@ -35,18 +35,18 @@
       <div class="navbar-inner">
         <div class="container-narrow">
           <ul class="nav">
-          	  <li><a href="index.html"><img src="../articles/logo_design.svg" width=200px title = "click here for Home"></a></li>
-              <li><a href="introduction.html"><img src="../articles/skeleton.svg" width=60px title = "click here for Introduction"></a></li>
-              <li><a href="demo.html"><img src="../articles/Bone4.svg" width=60px title = "click here for Demo"></a></li>
-              <li><a href="tutorial.html"><img src="../articles/skull.svg" width=60px title = "click here for Tutorial"></a></li>
-              <li><a href="extras.html"><img src="../articles/bone.svg" width=60px title = "click here for Extras"></a></li>
+          	  <li><a href="index.html"><img src="img/logo_design.svg" width=200px title = "click here for Home"></a></li>
+              <li><a href="introduction.html"><img src="img/skeleton.svg" width=60px title = "click here for Introduction"></a></li>
+              <li><a href="demo.html"><img src="img/Bone4.svg" width=60px title = "click here for Demo"></a></li>
+              <li><a href="tutorial.html"><img src="img/skull.svg" width=60px title = "click here for Tutorial"></a></li>
+              <li><a href="extras.html"><img src="img/bone.svg" width=60px title = "click here for Extras"></a></li>
           </ul>
         </div>
       </div>
 </div>
 
 <!-- <div style="width:800px; margin:0 auto;">
-<p><img src="../articles/logo_design.svg" align="top" style="width:800px;height:400px;"></p>
+<p><img src="img/logo_design.svg" align="top" style="width:800px;height:400px;"></p>
 </div> -->
 
 
@@ -194,7 +194,7 @@ GG->AG,39,0,C,G,-,22
 <p class = "margin"><font size="5">  We supply as input arguments the name of the MFF file in <codeline1>file</codeline1>. The output will be a (.png) file of the logo plot of the MFF file, saved in <codeline1> output_dir </codeline1>. If <codeline1> output_dir </codeline1> is NULL, the plot will be saved in the current working directory. </font></p>
 
 <div style="width:800px; margin:0 auto;">
-<p><img src="../articles/skoglund_plot.png" align="top" style="width:700px;height:500px;"></p>
+<p><img src="img/skoglund_plot.png" align="top" style="width:700px;height:500px;"></p>
 </div>
 
 <p class = "margin"><font size="5"> The function provides control parameters that the user can toggle with. <codeline1>breaks</codeline1>represents how to bin the locations of the mutations on the read from each end. (see <codeline1> aggregate_signature_counts() </codeline1> documentation above for more details on the binning). <codeline1>flanking_bases </codeline1> represents the number of bases to the left and right of the mutation we record in our feature. The default is 1. <codeline1>title</codeline1> represents the title of the logo plot representation. <codeline1>logo.control()</codeline1> allows the user to play with the settings of the logo plot.</font></p>
@@ -225,7 +225,7 @@ GG->AG,39,0,C,G,-,22
 <p class = "margin"><font size="5"> The output from this function would look like the following </font></p>
 
 <div style="width:800px; margin:0 auto;">
-<p><img src="../articles/readlength_plot.png" align="top" style="width:700px;height:500px;"></p>
+<p><img src="img/readlength_plot.png" align="top" style="width:700px;height:500px;"></p>
 </div>
 
 <p class = "margin"><font size="5"> We provide plot options in the form of <codeline1> plot_layout </codeline1> to fix the plotting window design, <codeline1> cols </codeline1> vector of colors for coloring the density plots for the three cases (reads with all mutations, with C->T mutations, with C->T mutations inside <codeline1> end_break </codeline1> from the end). The size of the legend and title are fixed by <codeline1> cex.legend </codeline1> and <codeline1> cex.main </codeline1>.</font</p>
