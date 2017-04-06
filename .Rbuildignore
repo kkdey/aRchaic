@@ -2,4 +2,4 @@
 ^\.Rprofile$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-docs/
+^docs/

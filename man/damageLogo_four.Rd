@@ -6,12 +6,12 @@
 \usage{
 damageLogo_four(theta_pool, sig_names = NULL, ic.scale = FALSE,
   max_pos = 20, flanking_bases = 1, yscale_change = TRUE, xaxis = TRUE,
-  yaxis = TRUE, xlab = " ", xaxis_fontsize = 5, xlab_fontsize = 10,
-  title_aligner = 18, y_fontsize = 10, title_fontsize = 20,
+  yaxis = TRUE, xlab = " ", xaxis_fontsize = 10, xlab_fontsize = 20,
+  title_aligner = 15, y_fontsize = 20, title_fontsize = 20,
   mut_width = 2, start = 1e-04, renyi_alpha = 1, inflation_factor = 1,
-  pop_names = paste0("Cluster ", 1:dim(theta_pool)[2]), logoport_x = 0.25,
+  pop_names = paste0("Cluster ", 1:dim(theta_pool)[2]), logoport_x = 0.23,
   logoport_y = 0.5, logoport_width = 0.28, logoport_height = 0.4,
-  lineport_x = 0.9, lineport_y = 0.8, lineport_width = 0.42,
+  lineport_x = 0.95, lineport_y = 0.8, lineport_width = 0.42,
   lineport_height = 0.58, output_dir = NULL, output_width = 1200,
   output_height = 700)
 }

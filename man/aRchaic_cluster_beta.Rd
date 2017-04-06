@@ -4,21 +4,23 @@
 \alias{aRchaic_cluster_beta}
 \title{Grade of Membership (GoM) model clustering of aDNA samples using filtered DNA damage patterns}
 \usage{
-aRchaic_cluster_beta(mat, K, type = c("mutation", "mutation-flank",
+aRchaic_cluster_beta(folders, K, type = c("mutation", "mutation-flank",
   "mutation-pos", "mutation-flank-pos", "specific-mutation-pos", "wo-strand",
-  "wo-strand-break"), tol = 0.01, pattern = NULL, max_pos = 20,
-  labs = NULL, levels = NULL, flanking_bases = 1,
+  "wo-strand-break"), tol = 0.01, run_from = c("start", "gom"),
+  pattern = NULL, max_pos = 20, labs = NULL, levels = NULL,
+  breaks = c(-1, seq(1, 20, 1)), flanking_bases = 1,
   gom_method = "independent", topic_cols = c("red", "blue",
   "darkgoldenrod1", "cyan", "firebrick", "green", "hotpink", "burlywood",
   "yellow", "darkgray", "deepskyblue", "darkkhaki", "brown4", "darkorchid",
   "magenta", "yellow", "azure1", "azure4"), structure.control = list(),
   graph.control = list(), topics.control = list(), output_dir = NULL,
-  structure_width = 5, structure_height = 8, inflation = rep(2, 1, 2),
+  structure_width = 5, structure_height = 8, inflation = rep(1, 1, 1),
   output_width = 1200, output_height = 700)
 }
 \arguments{
-\item{mat}{A matrix of signature counts of samples obtained from aRchaic_pool() on one or more.
-The signatures should contain al features}
+\item{folders}{a vector of folder names hosting the MFF files. Each folder may represent
+MFF files from same source sequenced and analysed together. (see vignette for
+examples)}
 
 \item{K}{the number of clusters to fit to the model.}
 
