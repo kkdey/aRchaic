@@ -1,0 +1,269 @@
+<html>
+
+  <head>
+
+    <meta charset='utf-8'>
+
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <meta name="viewport" content="width=device-width*0.8, initial-scale=2, maximum-scale=2">
+
+    <link href="stylesheets/bootstrap.2.2.2.min.css" rel="stylesheet">
+
+    <link href="stylesheets/broman2.css" rel="stylesheet" type="text/css" media="all">
+
+    <link href="stylesheets/kbroman.css" rel="stylesheet" type="text/css" media="all">
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Copse">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+ </head>
+
+<body style="background-color:#ffffff;">
+
+<!-- <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Copse"> -->
+
+<p></p>
+<p></p>
+
+<div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <ul class="nav">
+              <li><a href="index.html"><img src="../articles/logo_design.svg" width=200px title = "click here for Home"></a></li>
+              <li><a href="introduction.html"><img src="../articles/skeleton.svg" width=60px title = "click here for Introduction"></a></li>
+              <li><a href="demo.html"><img src="../articles/Bone4.svg" width=60px title = "click here for Demo"></a></li>
+              <li><a href="tutorial.html"><img src="../articles/skull.svg" width=60px title = "click here for Tutorial"></a></li>
+              <li><a href="extras.html"><img src="../articles/bone.svg" width=60px title = "click here for Extras"></a></li>
+          </ul>
+        </div>
+      </div>
+</div>
+
+<!-- <div style="width:800px; margin:0 auto;">
+<p><img src="../articles/logo_design.svg" align="top" style="width:800px;height:400px;"></p>
+</div> -->
+
+
+<style>
+  .bottom-three {
+     margin-bottom: 2cm;
+  }
+</style>
+
+<style>
+  .margin {
+     padding-bottom: 0.1cm;
+     padding-left: 2cm;
+     padding-right: 4cm;
+     padding-top: 1 cm;
+     color: black;
+
+  }
+</style>
+
+<style>
+  .list {
+     padding-bottom: 0.1cm;
+     padding-left: 3cm;
+     padding-right: 4cm;
+     padding-top: 1 cm;
+     color: black;
+  }
+</style> 
+
+
+<p class="bottom-three">
+</p>
+<p class="bottom-three">
+</p>
+<p class="bottom-three">
+</p>
+
+<p class="bottom-three">
+</p>
+
+
+
+<p class ="margin" id = "Demo"><span style="color:brown;"> <font size="7"><color = "brown;"><strong> Demo </strong></color></font></span></p>
+
+<p class = "margin"><font size="5"> To install and run <strong>aRchaic</strong>, the user needs to have the following (installation instructions provided in the links) </font></p>
+
+<ul class="list"><style="list-style-type:circle">
+<li><p><a href="https://git-scm.com/"> <font size="5" style="color: #1b3ee8"> Git </font> </a></p></li>
+  <li><p><a href="https://www.python.org/"> <font size="5" style="color: #1b3ee8"> Python (Version 2 or 3) </font> </a></p></li>
+  <li><p><a href="http://pysam.readthedocs.io/en/latest/installation.html"><font size="5" style="color: #1b3ee8"> pysam (>= 0.10.0) </font> </a></li>
+  <li><p><a href="https://pypi.python.org/pypi/pyfaidx"><font size="5" style="color: #1b3ee8"> pyfaidx (>= 0.4.8.1) </font></a></p></li>
+  <li><p><a href="https://cran.r-project.org/"> <font size="5" style="color: #1b3ee8"> R (&gt;= 3.2.0) </font></a></p></li>
+  <li><p><font size="5" style="color: #1b3ee8"> R libraries - <a href="https://cran.r-project.org/web/packages/gridBase/index.html" font size="5" style="color: #1b3ee8"> gridBase </a>, <a href="http://ggplot2.org/" font size="5" style="color: #1b3ee8"> ggplot2 </a>, <a href="https://github.com/kkdey/maptpx" font size="5" style="color: #1b3ee8"> maptpx </a>, <a href="https://github.com/kkdey/CountClust" font size="5" style="color: #1b3ee8"> CountClust </a>, <a href="https://github.com/kkdey/Logolas" font size="5" style="color: #1b3ee8"> Logolas </a>, <a href="https://github.com/kkdey/classtpx" font size="5" style="color: #1b3ee8"> classtpx </a></font><p>
+</li>
+</ul>
+
+<h3><span class="margin" style = "color:brown"><font size="6"><em>Installation </em></font></span></h3>
+
+<p class = "margin"><font size="5"> aRchaic uses Python interface for data preprocessing and R/RStudio for the main statistical analysis. R can be downloaded from <a href="https://cran.r-project.org/"> CRAN </a>. To start R, users can use the R GUI that comes with the install or run R through terminal by typing </font></p>
+
+<pre><code>
+  R
+
+</code></pre>
+
+<p class = "margin"><font size="5"> We recommend users to install and use <a href=https://www.rstudio.com/RStudio> RStudio </a>, a well maintained GUI for R which is extremely user friendly.</font></p>
+
+<p class = "margin"><font size="5"> Once in R/RStudio, the user can install the Github developmental version of the <strong> aRchaic </strong> R package through devtools. </font></p>
+
+<pre><code>
+  devtools::install_github("aRchaic")
+  
+</code></pre>
+
+<p class = "margin"><font size="5"> <strong> aRchaic </strong> installs as dependencies all the packages mentioned above. However, to manually install the required packages, the installation instructions are provided below. </font></p>
+
+<pre><code>
+
+  ###  Github R packages
+
+  devtools::install_github("kkdey/maptpx")
+  devtools::install_github("kkdey/CountClust")
+  devtools::install_github("kkdey/classtpx")
+
+  ###  CRAN R packages
+  install.packages("ggplot2")
+  install.packages("gridBase")
+
+  ### Bioconductor package
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("Logolas")
+
+</code></pre>
+
+<p class="bottom-three">
+</p>
+
+<h3><span class="margin" style = "color:brown"><font size="6"><em>Input Format </em></font></span></h3>
+
+<p class = "margin"><font size="5"> <strong>aRchaic</strong> takes a MutationFeatureFormat (MFF) file as input, which is a comma separated (.csv) file generated from a BAM file using pysam. Each row of the MFF file generated lists the features for a mutation, and the frequency of mutations with similar feature occurring in the BAM file. An example is provided below. </font> </p>
+
+
+<pre style="color:blue;"><code style="color:blue;">
+  TG->AC,1,45,G,C,-,7
+  CG->AT,38,31,G,G,-,1
+  CC->TC,56,4,G,C,+,1
+  TG->AT,93,28,T,T,-,1
+  AC->TA,1,39,T,G,+,8
+  CA->CA,1,50,C,C,+,1
+  CA->GT,4,83,T,T,+,1
+  CA->GC,22,52,C,C,-,1
+  GG->AG,39,0,C,G,-,22
+
+</code></pre>
+
+<p class = "margin"><font size="5"> In the first row above, the mutational feature is TG → AC, 1, 45, C, C and the count is 7. To be more specific, the mutation corresponds to a G →  A  mismatch, which is flanked by T on the 5’ end and C on the 3’ end (this is also referred to as mutation trio). The mismatch occurs 1 base from the start of the read and 45 bases from end of the read, where start and end are the 5' and 3'ends with respect to the reference genome to which the read is mapped. Furthermore, it tells us that the read corresponding to the mutation is flanked by G at the 5’ strand-break and C at the 3’ strand-break. The "-" signifies that the mismatch lies on read mapped to the reverse strand. </font></p>
+
+<h3><span class="margin" style = "color:brown"><font size="6"><em>Generating MFF File from BAM </em></font></span></h3>
+
+<p class = "margin"><font size="5"> The user can generate the MutationFeatureFormat (MFF) file using the "generate_mff.py" file. The python script requires the BAM file (.bam) for the sample along with its corresponding index file (.bam.bai) Also it needs the user to load the reference genome to which the reads in the BAM file are mapped to. A description of the code to generate MFF file from BAM is provided below. </font></p>
+
+
+<pre><code>
+  usage: generate_mff.py [-h] -b BAM -f FASTA -o OUT [--add-chr]
+                                  [--use-tags]
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -b BAM, --bam BAM     bam file
+    -f FASTA, --fasta FASTA
+                          reference file
+    -o OUT, --out OUT     out file
+    --add-chr             add chr prefix?, you can find out by running samtools
+                          idxstats <your bamfile> | head -1
+    --use-tags            use the MD and NM tags in your bam file?
+
+</code></pre>
+
+
+
+
+<!-- <ul class="list">
+<li><font size="5"> The substitution type (C → T , C → A, C → G, T → A, T → C, T → G) and the flanking bases to the left (5' end) and right (3' end).  </font> </li>
+<p></p>
+  <li><font size="5"> The position of the mutation from the ends of the read. </font></li>
+<p></p>
+  <li><font size="5"> Which strand - forward or reverse - does the mutation occur in. </font></li>
+<p></p>
+  <li><font size="5"> The base from the reference genome at the 5' strand break of the fragment corresponding to the read. </font></li>
+  </ul>
+
+<p><span class="margin"> <font size="5.5"> Graphical Representation </font> </span></p>
+
+<p class = "margin"><font size="5"> We provide a rich visualization of a sample mutational profile of an ancient Sardinian sample as follows.</font> </p>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../articles/aRchaic_plot.png" align="top" style="width:800px;height:500px;"></p>
+</div>
+
+<p class = "margin"><font size="5"> From the above plot, it is easy to see that C → T mutations are abundant in that sample. Also the mutation trend plot demonstrates that the mutations are mainly concentrated at the ends of the reads and mutational rate decays quickly as one moves inwards from the ends of the reads. We also see an enrichment of purines (A and G) at the 5' strand break. All these features are characteristic of ancient DNA samples and act as a validation check. </font></p>
+
+<p><span class="margin"> <font size="5.5"> Clustering </font> </span></p>
+
+<p class = "margin"><font size="5"> When provided with a pool of ancient and/or modern samples, one can use these mutational features to cluster the samples. For clustering, we use a Grade of Membership (GoM) model, similar to <a href="https://www.genetics.ucla.edu/software/admixture/">ADMIXTURE </a> and <a href="https://bioconductor.org/packages/release/bioc/html/CountClust.html">CountClust </a>. It represents each sample as having grades of membership in underlying clusters. A demo for how the clustering model works is provided below. </font></p>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../articles/overview.png" align="top" style="width:800px;height:500px;"></p>
+</div>
+
+<p><span class="margin"> <font size="5.5"> Classification </font> </span></p>
+<p class = "margin"><font size="5"> For the classification problem, we consider a pool of known ancient and modern samples and train a classifier (SVM and a classification GoM model) on these samples. Once trained, this classifier is then fitted on new test sample - control samples or contaminated samples - with the aim to detect what percentage of reads of the sample are ancient (or modern) </font></p>
+
+<p class="bottom-three">
+</p>f
+<p class="bottom-three">
+</p>
+<p class="bottom-three">
+</p> -->
+
+<h3><span class="margin" style = "color:brown"><font size="6"><em> Run aRchaic clustering </em></font></span></h3>
+
+<p class = "margin"><font size="5"> The primary function of the aRchaic package is <codeline>aRchaic_cluster()</codeline> which performs clustering of the samples using a Grade of membership model, assigning to each sample a membership in different clusters. Below we present a snippet of the 
+	main structure of this function. We cover this functions and its a in greater detail in our Tutorial section. 
+</font></p>
+
+<pre><code>
+    aRchaic::aRchaic_cluster(folders, K,
+                             labs, run_from = "start",
+                             output_dir, .....)
+
+  #' folders: names of the folder (s) containing MutationFeatureFormat (MFF) files, where each folder likely comprises of files from the same batch.
+  #' K : the number of clusters to fit to the data
+  #' labs: the labels of the samples (if not provided, defaults to the directory name where they are stored)
+  #' run_from: if "start", will run data processing of MFF files followed by clustering  and visualization.
+               if "gom", will look for whether MFF files are processed already from previous runs, 
+               if so, will run only clustering and visualization, else revert to "start"
+               if "plot", will look for a clustering model output from previous runs, 
+               if present, will perform visualization on the clustering output, else revert back to "gom".
+               These three options are meant to automatically minimize repetition of taks across runs on same or similar sets of data. 
+  #' output_dir: The output directory where to store the output files and model output
+
+</pre></code>
+
+
+<h3><span class="margin" style = "color:brown"><font size="6"><em> Output files </em></font></span></h3>
+
+<p class = "margin"><font size="5"> The above function will generate the following files in the <codeline> output_dir </codeline> specified by the user (defaults to the working directory if NULL).
+
+<ul class="list"><style="list-style-type:circle">
+<li><p><codeline> model.rda </codeline> - file containing the output from the GoM model fit</p></li>
+<li><p><codeline>structure.png</codeline> - file showing the grades of membership of samples grouped by labels in 
+                                            a STRUCTURE plot type representation</p></li>
+<li><p><codeline>logo_clus_&quot;k&quot;.png</codeline> - files for each k from 1 to K, the number of clusters, 
+                                                          showing the logo plot representation of each cluster.</p></li>
+</ul>
+
+
+</body>
+</html>
