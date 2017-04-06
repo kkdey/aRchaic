@@ -1,3 +1,52 @@
+#' @title Builds damage logo plots based on filtered mutation signatures (mutation +  position)
+#'
+#' @description Damage Logo plots for each cluster from the GoM model fit. It showcases the
+#' different mutational features - for example, mutation and  position on read.
+#'
+#' @param theta_pool The theta matrix obtained from running the grade of membership model that stores for each cluster, the
+#' probability distribution over all the mutational signatures.
+#' @param sig_names The mutational signature names. Defaults to the rownames of the theta matrix above.
+#' @param ic.scale A binary variable indicating whether the height of the bars for substitution and flanking bases should be
+#'        adjusted by the information criterion.
+#' @param max_pos The maximum distance from the end of the read upto which mutations are considered.
+#' @param flanking_bases The number of flanking bases of the mutational signature.
+#' @param yscale_change A binary variable indicating whether the Y axis scale should be adjusted based on the size of the
+#'        logos, defaults to TRUE.
+#' @param xlab The labels for X axis.
+#' @param xaxis A binary indicating whether the X axis of the logo plot should be shown
+#' @param yaxis A binary indicating whether the Y axis of the logo plot should be shown
+#' @param xaxis_fontsize The fontsize of the X axis ticks.
+#' @param xlab_fontsize The fontsize of the X axis labels.
+#' @param y_fontsize The fontsize of the Y axis ticks.
+#' @param mut_width Thw width of the bar for the mutation at the center.
+#' @param start The starting point of the stacking of logos on the Y axis. Should be close to 0, defau;ts to 0.0001.
+#' @param renyi_alpha The entropy scale for the Renyi entropy on the flanking bases and mutations.
+#' @param inflation The inflation scale of flanking bases with respect to mutation.
+#'                  Will be a 3 length vector. Defaults to c(1,1,1) implying no inflation.
+#'                  c(2,1,2) will mean the flanking bases are 2 times inflated compared to mutation.
+#' @param pop_names The title of the plot. Defaults to the cluster labels.
+#' @param logoport_x the X-axis position of the plot window for the logo plot
+#' @param logoport_y the Y-axis position of the plot window for the logo plot
+#' @param logoport_width the width of the plot window for the logo plot
+#' @param logoport_height the width of the plot window for the logo plot
+#' @param lineport_x the X-axis position of the plot window for the mutational profile line plot.
+#' @param lineport_y the Y-axis position of the plot window for the mutational profile line plot.
+#' @param lineport_width the width of the plot window for the mutational profile line plot.
+#' @param lineport_height the width of the plot window for the mutational profile line plot.
+#' @return Returns logo plots for each cluster
+#' @param output_dir The directory where the logo plot will be saved.
+#' @param output_width The width of the logo plot figure.
+#' @param output_height the height of the logo plot figure.
+#'
+#' @return Returns logo plot for each cluster
+#'
+#' @import grid
+#' @import gridBase
+#'
+#' @export
+
+
+
 damageLogo_four <- function(theta_pool,
                            sig_names = NULL,
                            ic.scale=FALSE,
@@ -7,21 +56,21 @@ damageLogo_four <- function(theta_pool,
                            xaxis=TRUE,
                            yaxis=TRUE,
                            xlab = " ",
-                           xaxis_fontsize=5,
-                           xlab_fontsize=10,
-                           title_aligner = 18,
-                           y_fontsize=10,
+                           xaxis_fontsize=10,
+                           xlab_fontsize=20,
+                           title_aligner = 15,
+                           y_fontsize=20,
                            title_fontsize = 20,
                            mut_width=2,
                            start=0.0001,
                            renyi_alpha = 1,
                            inflation_factor = 1,
                            pop_names=paste0("Cluster ",1:dim(theta_pool)[2]),
-                           logoport_x = 0.25,
+                           logoport_x = 0.23,
                            logoport_y= 0.50,
                            logoport_width= 0.28,
                            logoport_height= 0.40,
-                           lineport_x = 0.9,
+                           lineport_x = 0.95,
                            lineport_y=0.80,
                            lineport_width=0.42,
                            lineport_height=0.58,
@@ -253,9 +302,9 @@ damageLogo.pos.str.skeleton.four <- function(pwm,
 
   if (xaxis){
     grid.xaxis(at=xlim,
-               label=("\n mutation"),
+               label=("\n mismatch"),
                gp=gpar(fontsize=xaxis_fontsize))
-    grid.text(paste0(xlab),y=unit(-3,"lines"),
+    grid.text(paste0(xlab),y=unit(-1,"lines"),
               gp=gpar(fontsize=xlab_fontsize))
   }
   if (yaxis){

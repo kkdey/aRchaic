@@ -53,7 +53,9 @@
 #' time on repeated jobs.
 #'
 #' @keywords aRchaic_tsne
-#' @import ggplot2, gridBase, grid
+#' @import ggplot2
+#' @import gridBase
+#' @import grid
 #' @export
 
 

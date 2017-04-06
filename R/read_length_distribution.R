@@ -11,6 +11,7 @@
 #' @param cols The color profiles of the three plots. Defaults to "red", "green" and "blue".
 #' @param cex_legend The cex of the legend. Defaults to 0.5.
 #' @param cex_main The cex of the title of the figure. Defaults to 1.
+#' @param ylimit The limit of the Y axis.
 #'
 #' @return A 3-fold density plot of an MFF file under three scenarios - all reads,
 #' reads containing C to T mutations and reads containing C to T towards the ends
@@ -24,9 +25,14 @@ read_length_distribution <- function(file,
                                      end_break = 5,
                                      cols = c("red", "green", "blue"),
                                      cex_legend = 0.5,
-                                     cex.main = 1){
+                                     title = NULL,
+                                     cex.main = 1,
+                                     ylimit = NULL){
+   header <- head(strsplit(rev((as.vector(strsplit(file, "/" )[[1]])))[1], ".csv")[[1]],1)
 
-  ###  read in all the files in the directory
+    if(is.null(title)){
+      title <- header
+    }
 
     tab1 <- read.csv(paste0(file), header=FALSE)
     read_length <- tab1$V2 + tab1$V3
@@ -36,11 +42,12 @@ read_length_distribution <- function(file,
     indices2 <- which(tab1$V2 < end_break | tab1$V3 < end_break)
     indices_matched <- intersect(indices, indices2)
     read_length_3 <- (tab1[indices_matched, ]$V2 + tab1[indices_matched, ]$V3)
+    if(is.null(ylim)){ylimit  <-  max(table(read_length)/sum(table(read_length)))}
     plot(table(read_length)/sum(table(read_length)), type="o", col=cols[1],
-         main=paste0(ancient_names[l]), cex.main = cex.main, xlab="read pos", ylab="prop of occur")
+         main=paste0(title), cex.main = cex.main, xlab="read pos", ylab="prop of occur",
+         ylim =c(0, ylimit))
     points(table(read_length_CtoT)/sum(table(read_length_CtoT)), type="o", col=cols[2])
     points(table(read_length_3)/ sum(table(read_length_3)), type="o", col=cols[3])
     legend("topright", fill=c("red", "green", "blue"),
            legend = c("all", "CtoT", paste0("CtoT < ", end_break)), cex=cex_legend)
-    cat("we are at sample", l, "\n")
 }

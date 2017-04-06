@@ -51,8 +51,7 @@
 #' the vector \code{folders} and generates the probabilities of belonging to each class for the test
 #' samples (which correspond to those samples that have NA in \code{class_labs}).
 #'
-#' @keywords aRchaic_class
-#' @import e1071, classtpx
+#' @keywords aRchaic_class_beta
 #' @export
 
 

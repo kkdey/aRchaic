@@ -15,7 +15,6 @@
 #' The cells contain counts of the number of mutational signatures observed in that MFF file.
 #'
 #' @keywords aggregate_counts
-#' @import plyr
 #' @export
 
 

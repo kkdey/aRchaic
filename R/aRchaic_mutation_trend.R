@@ -21,7 +21,9 @@
 #'         MFF file.
 #'
 #' @keywords aRchaic_mutation_trend
-#' @import  gridBase, grid, ggplot2
+#' @import  gridBase
+#' @import  grid
+#' @import  ggplot2
 #' @export
 
 

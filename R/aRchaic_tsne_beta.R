@@ -53,7 +53,9 @@
 #' in each folder, aggregates them into a matrix, filters the signatures by the \code{type} of
 #' the mutational signature and then fits t-SNE and saves the t-SNE plot.
 #' @keywords aRchaic_pca
-#' @import ggplot2, gridBase, grid
+#' @import ggplot2
+#' @import gridBase
+#' @import grid
 #' @export
 
 aRchaic_tsne_beta =  function(folders,

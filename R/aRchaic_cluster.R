@@ -52,7 +52,10 @@
 #' respectively, if they are already present.
 #'
 #' @keywords aRchaic_cluster
-#' @import gridBase, ggplot2, Logolas, CountClust
+#' @import gridBase
+#' @import ggplot2
+#' @import Logolas
+#' @import CountClust
 #' @export
 
 
@@ -254,14 +257,14 @@ aRchaic_cluster = function(folders,
   }else if(run_from == "plot"){
     if(gom_method == "full"){
       if(!file.exists(paste0(output_dir, "model.rda"))){
-        message("Fitting the Grade of Membership Model - full version - due to Matt Taddy")
+       # message("Fitting the Grade of Membership Model - full version - due to Matt Taddy")
         suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
         save(topic_clus, file = paste0(output_dir, "model.rda"))
       }else{
         topic_clus <- get(load(paste0(output_dir, "model.rda")))
       }
     }else if(gom_method == "independent"){
-      message("Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens")
+     # message("Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens")
       signature_set <- colnames(pooled_data)
       sig_split <- t(sapply(1:length(signature_set), function(x) return(strsplit(signature_set[x], "")[[1]][1:8])))
       new_sig_split <- matrix(0, dim(sig_split)[1], 3);
@@ -316,7 +319,7 @@ aRchaic_cluster = function(folders,
 
     if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
     plot.new()
-    grid.newpage()
+    grid::grid.newpage()
     do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                          annotation = annotation,
                                          palette = topic_cols),

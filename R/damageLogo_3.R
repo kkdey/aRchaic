@@ -1,3 +1,56 @@
+#' @title Builds damage logo plots based on filtered mutation signatures (mutation, flanking base, position and strand break)
+#'
+#' @description Damage Logo plots for each cluster from the GoM model fit. It showcases the
+#' different mutational features - for example, mutation, flanking base, position on read
+#' and strand break information for each cluster.
+#'
+#' @param theta_pool The theta matrix obtained from running the grade of membership model that stores for each cluster, the
+#' probability distribution over all the mutational signatures.
+#' @param sig_names The mutational signature names. Defaults to the rownames of the theta matrix above.
+#' @param ic.scale A binary variable indicating whether the height of the bars for substitution and flanking bases should be
+#'        adjusted by the information criterion.
+#' @param max_pos The maximum distance from the end of the read upto which mutations are considered.
+#' @param flanking_bases The number of flanking bases of the mutational signature.
+#' @param yscale_change A binary variable indicating whether the Y axis scale should be adjusted based on the size of the
+#'        logos, defaults to TRUE.
+#' @param xlab The labels for X axis.
+#' @param xaxis A binary indicating whether the X axis of the logo plot should be shown
+#' @param yaxis A binary indicating whether the Y axis of the logo plot should be shown
+#' @param xaxis_fontsize The fontsize of the X axis ticks.
+#' @param xlab_fontsize The fontsize of the X axis labels.
+#' @param y_fontsize The fontsize of the Y axis ticks.
+#' @param mut_width Thw width of the bar for the mutation at the center.
+#' @param start The starting point of the stacking of logos on the Y axis. Should be close to 0, defau;ts to 0.0001.
+#' @param renyi_alpha The entropy scale for the Renyi entropy on the flanking bases and mutations.
+#' @param inflation The inflation scale of flanking bases with respect to mutation.
+#'                  Will be a 3 length vector. Defaults to c(1,1,1) implying no inflation.
+#'                  c(2,1,2) will mean the flanking bases are 2 times inflated compared to mutation.
+#' @param pop_names The title of the plot. Defaults to the cluster labels.
+#' @param logoport_x the X-axis position of the plot window for the logo plot
+#' @param logoport_y the Y-axis position of the plot window for the logo plot
+#' @param logoport_width the width of the plot window for the logo plot
+#' @param logoport_height the width of the plot window for the logo plot
+#' @param lineport_x the X-axis position of the plot window for the mutational profile line plot.
+#' @param lineport_y the Y-axis position of the plot window for the mutational profile line plot.
+#' @param lineport_width the width of the plot window for the mutational profile line plot.
+#' @param lineport_height the width of the plot window for the mutational profile line plot.
+#' @return Returns logo plots for each cluster
+#' @param breaklogoport_x the X-axis position of the plot window for strand break logo plot.
+#' @param breaklogoport_y the Y-axis position of the plot window for the strand break logo plot.
+#' @param breaklogoport_width the width of the plot window for the strand break logo plot.
+#' @param breaklogoport_height the width of the plot window for the strand break logo plot.
+#' @param output_dir The directory where the logo plot will be saved.
+#' @param output_width The width of the logo plot figure.
+#' @param output_height the height of the logo plot figure.
+#'
+#' @return Returns logo plot for each cluster
+#'
+#' @import grid
+#' @import gridBase
+#'
+#' @export
+
+
 damageLogo_three <- function(theta_pool,
                            sig_names = NULL,
                            ic.scale=TRUE,
@@ -276,9 +329,9 @@ damageLogo.pos.str.skeleton.three <- function(pwm,
 
   if (xaxis){
     grid.xaxis(at=xlim,
-               label=(c(paste0("\n left \n flank \n", flanked_coord[1:floor(npos/2)]),
+               label=(c(paste0("\n left \n flank \n"),
                         "\n mutation",
-                        paste0("\n right \n flank \n", -flanked_coord[(1:floor(npos/2))])
+                        paste0("\n right \n flank \n")
                )),
                gp=gpar(fontsize=xaxis_fontsize))
     grid.text(paste0(xlab),y=unit(-3,"lines"),

@@ -1,2 +1,4 @@
 packrat/lib*/
+packrat/src/
 .Rproj.user
+.DS_Store

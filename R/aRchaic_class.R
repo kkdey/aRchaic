@@ -35,7 +35,8 @@
 #' samples (which correspond to those samples that have NA in \code{class_labs}).
 #'
 #' @keywords aRchaic_class
-#' @import e1071, classtpx
+#' @import e1071
+#' @import classtpx
 #' @export
 
 

@@ -15,7 +15,10 @@
 #' @return The function creates a logo plot representation of the mutational features for a single
 #'         MFF file.
 #' @keywords aRchaic_view
-#' @import Logolas, gridBase, grid, ggplot2
+#' @import Logolas
+#' @import gridBase
+#' @import grid
+#' @import ggplot2
 #' @export
 
 
@@ -43,22 +46,22 @@ aRchaic_view = function(file,
     stop("The file is not found in the given directory")
   }
 
+
   logo.control.default <- list(sig_names = NULL, ic.scale=TRUE,
                                max_pos = 20, flanking_bases=1,
                                yscale_change = TRUE, xaxis=TRUE,
-                               yaxis=TRUE, xlab = " ", xaxis_fontsize=20,
-                               xlab_fontsize=10, title_aligner = 11,
-                               y_fontsize=20, title_fontsize = 35,
+                               yaxis=TRUE, xlab = " ", xaxis_fontsize=30,
+                               xlab_fontsize=10, title_aligner = 15,
+                               y_fontsize=27, title_fontsize = 35,
                                mut_width=2, start=0.0001,
-                               renyi_alpha = 5, inflation_factor = c(3,1,3),
-                               pop_names=title,
+                               renyi_alpha = 5, inflation_factor = c(2,1,2), pop_names= title,
                                logoport_x = 0.25, logoport_y= 0.50, logoport_width= 0.25, logoport_height= 0.50,
                                lineport_x = 0.9, lineport_y=0.40, lineport_width=0.32, lineport_height=0.28,
                                breaklogoport_x = 0.94, breaklogoport_y = 0.40, breaklogoport_width=0.30, breaklogoport_height=0.45,
-                               barport_x = 0.60, barport_y=0.60, barport_width=0.25, barport_height=0.25,
+                               barport_x = 0.60, barport_y=0.60, barport_width=0.25, barport_height=0.35,
                                output_width = 1200, output_height = 700)
 
-  logo.control <- modifyList(logo.control, logo.control.default)
+  logo.control <- modifyList(logo.control.default, logo.control)
 
 
   if(file.exists(paste0(dir, tail(strsplit(dir, "/")[[1]],1), ".rda"))){
@@ -75,7 +78,7 @@ aRchaic_view = function(file,
     message("MutationFeatureFormat file not present: performing the signature aggregation step ")
     pattern = header
     out <- aggregate_signature_counts(dir = dir,
-                                      pattern = pattern,
+                                      pattern = paste0(pattern, ".csv"),
                                       breaks = breaks,
                                       flanking_bases = flanking_bases)
     clubbed_counts <- club_signature_counts(out, flanking_bases = 1)

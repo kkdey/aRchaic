@@ -18,7 +18,6 @@
 #'         Also if the processed files in a folder are not present, it creates them as .rda
 #'         files in the folders.
 #' @keywords aRchaic_pool
-#' @import e1071, classtpx
 #' @export
 
 

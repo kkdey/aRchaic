@@ -8,8 +8,9 @@
 #' in a user defined directory.
 #'
 #'
-#' @param mat A matrix of signature counts of samples obtained from aRchaic_pool() on one or more.
-#'            The signatures should contain al features
+#' @param folders a vector of folder names hosting the MFF files. Each folder may represent
+#'                MFF files from same source sequenced and analysed together. (see vignette for
+#'                examples)
 #' @param K the number of clusters to fit to the model.
 #' @param type The type of filtering mechanism used. The possible options are
 #'                   - \code{mutation} : just the mutations (C->T, C->G, C->A, T->A, T->C and T->G)
@@ -56,20 +57,25 @@
 #' representing the cluster k respectively-  all in the \code{output_dir} provided.
 #'
 #' @keywords aRchaic_cluster_beta
-#' @import gridBase, ggplot2, Logolas, CountClust
+#' @import gridBase
+#' @import ggplot2
+#' @import Logolas
+#' @import CountClust
 #' @export
 
 
 
-aRchaic_cluster_beta = function(mat,
+aRchaic_cluster_beta = function(folders,
                                 K,
                                 type = c("mutation", "mutation-flank", "mutation-pos", "mutation-flank-pos",
                                          "specific-mutation-pos", "wo-strand", "wo-strand-break"),
                                 tol=0.01,
+                                run_from = c("start", "gom"),
                                 pattern = NULL,
                                 max_pos = 20,
                                 labs = NULL,
                                 levels = NULL,
+                                breaks = c(-1, seq(1,20,1)),
                                 flanking_bases = 1,
                                 gom_method = "independent",
                                 topic_cols = c("red","blue","darkgoldenrod1","cyan","firebrick", "green",
@@ -81,9 +87,101 @@ aRchaic_cluster_beta = function(mat,
                                 output_dir = NULL,
                                 structure_width = 5,
                                 structure_height = 8,
-                                inflation = rep(2,1,2),
+                                inflation = rep(1,1,1),
                                 output_width = 1200,
                                 output_height = 700){
+
+
+  if(is.null(labs)){
+    labs <- c()
+    for(i in 1:length(folders)){
+      temp <- setdiff(list.files(folders[i], pattern = ".csv"), list.files(folders[i], pattern = ".csv#"))
+      labs <- c(labs, rep(tail(strsplit(folders[i], "/")[[1]],1), length(temp)))
+    }
+  }
+
+  if(is.null(levels)){
+    levels <- unique(labs)
+  }
+
+
+  message("Checking if the folders exist")
+
+  for(i in 1:length(folders)){
+    if(!file.exists(folders[i]))
+      stop("A folder in the folder list does not exist:  aborting")
+  }
+
+  datalist <- vector("list", length(folders))
+
+  #########################  If the user wants to run from scratch  ##########################################
+
+  if(run_from == "start"){
+    if(is.null(run_index)){
+      run_index <- 1:length(folders)
+    }
+    if(sum(run_index - 1:length(folders))^2 == 0){
+      for(i in 1:length(folders)){
+        file.remove(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda"))
+      }
+    }else{
+      folders1 <- folders[run_index]
+      for(i in 1:length(folders1)){
+        file.remove(paste0(folders1[i], tail(strsplit(folders1[i], "/")[[1]],1), ".rda"))
+      }
+    }
+  }
+
+  #########################  Run aggregation functions on MutationFeatureFormat #############################################
+
+
+  for(i in 1:length(folders)){
+    if(!file.exists(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda"))){
+      message (paste0("Processing the MutationFeatureFormat files in the directory", folders[i]))
+      out <- aggregate_signature_counts(dir = paste0(folders[i]),
+                                        pattern = NULL,
+                                        breaks = breaks,
+                                        flanking_bases = flanking_bases)
+      clubbed_data <- club_signature_counts(out, flanking_bases = 1)
+      save(clubbed_data, file = paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda"))
+      datalist[[i]] <- clubbed_data
+    }else{
+      datalist[[i]] <- get(load(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda")))
+    }
+  }
+
+  ######################  Pooling data from different folders if present  ############################################
+
+  if(run_from == "start"){
+    message("Pooling the data from multiple sources")
+  }
+
+  sig_names <- colnames(datalist[[1]])
+  row_names_pool <- rownames(datalist[[1]])
+  if(length(datalist) >= 2){
+    for(num in 2:length(datalist)){
+      sig_names <- union(sig_names, colnames(datalist[[num]]))
+      row_names_pool <- c(row_names_pool, rownames(datalist[[num]]))
+    }
+  }
+
+  pooled_data <- matrix(0, length(row_names_pool), length(sig_names))
+  rownames(pooled_data) <- row_names_pool
+  colnames(pooled_data) <- sig_names
+
+  for(num in 1:length(datalist)){
+    pooled_data[match(rownames(datalist[[num]]), rownames(pooled_data)), match(colnames(datalist[[num]]), sig_names)] <- datalist[[num]]
+  }
+
+  zero_sum_rows <- which(rowSums(pooled_data) == 0)
+  if(length(zero_sum_rows) > 0){
+    pooled_data <- pooled_data[-zero_sum_rows, ]
+    labs <- labs[-zero_sum_rows]
+  }
+
+
+ mat <- pooled_data
+
 
 if(type == "mutation"){
   aRchaic_cluster_beta_mutation(mat=mat, K=K, tol=tol,
@@ -143,7 +241,7 @@ else if(type == "wo-strand"){
                                 gom_method = gom_method, topic_cols = topic_cols, structure.control = structure.control,
                                 logo.control = graph.control, topics.control = topics.control,
                                 output_dir = output_dir, structure_width = structure_width,
-                                tructure_height = structure_height, inflation = inflation,
+                                structure_height = structure_height, inflation = inflation,
                                 output_width = output_width, output_height = output_height)
 }
 else if(type == "wo-strand-break"){
@@ -241,7 +339,6 @@ aRchaic_cluster_beta_mutation = function(mat,
 
   message ("Structure plot and Logo plot representations of clusters")
 
-  if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
 
   omega <- topic_clus$omega
   annotation <- data.frame(
@@ -253,7 +350,7 @@ aRchaic_cluster_beta_mutation = function(mat,
 
   plot.new()
   grid.newpage()
-  do.call(StructureGGplot, append(list(omega= omega,
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                        annotation = annotation,
                                        palette = topic_cols),
                                   structure.control))
@@ -320,7 +417,7 @@ aRchaic_cluster_beta_mutation_flank = function(mat,
                                                output_dir = NULL,
                                                structure_width = 5,
                                                structure_height = 8,
-                                               inflation = rep(2,1,2),
+                                               inflation = c(1,1,1),
                                                output_width = 1200,
                                                output_height = 700){
   if(is.null(output_dir)){
@@ -396,7 +493,7 @@ aRchaic_cluster_beta_mutation_flank = function(mat,
 
   plot.new()
   grid.newpage()
-  do.call(StructureGGplot, append(list(omega= omega,
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                        annotation = annotation,
                                        palette = topic_cols),
                                   structure.control))
@@ -440,7 +537,7 @@ aRchaic_cluster_beta_mutation_flank = function(mat,
     }
   }
 
-  ic <- damage.ic(prop_patterns_list, alpha=renyi_alpha, inflation_factor = inflation_factor)
+  ic <- damage.ic(prop_patterns_list, alpha=1, inflation_factor = c(1,1,1))
 
 
   for(l in 1:dim(theta)[2]){
@@ -465,7 +562,7 @@ aRchaic_cluster_beta_mutation_flank = function(mat,
                           "col" = color_code)
 
     png(paste0(output_dir, "logo_clus_", l, ".png"), width=output_width, height = output_height)
-    do.call(Logolas::logomaker, c(list(table=tab, ic = ic[,1], color_profile = color_profile),
+    do.call(Logolas::logomaker, c(list(table=tab, ic = ic[,l], color_profile = color_profile),
                                   logo.control))
     dev.off()
   }
@@ -519,15 +616,15 @@ aRchaic_cluster_beta_mutation_pos = function(mat,
   logo.control.default <- list(sig_names = NULL, ic.scale=FALSE,
                                max_pos = max_pos, flanking_bases=flanking_bases,
                                yscale_change = TRUE, xaxis=TRUE,
-                               yaxis=TRUE, xlab = " ", xaxis_fontsize=20,
+                               yaxis=TRUE, xlab = " ", xaxis_fontsize=27,
                                xlab_fontsize=10, title_aligner = 11,
-                               y_fontsize=20, title_fontsize = 35,
+                               y_fontsize=27, title_fontsize = 35,
                                mut_width=2, start=0.0001,
-                               renyi_alpha = 5, inflation_factor = c(3,1,3),
+                               renyi_alpha = 5, inflation_factor = c(2,1,2),
                                pop_names = paste0("Cluster : ", 1:K),
-                               logoport_x = 0.25, logoport_y= 0.50, logoport_width= 0.15,
+                               logoport_x = 0.24, logoport_y= 0.50, logoport_width= 0.15,
                                logoport_height= 0.50,
-                               lineport_x = 0.9, lineport_y=0.73, lineport_width=0.35,
+                               lineport_x = 0.95, lineport_y=0.73, lineport_width=0.35,
                                lineport_height=0.48,
                                output_width = output_width, output_height = output_height)
 
@@ -588,7 +685,7 @@ aRchaic_cluster_beta_mutation_pos = function(mat,
 
   plot.new()
   grid.newpage()
-  do.call(StructureGGplot, append(list(omega= omega,
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                        annotation = annotation,
                                        palette = topic_cols),
                                   structure.control))
@@ -654,7 +751,7 @@ aRchaic_cluster_beta_mutation_flank_pos = function(mat,
                                xlab_fontsize=10, title_aligner = 11,
                                y_fontsize=20, title_fontsize = 35,
                                mut_width=2, start=0.0001,
-                               renyi_alpha = 5, inflation_factor = c(3,1,3),
+                               renyi_alpha = 5, inflation_factor = c(2,1,2),
                                pop_names = paste0("Cluster : ", 1:K),
                                logoport_x = 0.25, logoport_y= 0.50, logoport_width= 0.25,
                                logoport_height= 0.50,
@@ -719,7 +816,7 @@ aRchaic_cluster_beta_mutation_flank_pos = function(mat,
 
   plot.new()
   grid.newpage()
-  do.call(StructureGGplot, append(list(omega= omega,
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                        annotation = annotation,
                                        palette = topic_cols),
                                   structure.control))
@@ -829,7 +926,7 @@ aRchaic_cluster_beta_pos = function(mat,
 
   plot.new()
   grid.newpage()
-  do.call(StructureGGplot, append(list(omega= omega,
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                        annotation = annotation,
                                        palette = topic_cols),
                                   structure.control))
@@ -926,24 +1023,24 @@ aRchaic_cluster_beta_wo_strand = function(mat,
   logo.control.default <- list(sig_names = NULL, ic.scale=TRUE,
                                max_pos = 20, flanking_bases=1,
                                yscale_change = TRUE, xaxis=TRUE,
-                               yaxis=TRUE, xlab = " ", xaxis_fontsize=20,
+                               yaxis=TRUE, xlab = " ", xaxis_fontsize=30,
                                xlab_fontsize=10, title_aligner = 11,
-                               y_fontsize=20, title_fontsize = 35,
+                               y_fontsize=27, title_fontsize = 35,
                                mut_width=2, start=0.0001,
-                               renyi_alpha = 5, inflation_factor = c(3,1,3),
+                               renyi_alpha = 5, inflation_factor = c(2,1,2),
                                pop_names = paste0("Cluster : ", 1:K),
-                               logoport_x = 0.25,
+                               logoport_x = 0.26,
                                logoport_y= 0.50,
                                logoport_width= 0.28,
                                logoport_height= 0.40,
-                               lineport_x = 0.9,
+                               lineport_x = 0.95,
                                lineport_y=0.40,
                                lineport_width=0.32,
                                lineport_height=0.28,
-                               breaklogoport_x = 0.90,
+                               breaklogoport_x = 0.95,
                                breaklogoport_y = 0.40,
                                breaklogoport_width=0.35,
-                               breaklogoport_height=0.50,
+                               breaklogoport_height=0.40,
                                output_width = output_width,
                                output_height = output_height)
 
@@ -1006,7 +1103,7 @@ aRchaic_cluster_beta_wo_strand = function(mat,
 
   plot.new()
   grid.newpage()
-  do.call(StructureGGplot, append(list(omega= omega,
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                        annotation = annotation,
                                        palette = topic_cols),
                                   structure.control))
@@ -1073,7 +1170,7 @@ aRchaic_cluster_beta_wo_strand_break = function(mat,
                                xlab_fontsize=10, title_aligner = 11,
                                y_fontsize=20, title_fontsize = 35,
                                mut_width=2, start=0.0001,
-                               renyi_alpha = 5, inflation_factor = c(3,1,3),
+                               renyi_alpha = 5, inflation_factor = c(2,1,2),
                                pop_names = paste0("Cluster : ", 1:K),
                                logoport_x = 0.25,
                                logoport_y= 0.50,
@@ -1150,7 +1247,7 @@ aRchaic_cluster_beta_wo_strand_break = function(mat,
 
   plot.new()
   grid.newpage()
-  do.call(StructureGGplot, append(list(omega= omega,
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
                                        annotation = annotation,
                                        palette = topic_cols),
                                   structure.control))
@@ -1168,3 +1265,22 @@ aRchaic_cluster_beta_wo_strand_break = function(mat,
 
 }
 
+damage.ic<-function(pwm, alpha=1, inflation_factor = c(1,1,1)) {
+  if(length(inflation_factor) != ncol(pwm[[1]])){
+    stop("inflation factor vector size
+         must equal to the number of sites - flanking bases + mismatch")
+  }
+  npos<-ncol(pwm[[1]])
+  ic<- matrix(0, npos, length(pwm))
+
+  for(i in 1:npos){
+    mat <- numeric()
+    for(j in 1:length(pwm)){
+      mat <- cbind(mat, pwm[[j]][,i])
+    }
+    mat_clean <- mat[rowSums(mat) != 0,]
+    ic[i,] <- inflation_factor[i]*ic_computer_2(mat_clean, alpha)
+  }
+
+  return(ic)
+  }

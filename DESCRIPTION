@@ -15,9 +15,18 @@ License: GPL (>= 2)
 URL: https://github.com/kkdey/aRchaic
 LazyData: true
 Encoding: UTF-8
-Imports: ggplot2, grid, slam, e1071, gridExtra, gridBase, limma, plyr, dplyr, CountClust, Logolas
+Imports: ggplot2, 
+         slam, 
+         e1071, 
+         gridExtra, 
+         gridBase, 
+         limma, 
+         plyr, 
+         dplyr, 
+         CountClust, 
+         Logolas
 Remotes: kkdey/classtpx, kkdey/maptpx
 Suggests:
     knitr, BiocStyle, Biobase, roxygen2, RColorBrewer, devtools, xtable
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

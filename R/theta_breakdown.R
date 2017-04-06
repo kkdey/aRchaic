@@ -13,7 +13,10 @@
 #'         mutation, flanking base, strand break, distance from end of read and strand break composition
 #'         separately.
 #' @keywords theta_breakdown
-#' @import Logolas, gridBase, grid, ggplot2
+#' @import Logolas
+#' @import gridBase
+#' @import grid
+#' @import ggplot2
 #' @export
 
 

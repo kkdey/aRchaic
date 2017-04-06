@@ -1,0 +1,122 @@
+---
+title: "Filtering of data"
+author: "Kushal K Dey"
+date: "4/6/2017"
+output: html_document
+---
+
+`aRchaic` allows the user to filter the signatures and then do analysis on the filtered set of signatures. As default, `aRchaic` considers 6 features in a signature - mutation type, flanking base, position of mutation on read, strand  and strand break composition of the read. However, the user may want to only apply `aRchaic` on a subset of these features. for instance, the user may want to skip the features related to the read containing the mismatch (the strand and the strand break). Keeping in mind these needs, we provide several functions to filter the signatures and also beta versions of our clustering, visualization and classification functions that can be applied on the filtered signature data. 
+
+We demonstrate the various filtering options one by one here 
+
+## filter_by_mutation ()
+
+`filter_by_mutation ()` function only extracts the mutation type of the mutational signature and builds a new counts matrix by aggregating all signatures corresponding to that mutation type.
+
+First we load a full aggregated signature counts matrix for the Mathieson et al aDNA data.
+
+```{r}
+mat <- get(load("../data/Mathieson/Mathieson.rda"))
+dim(mat)
+```
+
+
+Then we apply the filtering by mutational type.
+
+```{r}
+mat_reduced <-  filter_by_mutation(mat = mat)
+dim(mat_reduced)
+
+mat_reduced[1:3, ]
+```
+
+Note that we have now reduced the 14,199 features in the original matrix to just 6 features in 
+the filtered matrix, corresponding to the mutational types of the original features. This is the fundamental idea of this section - to extract a subset of mutational features and build a new aggregated signature counts matrix with those filtered signatures. 
+
+We now look at the other filtering functions.
+
+## filter_by_mutation_flank ()
+
+This filtering mechanism preserves the mutation type and flanking base information of the 
+mutational signatures.
+
+```{r}
+mat_reduced <-  filter_by_mutation_flank(mat = mat)
+dim(mat_reduced)
+
+mat_reduced[1:3,1:3]
+```
+
+
+Note that the first signature is `AC->AA` which means C->A mismatch flanked by A's on the left and right. All other features (strand, strand break, position) are excluded from these filtered signatures.
+
+## filter_by_mutation_flank_pos ()
+
+```{r}
+mat_reduced <-  filter_by_mutation_flank_pos(mat = mat, max_pos = 10)
+dim(mat_reduced)
+
+mat_reduced[1:3,1:3]
+```
+
+
+Note here that `max_pos` is an additional parameter which is used to constrain upto what position from the end of the reads should we be considering mutations. All mutations which are greater than 10 bases away from ends of the reads are discarded in the above case.
+
+## filter_by_mutation_pos ()
+
+```{r}
+mat_reduced <-  filter_by_mutation_pos(mat = mat, max_pos = 10)
+dim(mat_reduced)
+
+mat_reduced[1:3,1:3]
+```
+
+This function filters only the mutational and mutational position.
+
+## filter_by_pos ()
+
+```{r}
+mat_reduced <-  filter_by_pos(mat = mat, max_pos = 10)
+dim(mat_reduced)
+
+mat_reduced[1:3,1:3]
+```
+
+Note that here we only filter out the positional information of mutations without worrying about any other features of the mutations. However, an user may want to use this for a specific mutation type, say C->T. For such case, she can use the following filtering mechanism.
+
+## filter_by_pos_pattern ()
+
+```{r}
+mat_reduced <-  filter_by_pos_pattern(mat = mat, max_pos = 10,  pattern= "C->T")
+dim(mat_reduced)
+
+mat_reduced[1:3,1:3]
+```
+
+Note that we still get 10 features for the 10 positions, but now the counts are only for the speciic mutation C->T.
+
+## filter_out_strand ()
+
+This filtering scheme keeps all features of the mutational signature except the strand information.
+
+```{r}
+mat_reduced <-  filter_out_strand(mat = mat)
+dim(mat_reduced)
+mat_reduced[1:3,1:3]
+```
+
+## filter_out_strand_break ()
+
+This filtering scheme keeps all features of the mutational signature except the strand break composition information.
+
+```{r}
+mat_reduced <-  filter_out_strand_break(mat = mat)
+dim(mat_reduced)
+mat_reduced[1:3,1:3]
+```
+
+These are all the filtering functions that `aRchaic` provides. These functions are internally used for filtering in the `aRchaic_cluster_beta ()` , `aRchaic_pca_beta ()` and `aRchaic_class_beta ()` functions to do generate filtered signatures and then perform model fit and visualization on those filtered signatures.
+
+We will see examples of that in the following sections.
+
+

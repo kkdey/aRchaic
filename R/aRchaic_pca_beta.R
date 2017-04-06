@@ -55,7 +55,9 @@
 #' in each folder, aggregates them into a matrix, filters the signatures by the \code{type} of
 #' the mutational signature and then fits PCA and saves the PCA plot.
 #' @keywords aRchaic_pca
-#' @import ggplot2, gridBase, grid
+#' @import ggplot2
+#' @import gridBase
+#' @import grid
 #' @export
 
 

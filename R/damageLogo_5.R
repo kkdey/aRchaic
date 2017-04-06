@@ -1,8 +1,8 @@
-#' @title Builds damage logo plots along with mutational profile across read and the strand break composition for the clusters
+#' @title Builds damage logo plots based on full mutation signatures (mutation, flanking base, position, strand and strand break)
 #'
-#' @description Damage Logo plots for each cluster representing the substitution frequency of the 6 substitutional
-#' patterns (adjusting for strand bias) and the flanking bases arranged as per relative frequency on either side of
-#' the substitution along with the probability of the cluster mutational profile along the read and the strand break composition.
+#' @description Damage Logo plots for each cluster from the GoM model fit. It showcases the
+#' different mutational features - for example, mutation, flanking base, position on read,
+#' strand and strand break information for each cluster.
 #'
 #' @param theta_pool The theta matrix obtained from running the grade of membership model that stores for each cluster, the
 #' probability distribution over all the mutational signatures.
@@ -22,6 +22,9 @@
 #' @param mut_width Thw width of the bar for the mutation at the center.
 #' @param start The starting point of the stacking of logos on the Y axis. Should be close to 0, defau;ts to 0.0001.
 #' @param renyi_alpha The entropy scale for the Renyi entropy on the flanking bases and mutations.
+#' @param inflation The inflation scale of flanking bases with respect to mutation.
+#'                  Will be a 3 length vector. Defaults to c(1,1,1) implying no inflation.
+#'                  c(2,1,2) will mean the flanking bases are 2 times inflated compared to mutation.
 #' @param pop_names The title of the plot. Defaults to the cluster labels.
 #' @param logoport_x the X-axis position of the plot window for the logo plot
 #' @param logoport_y the Y-axis position of the plot window for the logo plot
@@ -32,11 +35,22 @@
 #' @param lineport_width the width of the plot window for the mutational profile line plot.
 #' @param lineport_height the width of the plot window for the mutational profile line plot.
 #' @return Returns logo plots for each cluster
+#' @param breaklogoport_x the X-axis position of the plot window for strand break logo plot.
+#' @param breaklogoport_y the Y-axis position of the plot window for the strand break logo plot.
+#' @param breaklogoport_width the width of the plot window for the strand break logo plot.
+#' @param breaklogoport_height the width of the plot window for the strand break logo plot.
+#' @param barport_x the X-axis position of the plot window for strand bar plot.
+#' @param barport_y the Y-axis position of the plot window for the strand bar plot.
+#' @param barport_width the width of the plot window for the strand bar plot.
+#' @param barport_height the width of the plot window for the strand bar plot.
+#' @param output_dir The directory where the logo plot will be saved.
+#' @param output_width The width of the logo plot figure.
+#' @param output_height the height of the logo plot figure.
+#'
+#' @return Returns logo plot for each cluster
 #'
 #' @import grid
 #' @import gridBase
-#' @import dplyr
-#' @import plyr
 #'
 #' @export
 
@@ -53,13 +67,13 @@ damageLogo_five <- function(theta_pool,
                             xlab = " ",
                             xaxis_fontsize=10,
                             xlab_fontsize=20,
-                            title_aligner = 18,
+                            title_aligner = 15,
                             y_fontsize=20,
                             title_fontsize = 20,
                             mut_width=2,
                             start=0.0001,
                             renyi_alpha = 1,
-                            inflation_factor = 1,
+                            inflation_factor = c(2,1,2),
                             pop_names=paste0("Cluster ",1:dim(theta_pool)[2]),
                             logoport_x = 0.25,
                             logoport_y= 0.50,
@@ -81,6 +95,9 @@ damageLogo_five <- function(theta_pool,
                             output_width = 1200,
                             output_height = 700){
 
+  library(grid)
+  library(gridBase)
+
   if(length(inflation_factor)==1){
     inflation_factor <- rep(inflation_factor, dim(theta_pool)[2])
   }
@@ -96,7 +113,7 @@ damageLogo_five <- function(theta_pool,
   library(dplyr)
   theta <- dplyr::tbl_df(data.frame(theta_pool)) %>% dplyr::mutate(sig = signature_patterns) %>% dplyr::group_by(sig) %>% dplyr::summarise_each(funs(sum)) %>% as.data.frame()
   rownames(theta) <-  theta[,1]
-  theta <- theta[,-1]
+  theta <- theta[,-1, drop=FALSE]
 
   indices_minus <- grep("_-_", signature_set)
   strand_theta <- data.frame("minus" = colSums(theta_pool[indices_minus,]),
@@ -150,12 +167,12 @@ damageLogo_five <- function(theta_pool,
   for(l in 1:dim(theta)[2]){
     prop_patterns_list[[l]] <- numeric();
     for(j in 1:ncol(new_sig_split)){
-      temp <- tapply(theta[,l], factor(new_sig_split[,j], levels=c("A", "C", "G", "T", "X",
+      temp2 <- tapply(theta[,l], factor(new_sig_split[,j], levels=c("A", "C", "G", "T", "X",
                                                                    "C->T", "C->A", "C->G",
                                                                    "T->A", "T->C", "T->G")), sum)
 
-      temp[is.na(temp)]=0
-      prop_patterns_list[[l]] <- cbind(prop_patterns_list[[l]], temp)
+      temp2[is.na(temp2)]=0
+      prop_patterns_list[[l]] <- cbind(prop_patterns_list[[l]], temp2)
     }
   }
 
@@ -168,7 +185,7 @@ damageLogo_five <- function(theta_pool,
     damageLogo.pos.str.skeleton(pwm = prop_patterns_list[[l]],
                                 probs = prob_mutation[l,],
                                 breaks_theta_vec = breaks_theta[,l, drop=FALSE],
-                                strand_theta_vec = strand_theta[l,],
+                                strand_theta_vec = strand_theta[1,],
                                 ic = ic[,l],
                                 max_pos = max_pos,
                                 max_prob = max_prob,
@@ -249,7 +266,7 @@ damageLogo_five <- function(theta_pool,
         damageLogo.pos.str.skeleton(pwm = prop_patterns_list[[l]],
                                     probs = prob_mutation[l,],
                                     breaks_theta_vec = breaks_theta[,l, drop=FALSE],
-                                    strand_theta_vec = strand_theta[l,],
+                                    strand_theta_vec = strand_theta[1,],
                                     ic = ic[,l],
                                     max_pos = max_pos,
                                     max_prob = max_prob,
@@ -503,7 +520,7 @@ damageLogo.pos.str.skeleton <- function(pwm,
   # par(plt = gridPLT(), new=TRUE)
 
   vp4 <- viewport(width = barport_width, height = barport_height, x = barport_x, y = barport_y)
-  p = plot_bar(strand_theta_vec = strand_theta_vec)
+  p = plot_bar(strand_theta_vec_2 = strand_theta_vec)
   print(p, vp = vp4)
 
   vp3 <- viewport(width = breaklogoport_width, height = breaklogoport_height, x = breaklogoport_x,
@@ -517,17 +534,17 @@ damageLogo.pos.str.skeleton <- function(pwm,
   par(ask=FALSE)
 }
 
-plot_bar <- function(strand_theta_vec){
-  df <- data.frame("value" = as.numeric(t(strand_theta_vec)), "strand"=plyr::revalue(factor(names(strand_theta_vec)), c("plus" = "+",  "minus" = "\U2012")))
-  ggplot(df, aes(x=strand, y=value, fill=c("green", "lightpink")))  +
-    geom_bar(stat='identity', width=0.8, position = position_dodge(width=1.5), 
-             colour = 'black') + labs(title="   strand \n orientation ") + 
+plot_bar <- function(strand_theta_vec_2){
+  df <- data.frame("value" = as.numeric(t(strand_theta_vec_2)), "strand"=plyr::revalue(factor(names(strand_theta_vec_2)), c("plus" = "+",  "minus" = "\U2012")))
+  ggplot2::ggplot(df, aes(x=strand, y=value, fill = c("lightpink", "green")))  +
+    geom_bar(stat='identity', width=0.8, position = position_dodge(width=1.5),
+             colour = 'black') + labs(title="   strand \n orientation ") +
     xlab("") + ylim(0,1) + ylab("") + theme(legend.position="none",
                                             axis.ticks = element_blank(),
                                             axis.text = element_blank(),
                                             panel.background = element_rect(fill = "white"),
                                             panel.border = element_rect(colour = "white"),
-                                            title = element_text(size = 27, vjust = 50)) +
+                                            title = element_text(size = 27)) +
     #  geom_text(aes(x=strand, y=value+0.1, label=value)) +
     geom_text(aes(x=strand, y=value*0.5, label=as.character(strand)), colour="white", size=25) + coord_flip()
     # theme(axis.text = element_blank(),
@@ -553,7 +570,7 @@ plot_logo <- function(breaks_theta_vec){
                         "col" = c("blue", "red"))
 
 
-  logomaker(mat,
+  Logolas::logomaker(mat,
             color_profile = color_profile,
             hist=TRUE,
             frame_width = 1,
@@ -1310,7 +1327,7 @@ plot_graph <- function(probs, max_pos, max_prob, col="red",
        cex.lab=2.8, mgp=c(3.5, 1, 0))
   title(xlab = xlab, mgp=c(3,1.5,0), cex.lab=2.3)
   ylimit <- c(0.0, 0.5, 1.0)*max_prob
-  axis(side = 2, at = c(0.0, 0.5, 1.0), labels = round(ylimit,2), 
+  axis(side = 2, at = c(0.0, 0.5, 1.0), labels = round(ylimit,2),
        cex.axis = cex.axis, lwd.ticks=1, tck=-0.05,
        cex.lab=2, mgp=c(3.5, 1, 0))
   title(ylab = ylab, mgp=c(3,1,0), cex.lab=2.3)

@@ -52,7 +52,9 @@
 #' time on repeated jobs.
 #'
 #' @keywords aRchaic_pca
-#' @import ggplot2, gridBase, grid
+#' @import ggplot2
+#' @import gridBase
+#' @import grid
 #' @export
 
 
