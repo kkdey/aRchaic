@@ -58,8 +58,10 @@ aRchaic_cluster(folders = folders,
 We now present a more elaborate example involving a modern cluster and UDG and non-UDG samples from Lazaridis and Pinhasi data. Since the MFF files are big, we are not providing them, instead we are providing the `.rda` processed file obtained from doing signature aggregation by `aRchaic_pool()` on these two datasets.
 
 ```{r}
-folders <- c("../data/moderns-50/", "../data/Lazaridis/", "../data/Pinhasi/")
-labs <- c(rep("moderns", 50), rep("Lazaridis", 9), rep("Pinhasi", 12))
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
 aRchaic_cluster(folders = folders,
                 K = 3,
                 labs = labs,
@@ -89,8 +91,10 @@ For mutation filter signature, we do the following
 
 
 ```{r}
-folders <- c("../data/moderns-50/", "../data/Lazaridis/", "../data/Pinhasi/")
-labs <- c(rep("moderns", 50), rep("Lazaridis", 9), rep("Pinhasi", 12))
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
 aRchaic_cluster_beta(folders = folders,
                 K = 3,
                 type = "mutation",
@@ -105,8 +109,10 @@ aRchaic_cluster_beta(folders = folders,
 For mutation and flanking base 
 
 ```{r}
-folders <- c("../data/moderns-50/", "../data/Lazaridis/", "../data/Pinhasi/")
-labs <- c(rep("moderns", 50), rep("Lazaridis", 9), rep("Pinhasi", 12))
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
 aRchaic_cluster_beta(folders = folders,
                 K = 3,
                 type = "mutation-flank",
@@ -121,8 +127,10 @@ aRchaic_cluster_beta(folders = folders,
 For mutation and position information
 
 ```{r}
-folders <- c("../data/moderns-50/", "../data/Lazaridis/", "../data/Pinhasi/")
-labs <- c(rep("moderns", 50), rep("Lazaridis", 9), rep("Pinhasi", 12))
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
 aRchaic_cluster_beta(folders = folders,
                 K = 3,
                 type = "mutation-pos",
@@ -137,8 +145,10 @@ aRchaic_cluster_beta(folders = folders,
 Finally we see how the plot looks like without the strand information.
 
 ```{r}
-folders <- c("../data/moderns-50/", "../data/Lazaridis/", "../data/Pinhasi/")
-labs <- c(rep("moderns", 50), rep("Lazaridis", 9), rep("Pinhasi", 12))
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
 aRchaic_cluster_beta(folders = folders,
                 K = 3,
                 type = "wo-strand",
@@ -151,3 +161,18 @@ aRchaic_cluster_beta(folders = folders,
 ```
 For the other types of filtering `type` under `aRchaic_cluster`, check the R documentation.
 
+```{r}
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
+aRchaic_cluster_beta(folders = folders,
+                K = 3,
+                type = "mutation-flank-pos",
+                labs = labs,
+                tol = 10,
+                run_from = "gom",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/mutation-flank-pos/",
+                output_width = 1200,
+                output_height = 700)
+```

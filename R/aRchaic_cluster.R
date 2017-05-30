@@ -38,6 +38,9 @@
 #' @param logo.control Control parameters for the logo plot representation \code{damageLogo5()}
 #'                     function.
 #' @param topics.control Control parameters for the maptpx GoM model fit.
+#' @param positive_logo a binary, if FALSE, it will use negative logo representations
+#'                      with enrichment score. Else will display proportional occurrence
+#'                      in a positive logo plot representation.
 #' @param output_dir The output directory where the model, Structure plot and the logo plots
 #'                   of the clusters will be saved. If NULL, it picks the current working directory.
 #' @param structure_width The width of the image of the Structure plot representation.
@@ -76,6 +79,7 @@ aRchaic_cluster = function(folders,
                            structure.control = list(),
                            logo.control = list(),
                            topics.control = list(),
+                           positive_logo = FALSE,
                            output_dir = NULL,
                           # save_plot = TRUE,
                            structure_width = 5,
@@ -93,7 +97,7 @@ aRchaic_cluster = function(folders,
                                  legend_key_size = 0.7,
                                  legend_text_size = 8)
 
-  logo.control.default <- list(sig_names = NULL, ic.scale=TRUE,
+  logo.control.default <- list(sig_names = NULL, ic.scale=TRUE, use_log = FALSE,
                                max_pos = 20, flanking_bases=1,
                                yscale_change = TRUE, xaxis=TRUE,
                                yaxis=TRUE, xlab = " ", xaxis_fontsize=30,
@@ -101,6 +105,7 @@ aRchaic_cluster = function(folders,
                                y_fontsize=27, title_fontsize = 35,
                                mut_width=2, start=0.0001,
                                renyi_alpha = 5, inflation_factor = c(3,1,3),
+                               base_probs_list = NULL,
                                pop_names = paste0("Cluster : ", 1:K),
                                logoport_x = 0.25, logoport_y= 0.50, logoport_width= 0.25, logoport_height= 0.50,
                                lineport_x = 0.9, lineport_y=0.40, lineport_width=0.32, lineport_height=0.28,
@@ -328,12 +333,22 @@ aRchaic_cluster = function(folders,
                     height = structure_height)
 
   # if(save_plot){
-    if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
-    plot.new()
-    do.call(damageLogo_five, append(list(theta_pool = topic_clus$theta,
-                                output_dir = output_dir),
-            logo.control))
-    graphics.off()
+    if(positive_logo){
+      if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
+      plot.new()
+      do.call(damageLogo_five, append(list(theta_pool = topic_clus$theta,
+                                           output_dir = output_dir),
+                                      logo.control))
+      graphics.off()
+    }else{
+      if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
+      plot.new()
+      do.call(damageLogo_five_neg, append(list(theta_pool = topic_clus$theta,
+                                           output_dir = output_dir),
+                                      logo.control))
+      graphics.off()
+    }
+
   # }else if(!save_plot){
   #   plot.new()
   #   if(is.null(output_dir)){ output_dir <- paste0(getwd(), "/")}

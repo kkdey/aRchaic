@@ -11,8 +11,8 @@ aRchaic_cluster(folders, K, tol = 100, labs = NULL, levels = NULL,
   "green", "hotpink", "burlywood", "yellow", "darkgray", "deepskyblue",
   "darkkhaki", "brown4", "darkorchid", "magenta", "yellow", "azure1", "azure4"),
   structure.control = list(), logo.control = list(),
-  topics.control = list(), output_dir = NULL, structure_width = 5,
-  structure_height = 8)
+  topics.control = list(), positive_logo = FALSE, output_dir = NULL,
+  structure_width = 5, structure_height = 8)
 }
 \arguments{
 \item{folders}{a vector of folder names hosting the MFF files. Each folder may represent
@@ -62,6 +62,10 @@ of the grades of membership.}
 function.}
 
 \item{topics.control}{Control parameters for the maptpx GoM model fit.}
+
+\item{positive_logo}{a binary, if FALSE, it will use negative logo representations
+with enrichment score. Else will display proportional occurrence
+in a positive logo plot representation.}
 
 \item{output_dir}{The output directory where the model, Structure plot and the logo plots
 of the clusters will be saved. If NULL, it picks the current working directory.}

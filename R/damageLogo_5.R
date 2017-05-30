@@ -74,6 +74,7 @@ damageLogo_five <- function(theta_pool,
                             start=0.0001,
                             renyi_alpha = 1,
                             inflation_factor = c(2,1,2),
+                            base_probs_list = NULL,
                             pop_names=paste0("Cluster ",1:dim(theta_pool)[2]),
                             logoport_x = 0.25,
                             logoport_y= 0.50,
@@ -176,7 +177,8 @@ damageLogo_five <- function(theta_pool,
     }
   }
 
-  ic <- damage.ic(prop_patterns_list, alpha=renyi_alpha, inflation_factor = inflation_factor)
+  ic <- damage.ic(prop_patterns_list, alpha=renyi_alpha,
+                  inflation_factor = inflation_factor, base_probs_list = base_probs_list)
 
   grob_list <- list()
   if(flag == 1){
@@ -597,11 +599,20 @@ pwm2ic<-function(pwm) {
   ic
 }
 
-ic_computer_2 <-function(mat, alpha) {
+ic_computer_2 <-function(mat, alpha, base_probs = NULL) {
+
   mat <- apply(mat, 2, function(x) return(x/sum(x)))
   npos<-ncol(mat)
   ic <-numeric(length=npos)
   for (i in 1:npos) {
+
+    if(is.null(base_probs)){
+      ll <- length(which(mat[,i]!=0.00))
+      probs <- rep(1/ll, ll)
+    } else{
+      probs <- base_probs
+    }
+
     if(alpha == 1){
       ic[i] <- log(length(which(mat[,i]!=0.00)), base=2) + sum(sapply(mat[, i], function(x) {
         if (x > 0) { x*log2(x) } else { 0 }
@@ -614,29 +625,39 @@ ic_computer_2 <-function(mat, alpha) {
       stop("alpha value must be greater than 0")
     }
     else{
-      ll <- length(which(mat[,i]!=0.00))
-      ic[i] <- (1/(1-alpha))* log (sum(rep(1/ll, ll)^{alpha}), base=2) - (1/(1-alpha))* log (sum(mat[,i]^{alpha}), base=2)
+      ic[i] <- (1/(1-alpha))* log (sum(probs^{alpha}), base=2) - (1/(1-alpha))* log (sum(mat[,i]^{alpha}), base=2)
     }
   }
   return(ic)
 }
 
 
-damage.ic<-function(pwm, alpha=1, inflation_factor = c(1,1,1)) {
+damage.ic<-function(pwm, alpha=1, inflation_factor = c(1,1,1), base_probs_list = NULL) {
   if(length(inflation_factor) != ncol(pwm[[1]])){
     stop("inflation factor vector size
          must equal to the number of sites - flanking bases + mismatch")
   }
+
   npos<-ncol(pwm[[1]])
   ic<- matrix(0, npos, length(pwm))
 
   for(i in 1:npos){
+
     mat <- numeric()
     for(j in 1:length(pwm)){
       mat <- cbind(mat, pwm[[j]][,i])
     }
-    mat_clean <- mat[rowSums(mat) != 0,]
-    ic[i,] <- inflation_factor[i]*ic_computer_2(mat_clean, alpha)
+
+    if(!is.null(base_probs_list)){
+      base_probs <- base_probs_list[[i]]
+      mat <- mat[!is.na(match(rownames(mat), names(base_probs))),]
+      mat_clean <- mat
+    }else{
+      base_probs = NULL
+      mat_clean <- mat[rowSums(mat) != 0,]
+    }
+
+    ic[i,] <- inflation_factor[i]*ic_computer_2(mat_clean, alpha, base_probs)
   }
 
   return(ic)

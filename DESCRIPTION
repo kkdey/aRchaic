@@ -22,6 +22,7 @@ Imports: ggplot2,
          gridBase, 
          limma, 
          plyr, 
+         magrittr,
          dplyr, 
          CountClust, 
          Logolas
