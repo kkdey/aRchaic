@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.3.2
+RVersion: 3.3.3
 Repos: BioCsoft=https://bioconductor.org/packages/3.4/bioc,
     BioCann=https://bioconductor.org/packages/3.4/data/annotation,
     BioCexp=https://bioconductor.org/packages/3.4/data/experiment,
@@ -37,8 +37,8 @@ Package: CountClust
 Source: Bioconductor
 Version: 1.2.0
 Hash: cfb9f5954af26211cfa01c3124237c93
-Requires: cowplot, flexmix, ggplot2, gtools, limma, maptpx, picante,
-    plyr, reshape2, slam
+Requires: gtools, limma, slam, plyr, flexmix, maptpx, picante,
+    reshape2, ggplot2, cowplot
 
 Package: DBI
 Source: CRAN
@@ -94,16 +94,6 @@ Source: CRAN
 Version: 1.0-6
 Hash: 931f9972deae0f205e1c78a51f33149b
 
-Package: classtpx
-Source: github
-Version: 0.99.0
-Hash: 4180f43c5e4830848cb5c45f150afb4d
-Requires: slam
-GithubRepo: classtpx
-GithubUsername: kkdey
-GithubRef: master
-GithubSha1: 0436ceb6ad26eb306b2c86834e20eff419e93881
-
 Package: colorspace
 Source: CRAN
 Version: 1.3-2
@@ -118,7 +108,7 @@ Package: cowplot
 Source: CRAN
 Version: 0.7.0
 Hash: 2466c098180dba6d13128bbdafeb1eda
-Requires: ggplot2, gtable, plyr
+Requires: gtable, plyr, ggplot2
 
 Package: crayon
 Source: CRAN
@@ -138,8 +128,8 @@ Requires: R6, assertthat, crayon, rprojroot
 
 Package: devtools
 Source: CRAN
-Version: 1.12.0
-Hash: bbad95109ae75cbb14099281cda43af2
+Version: 1.13.1
+Hash: 8dadb6c6a916c8312dddc7b4d394c9f3
 Requires: digest, git2r, httr, jsonlite, memoise, rstudioapi, whisker,
     withr
 
@@ -180,7 +170,7 @@ Package: ggplot2
 Source: CRAN
 Version: 2.2.1
 Hash: 46e5cb78836848aa44655e577433f54b
-Requires: digest, gtable, lazyeval, plyr, reshape2, scales, tibble
+Requires: digest, gtable, lazyeval, plyr, tibble, scales, reshape2
 
 Package: git2r
 Source: CRAN
@@ -228,7 +218,7 @@ Package: knitr
 Source: CRAN
 Version: 1.15.1
 Hash: eed7437e2b614c9e3923b7932b16ac97
-Requires: digest, evaluate, highr, markdown, stringr, yaml
+Requires: digest, highr, yaml, markdown, stringr, evaluate
 
 Package: labeling
 Source: CRAN
@@ -268,8 +258,8 @@ Requires: mime
 
 Package: memoise
 Source: CRAN
-Version: 1.0.0
-Hash: 56e7087c3559eb7ba72a9afb349bf896
+Version: 1.1.0
+Hash: 410fcd334bc626db100237cc1370f2e9
 Requires: digest
 
 Package: mime
@@ -343,7 +333,7 @@ Package: scales
 Source: CRAN
 Version: 0.4.1
 Hash: 2d008b6e3fb9938255669ddf3c85f1f3
-Requires: RColorBrewer, Rcpp, dichromat, labeling, munsell, plyr
+Requires: RColorBrewer, Rcpp, dichromat, labeling, plyr, munsell
 
 Package: slam
 Source: CRAN

@@ -715,7 +715,6 @@ plot_logo <- function(breaks_theta_vec){
 
   Logolas::logomaker(mat,
                      color_profile = color_profile,
-                     hist=TRUE,
                      frame_width = 1,
                      ic.scale = TRUE,
                      yscale_change = TRUE,
@@ -726,6 +725,7 @@ plot_logo <- function(breaks_theta_vec){
                      main_fontsize = 30,
                      xaxis_fontsize = 27,
                      col_line_split="black",
+                     control = list(hist=TRUE),
                      newpage=FALSE)
 }
 
