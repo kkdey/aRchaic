@@ -4,7 +4,7 @@ a R/python software for exploration, clustering, visualization and classificatio
 
 ## Authors
 
-[Kushal K Dey*](http://kkdey.github.io/), [Hussein al Asadi
+[Kushal K Dey*](http://kkdey.github.io/), [Hussein Al-Asadi
 *](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/), [Matthew Stephens](http://stephenslab.uchicago.edu/)
 
 
@@ -31,7 +31,7 @@ Check our [Project Webpage](https://kkdey.github.io/aRchaic/)
 
 ## Contact
 
-For any inquiries or questions related to the package, please open an issue in this repository. You can also contact us at [kkdey@uchicago.edu](kkdey@uchicago.edu) or [halasadi@gmail.com](halasadi@uchicago.edu)
+For any inquiries or questions related to the package, please open an issue in this repository. You can also contact us at [kkdey@uchicago.edu](kkdey@uchicago.edu) or [halasadi@uchicago.edu](halasadi@uchicago.edu)
 
 
 Also users are welcome to contribute to the package by submitting pull request. 
