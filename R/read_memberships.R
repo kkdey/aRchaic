@@ -37,11 +37,11 @@
 
 
 read_memberships <- function(fit,
-                               reads_file,
-                               num_cores = NULL,
-                               subset = NULL,
-                               verbose = TRUE,
-                               nostrand = FALSE){
+                             reads_file,
+                             num_cores = NULL,
+                             subset = NULL,
+                             verbose = TRUE,
+                             nostrand = FALSE){
 
   argl <- list()
 
@@ -51,13 +51,20 @@ read_memberships <- function(fit,
 
   reads_collection <- reads_file
 
-  read_id <- unique(reads_collection[,7])
+  read_id_full <- unique(reads_file[,7])
+
+  read_id <- as.character(read_id_full)
+ # read_id_full_num <- 1:length(read_id_full)
+#  reads_collection[,7] <- mapvalues(reads_file[,7], from = read_id_full, to = read_id_full_num)
+
   if(!is.null(subset)){
-    if(subset < length(read_id)){
-      indices <- sample(1:length(read_id), subset, replace = FALSE)
-      read_id <- read_id[indices]
+    if(subset < length(read_id_full)){
+      indices <- sample(1:length(read_id_full), subset, replace = FALSE)
+      read_id <- read_id_full[indices]
     }
   }
+
+  read_id <- as.character(read_id)
 
   if(is.null(num_cores)){
     cl <- parallel::makeCluster(parallel::detectCores(),type=ifelse(.Platform$OS.type=="unix","FORK","PSOCK"))
@@ -79,7 +86,12 @@ read_memberships <- function(fit,
               parLapply(cl, read_id, fun = read_probability, argl)),
               stringsAsFactors = FALSE)
   }
+
   colnames(read_member_mat) <- c(paste("cl-", 1:dim(theta)[2]), "sig", "ID")
+  # read_member_mat_2 <- read_member_mat
+  # suppressMessages(suppressWarnings(read_member_mat_2$ID <- mapvalues(as.character(read_member_mat$ID),
+  #                                                                     from = as.character(read_id_full_num),
+  #                                                                     to = as.character(read_id_full))))
   return(read_member_mat)
 }
 
