@@ -5,7 +5,7 @@ a R/python software for exploration, clustering, visualization and classificatio
 ## Authors
 
 [Kushal K Dey*](http://kkdey.github.io/), [Hussein al Asadi
-*](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/)[Matthew Stephens](http://stephenslab.uchicago.edu/)
+*](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/), [Matthew Stephens](http://stephenslab.uchicago.edu/)
 
 
 ## Installation
