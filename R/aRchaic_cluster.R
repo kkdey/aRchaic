@@ -201,8 +201,10 @@ aRchaic_cluster = function(folders,
   rownames(pooled_data) <- row_names_pool
   colnames(pooled_data) <- sig_names
 
+ # temp_pooled_data <- matrix(0, length(row_names_pool), length(sig_names))
+
   for(num in 1:length(datalist)){
-    pooled_data[match(rownames(datalist[[num]]), rownames(pooled_data)), match(colnames(datalist[[num]]), sig_names)] <- datalist[[num]]
+    pooled_data[match(rownames(datalist[[num]]), rownames(pooled_data)), match(colnames(datalist[[num]]), sig_names)] <- as.matrix(datalist[[num]])
   }
 
   zero_sum_rows <- which(rowSums(pooled_data) == 0)
