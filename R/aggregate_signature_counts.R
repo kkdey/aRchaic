@@ -115,15 +115,26 @@ damage_build_bin_counts =  function(file,
                                     breaks=NULL,
                                     type=1)
 {
-  file <-  read.csv(file=file, header=FALSE);
-  file[which(file[,3]==-1), 3] <- 0
-  file[which(file[,2]==-1), 2] <- 0
+  file <-  read.csv(file=file, header=TRUE);
+  file <- file[,-7] ## remove the read name
 
-  min_dist_from_end <- apply(file[,2:3], 1, function(x) return(min(x)))
+  colnames(file) <- c("mut", "leftpos", "rightpos", "lsb", "rsb", "strand")
+  library(dplyr)
+  tab <- dplyr::tbl_df(file) %>% dplyr::group_by(mut, leftpos, rightpos, lsb, rsb, strand) %>% dplyr::summarize(n= n())
+  tab2 <- as.data.frame(tab)
+
+  if(length(which(tab2[,3]==-1)) !=0){
+    tab2[which(tab2[,3]==-1), 3] <- 0
+  }
+  if(length(which(tab2[,2]==-1)) !=0){
+    tab2[which(tab2[,2]==-1), 2] <- 0
+  }
+
+  min_dist_from_end <- as.numeric(apply(tab2[,2:3], 1, function(x) return(min(x))))
 
 
   if(is.null(breaks)){
-    bins <- c(-1, 5, 10, 15, 20, max(min_dist_from_end))
+    bins <- c(0, 5, 10, 15, 20, max(min_dist_from_end))
   }else{
    # message("breaks values provided : adjusting")
     bins <- c(intersect(breaks, (-1):max(min_dist_from_end)),max(min_dist_from_end))
@@ -131,7 +142,7 @@ damage_build_bin_counts =  function(file,
 
   bin_values <- .bincode(min_dist_from_end, bins, TRUE)
 
-  modified_file <- cbind.data.frame(file[,1], file[,4], file[,5], file[,6], file[,7], bin_values)
+  modified_file <- cbind.data.frame(tab2[,1], tab2[,4], tab2[,5], tab2[,6], tab2[,7], bin_values)
   colnames(modified_file) <- c("pattern", "base.lsb", "base.rsb", "strand", "counts", "bin_values")
 
   library(plyr)
