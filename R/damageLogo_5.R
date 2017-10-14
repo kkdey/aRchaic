@@ -614,8 +614,10 @@ ic_computer_2 <-function(mat, alpha, base_probs = NULL) {
     }
 
     if(alpha == 1){
-      ic[i] <- log(length(which(mat[,i]!=0.00)), base=2) + sum(sapply(mat[, i], function(x) {
-        if (x > 0) { x*log2(x) } else { 0 }
+      ic[i] <- sum(sapply(1:length(mat[,i]), function(x) {
+        if (x > 0) { mat[x, i]*log2(mat[x,i]) } else { 0 }
+      })) - sum(sapply(1:length(mat[,i]), function(x) {
+        if (x > 0) { mat[x, i]*log2(probs[x]) } else { 0 }
       }))
     }
     else if(alpha == Inf){
@@ -625,7 +627,7 @@ ic_computer_2 <-function(mat, alpha, base_probs = NULL) {
       stop("alpha value must be greater than 0")
     }
     else{
-      ic[i] <- (1/(1-alpha))* log (sum(probs^{alpha}), base=2) - (1/(1-alpha))* log (sum(mat[,i]^{alpha}), base=2)
+      ic[i] <- - (1/(1-alpha))* log2(sum(probs^{alpha})) + (1/(1-alpha))* log2(sum(mat[,i]^{alpha}))
     }
   }
   return(ic)
@@ -650,7 +652,8 @@ damage.ic<-function(pwm, alpha=1, inflation_factor = c(1,1,1), base_probs_list =
 
     if(!is.null(base_probs_list)){
       base_probs <- base_probs_list[[i]]
-      mat <- mat[!is.na(match(rownames(mat), names(base_probs))),]
+      idx <- match(names(base_probs), rownames(mat))
+      mat <- mat[idx[!is.na(idx)],]
       mat_clean <- mat
     }else{
       base_probs = NULL
