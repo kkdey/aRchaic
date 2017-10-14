@@ -627,7 +627,8 @@ ic_computer_2 <-function(mat, alpha, base_probs = NULL) {
       stop("alpha value must be greater than 0")
     }
     else{
-      ic[i] <- - (1/(1-alpha))* log2(sum(probs^{alpha})) + (1/(1-alpha))* log2(sum(mat[,i]^{alpha}))
+      ic[i] <-  abs((log(length(which(mat[,i] !=0.00)), base=2) - (1/(1-alpha))* log2(sum(mat[,i]^{alpha}))) -
+                      (log(length(which(mat[,i] !=0.00)), base=2) - (1/(1-alpha))* log2(sum(probs^{alpha}))))
     }
   }
   return(ic)
