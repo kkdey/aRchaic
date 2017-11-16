@@ -1,0 +1,78 @@
+---
+title: "aRchaic_view"
+author: "Kushal K Dey"
+date: "4/5/2017"
+output: html_document
+---
+
+## aRchaic_view
+
+`aRchaic_view ()` is an exploratory function that gives us a glimpse of the mutational patterns of a single MFF file. It produces a logo plot representation of the relative frequency of the different features - such as mutation type, flanking bases, strand, strand break and position of mutation - from the mutations recorded in the MFF file.
+
+We demonstrate by the following example.
+
+```{r}
+library(aRchaic)
+aRchaic_view(file = "../data/moderns/HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.q30.csv", output_dir = "../utilities/", title = "GBR1")
+```
+
+It says `skipping the signature aggregation step` because the `moderns.rda` file is already
+present in the folder derived from `aRchaic_pool()`. If we remove the `.rda` file and rerun,
+this is what we will see. 
+
+```{r}
+aRchaic_view(file = "../data/moderns/HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.q30.csv", output_dir = "../utilities/", title = "GBR1")
+```
+Check that here it performs signature aggregation step on just the file of interest and 
+produces the logo plot in file. 
+
+The above functions will create the following logo plot in a PNG file in the `output_dir` provided. 
+
+
+
+
+
+
+
+Next we view an ancient MFF file from `../data/Mathieson` folder.
+
+```{r}
+aRchaic_view(file = "../data/Mathieson/I0011.1240k.subsampled.q30.csv", output_dir = "../utilities/", title = "I0011")
+```
+
+This will create the following logo plot representation.
+
+
+
+Once can play around with the logo controls for the plot too.
+
+```{r}
+aRchaic_view(file = "../data/Mathieson/I0011.1240k.subsampled.q30.csv", output_dir = "../utilities/", title = "I0011-2", logo.control = list(ic.scale= FALSE,
+                                                       title_fontsize = 20))
+```
+
+This creates the following logo plot.
+
+
+
+Note that since `ic.scale=FALSE`, the heights of the columns in the mutation and flanking base
+logo plot is the same and only the relative proportion of the different types of mutations
+and flanking bases are now captured. the default however is `ic.scale=TRUE`, in which case the heights of the mutation and flanking bases are determined by the entropy.
+
+The control parameters of the logo plot, which the user can play around with, along with their default values are the following
+
+```{r}
+logo.control.default <- list(sig_names = NULL, ic.scale=TRUE, max_pos = 20, flanking_bases=1,
+         yscale_change = TRUE, xaxis=TRUE, yaxis=TRUE, xlab = " ", xaxis_fontsize=20,
+         xlab_fontsize=10, title_aligner = 11, y_fontsize=20, title_fontsize = 35,
+         mut_width=2, start=0.0001, renyi_alpha = 5, inflation_factor = c(2,1,2),
+         pop_names=title, logoport_x = 0.25, logoport_y= 0.50, logoport_width= 0.25, logoport_height= 0.50, lineport_x = 0.9, lineport_y=0.40, lineport_width=0.32, lineport_height=0.28, breaklogoport_x = 0.94, breaklogoport_y = 0.40, breaklogoport_width=0.30, breaklogoport_height=0.45, barport_x = 0.60, barport_y=0.60, barport_width=0.25, barport_height=0.25, output_width = 1200, output_height = 700)
+
+```
+
+The `logoport` option fixes the position and layout of the viewport for the mutation and flanking base logo plot. The `lineport` option fixes the position and layout for the mutation trend along read plot. The `breaklogoport` option fixes the position and layout for the strand break logo plot. The `barplot` option fixes the position and layout for the strand (positive or negative strand) bar plot.
+
+The `output_width` and `output_height` options fix the size of the logo plot image.
+The inflation_factor` and `renyi_alpha` control the heights of the mutation and flanking base
+logo plots if `ic.scale=TRUE`. Other options fix the axis labels, title and font sizes.
+

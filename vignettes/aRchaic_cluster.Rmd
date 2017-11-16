@@ -1,0 +1,178 @@
+---
+title: "aRchaic_cluster"
+author: "Kushal K Dey"
+date: "4/6/2017"
+output: html_document
+---
+
+`aRchaic_cluster` is the primary function of this package which performs a GoM (grade of membership) clustering of the samples based on the mutational signatures comprising of various features of the mutations - mismatch, flanking bases, position of mismatch on read, strand and strand break information of the reads containing the mismatch.
+
+To demonstrate the function, we apply it on a small example first of moderns and Mathieson subsampled data we choose our output directory to be "../utilities/moderns_Mathieson" to save the output. We fit the clustering model here for $K=2$.
+
+```{r}
+library(aRchaic)
+folders <- c("../data/moderns/", "../data/Mathieson/")
+aRchaic_cluster(folders = folders,
+                            K = 2,
+                            tol = 0.1,
+                            run_from = "start",
+                            output_dir = "../utilities/moderns_Mathieson/")
+```
+
+This function will produce the following in the `output_dir`
+
+- a `model.rda` file containing the GoM model output
+- a `structure.png` file containing the STRUCTURE plot representation of the clusters
+- a `logo_clus_k.png` file for k equal to 1 to K (number of clusters), which is equal to 2 here.
+
+Note that when `run_from = "start"`, the function performs the data processing even if the ".rda" processed file is present from before. However if we now change the option to "gom", it uses the processed .rda files in the folders and pool them together and perform the GoM  clustering and visualziation and save them in the output directory.
+
+```{r}
+folders <- c("../data/moderns/", "../data/Mathieson/")
+aRchaic_cluster(folders = folders,
+                            K = 2,
+                            tol = 0.1,
+                            run_from = "gom",
+                            output_dir = "../utilities/moderns_Mathieson/")
+```
+
+Now if someone wants to use the `model.rda` file from a previous GoM model fit and just perform the visualization, one can use the `run_from = "plot"` option.
+
+The figure would look like the following.
+
+We can also play around with the labels 
+
+```{r}
+labs <- c("GBR", "GBR", "FIN", "FIN", "PUR", "PUR", "CLM", "CLM", "MXL", "MXL", rep("I",10))
+levels <- unique(labs)
+
+aRchaic_cluster(folders = folders,
+                            K = 2,
+                            labs = labs,
+                            levels = levels, 
+                            tol = 0.1,
+                            run_from = "plot",
+                            output_dir = "../utilities/moderns_Mathieson/")
+
+```
+We now present a more elaborate example involving a modern cluster and UDG and non-UDG samples from Lazaridis and Pinhasi data. Since the MFF files are big, we are not providing them, instead we are providing the `.rda` processed file obtained from doing signature aggregation by `aRchaic_pool()` on these two datasets.
+
+```{r}
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
+aRchaic_cluster(folders = folders,
+                K = 3,
+                labs = labs,
+                levels = levels,
+                tol = 0.1,
+                run_from = "plot",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/")
+```
+
+```{r}
+labs <- c(rep("moderns", 50), rep("Lazaridis", 9), rep("Pinhasi", 12))
+aRchaic_cluster(folders = folders,
+                K = 3,
+                labs = labs,
+                tol = 0.1,
+                run_from = "plot",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/")
+```
+
+Note that we had `run_from = "plot"` but still it ran the GoM model because it could not find `model.rda` in the `output_dir`. So, unless you want to overwrite any files, always stick to the `run_from = "plot"` as a safe bet.
+
+There are many other parameters in the `aRchaic_cluster ()` function, the details of which you can find in the R documentation under `Extras`. By default, this function fits the independent topic model proposed by Y. Shiraichi and M. Stephens, but if the user opts for `gom_method = "full"` option, then it will run the full GoM model using the `maptpx` package due to Matt Taddy.
+
+We provide an analogous `aRchaic_cluster_beta ()` function for applying GoM model clustering on signature counts with filtered signatures. We have already discussed the different filtering mechanisms that `aRchaic` provides in the previous section. Next we see, how GoM model and visualization can be applied on filtered signature data.
+
+For mutation filter signature, we do the following 
+
+
+```{r}
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
+aRchaic_cluster_beta(folders = folders,
+                K = 3,
+                type = "mutation",
+                labs = labs,
+                tol = 0.1,
+                run_from = "gom",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/mutation/",
+                output_width = 300,
+                output_height = 700)
+```
+
+For mutation and flanking base 
+
+```{r}
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
+aRchaic_cluster_beta(folders = folders,
+                K = 3,
+                type = "mutation-flank",
+                labs = labs,
+                tol = 0.1,
+                run_from = "gom",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/mutation-flank/",
+                output_width = 700,
+                output_height = 700)
+```
+
+For mutation and position information
+
+```{r}
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
+aRchaic_cluster_beta(folders = folders,
+                K = 3,
+                type = "mutation-pos",
+                labs = labs,
+                tol = 0.1,
+                run_from = "gom",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/mutation-pos/",
+                output_width = 900,
+                output_height = 700)
+```
+
+Finally we see how the plot looks like without the strand information.
+
+```{r}
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
+aRchaic_cluster_beta(folders = folders,
+                K = 3,
+                type = "wo-strand",
+                labs = labs,
+                tol = 100,
+                run_from = "gom",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/wo-strand/",
+                output_width = 1200,
+                output_height = 700)
+```
+For the other types of filtering `type` under `aRchaic_cluster`, check the R documentation.
+
+```{r}
+folders <- c("../data/Pinhasi/", "../data/Lazaridis/", "../data/moderns-50/")
+labs <- c(rep("Pinhasi (non UDG)", 12),
+          rep("Lazaridis (UDG)", 9),
+          rep("moderns", 50))
+aRchaic_cluster_beta(folders = folders,
+                K = 3,
+                type = "mutation-flank-pos",
+                labs = labs,
+                tol = 10,
+                run_from = "gom",
+                output_dir = "../utilities/moderns_Pinhasi_Lazaridis/mutation-flank-pos/",
+                output_width = 1200,
+                output_height = 700)
+```

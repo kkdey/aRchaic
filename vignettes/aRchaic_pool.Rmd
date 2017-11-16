@@ -1,0 +1,78 @@
+---
+title: "aRchaic_pool"
+author: "Kushal K Dey"
+date: "4/5/2017"
+output: html_document
+---
+
+## aRchaic_pool()
+
+`aRchaic_pool ()` function processes the MFF files in a folder, aggregates the signatures 
+by binning them as per the position of the match from the ends of the reads and also clubs the 
+signatures (so that G->A gets clubbed with C->T). It outputs a matrix of counts of the binned and clubbed signature patterns with samples (MFF files) along the rows and signatures along the columns.
+
+We demonstrate by applying this function on a test folder containing MFF files from 10 modern samples obtained from 1000 Genomes.
+
+```{r}
+library(aRchaic)
+tab <- aRchaic_pool(folders = "../data/moderns/")
+```
+`tab` represents a matrix of counts of signatures for the 10 modern samples.Besides outputting the matrix as `tab`, this function also saves the processed data as `moderns.rda` file (name derived from folder name) in the folder `moderns`. 
+
+```{r}
+dim(tab)
+tab[1:3,1:3]
+```
+
+In `aRchaic_pool`, the user can put more than one folder names. For example, if one wants to pool data from two folders - `Mathieson` (which comprises of MFF files for 10 samples from
+Mathieson et al aDNA data) and `moderns`, the user can write the following
+
+```{r}
+tab <- aRchaic_pool(folders = c("../data/moderns/", "../data/Mathieson/"))
+```
+
+Notice here that the data aggregation and clubbing happened only over `../data/Mathieson` 
+because for the `../data/moderns` folder, the function read the data from the `moderns.rda` file. This saves computation time by avoiding repetition of same task. We take a look at the 
+`tab` matrix again
+
+```{r}
+dim(tab)
+tab[1:3,1:3]
+tab[18:20, 1:3]
+```
+
+Notice that the pooled data of `moderns` and `Mathieson` has more columns than just the `moderns` data. This is because the `aRchaic_pool` function does not take account of signatures
+which have 0 counts across all samples. So, a few signatures have been added in the pooled data
+which had 0 counts in the moderns data.
+
+If the user wants to obtain the matrix of signature counts only for certain specific samples in the two folders, `aRchaic_pool ()` is also flexible in handling that through its input called `pattern`. The user would need to put in the names of the files in the `pattern` for which she wants to build the matrix.
+
+We demonstrate by the following example.
+
+```{r}
+tab <- aRchaic_pool(folders = c("../data/moderns/", "../data/Mathieson/"),
+                    pattern =c("HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.q30.csv",
+                               "I0025.1240k.subsampled.q30.csv",
+                               "I0046.1240k.subsampled.q30.csv"))
+```
+
+Note that in this case, there was no signature aggregation because both the folders contain the `.rda` files containing the signature counts. We take a look at the `tab` matrix.
+
+```{r}
+dim(tab)
+```
+```{r}
+rownames(tab)
+```
+
+So, `tab` now contains the signature counts results for only the three samples we gave in `pattern`. As default, `pattern` is NULL, in which case, `aRchaic_pool` takes all files in the 
+folder into account.
+
+Among other features of `aRchaic_pool` are `breaks` that determine the binning sizes of mutational position in the mutation signature aggregation, and `flanking_bases` which as default is set to 1, as these MFF files record one flanking base to the left and one to the 
+right.
+
+`aRchaic_pool` is a pivotal function of this package. Many of our data anlytic functions like `aRchaic_cluster`, `aRchaic_pca` and `aRchaic_class` all call `aRchaic_pool` internally to perform the signature aggregation and matrix of counts building from the raw MFF files. 
+
+
+
+

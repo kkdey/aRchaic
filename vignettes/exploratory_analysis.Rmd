@@ -1,0 +1,149 @@
+---
+title: "exploratory_analysis"
+author: "Kushal K Dey"
+date: "4/6/2017"
+output: html_document
+---
+
+`aRchaic` provides various functions and tools to perform exploratory analysis of ancient DNA
+sample using the mutational features recorded in its MFF file. In this section,
+we shall focus on a few of these tools.
+
+## Read length distribution
+
+aRchaic provides a function `read_length_distribution ()` to track the density plot of the read
+lengths for all reads, as well as reads containing C->T mutations and those containing C->T
+mutations near the ends of the reads, latter two being potential representatives of
+damaged reads. We demonstrate by applying this function on an MFF file.
+
+```{r}
+library(aRchaic)
+read_length_distribution(file = "../data/Mathieson/I0011.1240k.subsampled.q30.csv",
+                         end_break = 5,
+                         cols = c("red", "green", "blue"),
+                         cex_legend = 0.7,
+                         ylimit = 0.03)
+```
+
+In this case, for the third option (colored blue), we consider reads with C->T mutations occurring inside of 5 bases from the ends of the reads. The user can play with this. Also, she
+can change the size of the title and the legend and change the Y axis limit.
+
+```{r}
+read_length_distribution(file = "../data/Mathieson/I0013.1240k.subsampled.q30.csv",
+                         end_break = 10,
+                         cols = c("red", "black", "blue"),
+                         cex.main = 2,
+                         ylimit = 0.02)
+```
+
+## Strand Break composition
+
+`aRchaic` provides the function `strand_break_composition()` to estimate the composition of
+nucleotides at the left and the right strand breaks of the reads containing mutations. We demonstrate the use of this function.
+
+```{r}
+tab <- strand_breaks_composition(file = "../data/Mathieson/I0013.1240k.subsampled.q30.csv",
+                          dist_from_ends = 5,
+                          CtoT = TRUE)
+```
+The function creates a list of the left and right strand break compositions and also  produces 2 plots - the first plot being the composition of bases at the 5' end, and the second being the composition of bases at the 3' end. As expected, we see enrichment of purines at the 5' strand break and that of pyrimidines at the 3' strand break.
+
+We also take a look at the `tab` output
+
+```{r}
+tab
+```
+
+
+Here `dist_from_ends = 10` meant we only considered those reads which had a mutation inside of 
+10 bases from the end of the read. Also, `CtoT = TRUE` means we only considered reads with CtoT mutations occurring inside ``dist_from_ends` bases from ends of the read.
+
+## Flanking bases composition 
+
+Similar to strand break composition, `aRchaic` provides the `flanking_base_composition ()` to estimate the composition of different nucleotides at the left flanking and right flanking bases of each mutation of a particular mutation type (for example C->T). This helps answers questions like - is it more likely to see A on the left/right flanking base of a C->T mismatch rather than a T? Are mutations enriched in CpG regions? etc.
+
+```{r}
+tab <- flanking_base_composition(file = "../data/Mathieson/I0013.1240k.subsampled.q30.csv",
+                          dist_from_ends = 5,
+                          pattern = "C->T")
+```
+
+The plot shows that A and G are the most likely nucleotides to the left and right of C->T mutations in this sample occurring inside `dist_from_ends = 5` bases from ends of the reads. Also, G is more enriched than any other nucleotide to the right. We can also look at the output of the function to get a clearer picture.
+
+```{r}
+tab
+```
+
+We can change the logo plot by tuning the `logo.control` parameter.
+
+```{r}
+flanking_base_composition(file = "../data/Mathieson/I0013.1240k.subsampled.q30.csv",
+                          dist_from_ends = 10,
+                          pattern = "C->T",
+                          logo.control = list(ic.scale= TRUE,
+                                              col_line_split = "black"))
+```
+
+The other exploratory tool in `aRchaic` is `aRchaic_mutation_trend ()` which tracks the trend in mutation probability across the read from its ends.
+
+```{r}
+aRchaic_mutation_trend(file = "../data/Mathieson/I0013.1240k.subsampled.q30.csv",
+                       pattern = c("C->T", "C->A", "C->G",
+                                               "T->A", "T->C", "T->G",
+                                               "G->A", "G->C", "G->T",
+                                               "A->C", "A->G", "A->C"
+                                   ),
+                       plot_type = "left",
+                       sample_name = "I0013",
+                       strand = "both")
+```
+
+One can do the plot for the 3' end too. Here is an example
+
+```{r}
+par(mfrow =c(1,2))
+aRchaic_mutation_trend(file = "../data/Mathieson/I0013.1240k.subsampled.q30.csv",
+                       pattern = c("C->T", "C->A", "C->G",
+                                   "T->A", "T->C", "T->G",
+                                   "G->A", "G->C", "G->T",
+                                   "A->C", "A->G", "A->C"
+                                   ),
+                       plot_type = "left",
+                       sample_name = "I0013",
+                       strand = "both")
+aRchaic_mutation_trend(file = "../data/Mathieson/I0013.1240k.subsampled.q30.csv",
+                       pattern = c("C->T", "C->A", "C->G",
+                                    "T->A", "T->C", "T->G",
+                                    "G->A", "G->C", "G->T",
+                                    "A->C", "A->G", "A->C"
+                                   ),
+                       plot_type = "right",
+                       sample_name = "I0013",
+                       strand = "both")
+```
+
+The Mathieson data is UDG treated, so next we see how the plot looks for a non UDG treated
+aDNA sample.
+
+```{r}
+par(mfrow =c(1,2))
+aRchaic_mutation_trend(file = "../data/Pinhasi/IR1-subsampled.q30.csv",
+                       pattern = c("C->T", "C->A", "C->G",
+                                   "T->A", "T->C", "T->G",
+                                   "G->A", "G->C", "G->T",
+                                   "A->C", "A->G", "A->C"
+                                   ),
+                       plot_type = "left",
+                       sample_name = "IR1",
+                       strand = "both")
+aRchaic_mutation_trend(file = "../data/Pinhasi/IR1-subsampled.q30.csv",
+                       pattern = c("C->T", "C->A", "C->G",
+                                    "T->A", "T->C", "T->G",
+                                    "G->A", "G->C", "G->T",
+                                    "A->C", "A->G", "A->C"
+                                   ),
+                       plot_type = "right",
+                       sample_name = "IR2",
+                       strand = "both")
+```
+
