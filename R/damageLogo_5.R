@@ -120,6 +120,7 @@ damageLogo_five <- function(theta_pool,
   rownames(theta2) <-  theta2[,1]
   theta2 <- theta2[,-1, drop=FALSE]
 
+
   indices_minus <- grep("_-_", signature_set)
   strand_theta <- data.frame("minus" = colSums(theta_pool[indices_minus,]),
                              "plus" = colSums(theta_pool[-indices_minus,]))
@@ -136,6 +137,7 @@ damageLogo_five <- function(theta_pool,
                       dplyr::group_by(sig) %>%
                       dplyr::summarise_all(funs(sum)) %>%
                         as.data.frame()
+
   rownames(theta_break) <- theta_break[,1]
   theta_break <- theta_break[,-1]
 
@@ -149,6 +151,7 @@ damageLogo_five <- function(theta_pool,
  # prob_mutation <- filter_by_pos(t(theta_pool), max_pos = max_pos)
   prob_mutation <- filter_signatures_only_location(t(theta_pool),
                         max_pos = max_pos, flanking_bases = flanking_bases)
+
   prob_mutation <- t(apply(prob_mutation, 1, function(x) {
     y <- x[!is.na(x)];
     return(y/sum(y))
@@ -180,7 +183,6 @@ damageLogo_five <- function(theta_pool,
       temp2 <- tapply(theta_pool[,l], factor(new_sig_split[,j], levels=c("A", "C", "G", "T",
                                                                    "C->T", "C->A", "C->G",
                                                                    "T->A", "T->C", "T->G")), sum)
-
       prop_patterns_list[[l]] <- cbind(prop_patterns_list[[l]], temp2)
     }
   }
