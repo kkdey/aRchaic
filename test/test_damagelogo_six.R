@@ -1,32 +1,64 @@
 
 #################   damagelogo six   ##########################
 
-topic_clus <- get(load("../../ancient-damage/utilities/Lazaridis_moderns/clus_2/model.rda"))
+topic_clus <- get(load("../../ancient-damage/utilities/moderns_Pinhasi/clus_2/model.rda"))
 omega <- topic_clus$omega
 theta <- topic_clus$theta
 
+base_probs_list <- get(load("../../ancient-damage/utilities/base_probs_temp_2.rda"))
+# base_probs_mat <- matrix(NA, 10, 3)
+# rownames(base_probs_mat) <- c("A", "C", "G", "T", "C->A", "C->G", "C->T", "T->A", "T->C", "T->G")
+# for(l in 1:length(base_probs_list)){
+#   base_probs_mat[match(names(base_probs_list[[l]]), rownames(base_probs_mat)),l] <- base_probs_list[[l]]
+# }
+#
+
+
+
+damageLogo_six(theta,
+               base_probs_list = base_probs_list,
+               ranges = c(1,3),
+               logoport_x = 0.7,
+               logoport_y= 0.5,
+               logoport_width= 1.2,
+               logoport_height= 1.2,
+               breaklogoport_x = 0.6,
+               breaklogoport_y = 0.45,
+               breaklogoport_width=0.4,
+               breaklogoport_height=1,
+               lineport_x = 0.8,
+               lineport_y=0.5,
+               lineport_width=1,
+               lineport_height=1.4)
+
+
+theta_pool <- theta
 sig_names = NULL
-ic.scale=TRUE
 max_pos = 20
 flanking_bases=1
-yscale_change = TRUE
-xaxis=TRUE
-yaxis=TRUE
-xlab = " "
-xaxis_fontsize=10
-xlab_fontsize=20
-title_aligner = 15
-y_fontsize=20
-title_fontsize = 20
-mut_width=2
-start=0.0001
-renyi_alpha = 1
-inflation_factor = c(2,1,2)
+mutlogo.control = list()
+breaklogo.control = list()
 base_probs_list = NULL
-pop_names=paste0("Cluster ",1:dim(theta)[2])
+logoport_x = 0.7
+logoport_y= 0.5
+logoport_width= 1.2
+logoport_height= 1.1
+breaklogoport_x = 0.5
+breaklogoport_y = 0.4
+breaklogoport_width=0.7
+breaklogoport_height=1
+lineport_x = 0.4
+lineport_y=0.5
+lineport_width=1
+lineport_height=1
 output_dir = NULL
 output_width = 1200
 output_height = 700
+
+
+
+
+
 
 theta_pool <- theta
 tab <- prop_patterns_list[[1]]
@@ -102,4 +134,27 @@ p <- ggplot(data=pos_data, aes(x=position,y=val)) + geom_point() +
 print(p, vp = vp3)
 
 
+set.seed(20)
+cols = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category ==
+                                       'qual',]
+col_vector = unlist(mapply(RColorBrewer::brewer.pal, cols$maxcolors, rownames(cols)))
+total_chars = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+                "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "zero", "one", "two",
+                "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
+                "dash", "colon", "semicolon", "leftarrow", "rightarrow")
+color_profile <- list("type" = "per_symbol",
+                      "col" = sample(col_vector, length(total_chars), replace=FALSE))
+
+grid.newpage()
+nlogomaker(pwm1,
+           logoheight = 'log',
+           color_profile = color_profile,
+           frame_width = 1,
+           xlab = "Position",
+           bg = base_probs_mat,
+           pop_name = '',
+           control = list(epsilon=0.25,gap_ylab=3.5,
+                          round_off = 1),
+           xaxis = FALSE
+)
 

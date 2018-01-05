@@ -7,25 +7,10 @@
 #' @param theta_pool The theta matrix obtained from running the grade of membership model that stores for each cluster, the
 #' probability distribution over all the mutational signatures.
 #' @param sig_names The mutational signature names. Defaults to the rownames of the theta matrix above.
-#' @param ic.scale A binary variable indicating whether the height of the bars for substitution and flanking bases should be
-#'        adjusted by the information criterion.
 #' @param max_pos The maximum distance from the end of the read upto which mutations are considered.
 #' @param flanking_bases The number of flanking bases of the mutational signature.
-#' @param yscale_change A binary variable indicating whether the Y axis scale should be adjusted based on the size of the
-#'        logos, defaults to TRUE.
-#' @param xlab The labels for X axis.
-#' @param xaxis A binary indicating whether the X axis of the logo plot should be shown
-#' @param yaxis A binary indicating whether the Y axis of the logo plot should be shown
-#' @param xaxis_fontsize The fontsize of the X axis ticks.
-#' @param xlab_fontsize The fontsize of the X axis labels.
-#' @param y_fontsize The fontsize of the Y axis ticks.
-#' @param mut_width Thw width of the bar for the mutation at the center.
-#' @param start The starting point of the stacking of logos on the Y axis. Should be close to 0, defau;ts to 0.0001.
-#' @param renyi_alpha The entropy scale for the Renyi entropy on the flanking bases and mutations.
-#' @param inflation The inflation scale of flanking bases with respect to mutation.
-#'                  Will be a 3 length vector. Defaults to c(1,1,1) implying no inflation.
-#'                  c(2,1,2) will mean the flanking bases are 2 times inflated compared to mutation.
-#' @param pop_names The title of the plot. Defaults to the cluster labels.
+#' @param mutlogo.control The control parameters for the mismatch and flanking bases logo.
+#' @param breaklogo.control The control parameters for the logo for strand break.
 #' @param logoport_x the X-axis position of the plot window for the logo plot
 #' @param logoport_y the Y-axis position of the plot window for the logo plot
 #' @param logoport_width the width of the plot window for the logo plot
@@ -58,6 +43,9 @@ damageLogo_six <- function(theta_pool,
                             mutlogo.control = list(),
                             breaklogo.control = list(),
                             base_probs_list = NULL,
+                            clip = 0,
+                            mut_ranges  = c(0, 0),
+                            break_ranges = c(0, 0),
                             logoport_x = 0.7,
                             logoport_y= 0.5,
                             logoport_width= 1.2,
@@ -76,9 +64,7 @@ damageLogo_six <- function(theta_pool,
   library(grid)
   library(gridBase)
 
-  if(length(inflation_factor)==1){
-    inflation_factor <- rep(inflation_factor, dim(theta_pool)[2])
-  }
+
   if(is.null(output_dir)){output_dir <- getwd();}
   flag <- 0
   if(dim(theta_pool)[2] == 1){
@@ -121,7 +107,7 @@ damageLogo_six <- function(theta_pool,
 
 
   if(is.null(sig_names))
-    sig_names <- rownames(theta)
+    sig_names <- rownames(theta_pool)
 
   # prob_mutation <- filter_by_pos(t(theta_pool), max_pos = max_pos)
   prob_mutation <- filter_signatures_only_location(t(theta_pool),
@@ -131,6 +117,25 @@ damageLogo_six <- function(theta_pool,
     return(y/sum(y))
   }))
   max_prob <- max(prob_mutation);
+  clipped_bases <- setdiff(1:20, as.numeric(colnames(prob_mutation)))
+
+  if(is.null(base_probs_list)){
+    prob_limits = c(round(min(prob_mutation), 2)-0.01, round(max(prob_mutation), 2) + 0.01)
+    prob_breaks = c(0, round(min(prob_mutation),2)-0.01,
+               round(0.5*(min(prob_mutation)+max(prob_mutation)), 2),
+               round(max(prob_mutation), 2)+0.01)
+  }else{
+    if(length(clipped_bases) > 0){
+      prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])[-clipped_bases]))
+    }else{
+      prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])))
+    }
+    colnames(prob1_mutation) <- colnames(prob_mutation)
+    prob_limits = c(round(min(prob1_mutation), 2)-0.01, round(max(prob1_mutation), 2) + 0.01)
+    prob_breaks = c(0, round(min(prob1_mutation),2)-0.01,
+                    round(0.5*(min(prob1_mutation)+max(prob1_mutation)), 2),
+                    round(max(prob1_mutation), 2)+0.01)
+  }
 
   sig_split <- do.call(rbind,
                        lapply(sig_names,
@@ -151,7 +156,7 @@ damageLogo_six <- function(theta_pool,
 
   prop_patterns_list <- list()
 
-  for(l in 1:dim(theta)[2]){
+  for(l in 1:dim(theta_pool)[2]){
     prop_patterns_list[[l]] <- numeric();
     for(j in 1:ncol(new_sig_split)){
       temp2 <- tapply(theta_pool[,l], factor(new_sig_split[,j], levels=c("A", "C", "G", "T",
@@ -166,12 +171,19 @@ damageLogo_six <- function(theta_pool,
   grob_list <- list()
   if(flag == 1){
     l = 1
-    png(paste0(output_dir, "logo_", pop_names[l], ".png"), width=output_width, height = output_height)
+    png(paste0(output_dir, "logo", ".png"), width=output_width, height = output_height)
     damageLogo_six.skeleton(pwm = prop_patterns_list[[l]],
                             probs = prob_mutation[l,],
                             breaks_theta_vec = breaks_theta[,l, drop=FALSE],
+                            prob_limits = prob_limits,
+                            prob_breaks = prob_breaks,
                             mutlogo.control = mutlogo.control,
                             breaklogo.control = breaklogo.control,
+                            background = base_probs_list,
+                            clip = clip,
+                            mut_ranges = mut_ranges,
+                            break_ranges = break_ranges,
+                            flanking_bases = flanking_bases,
                             logoport_x = logoport_x,
                             logoport_y= logoport_y,
                             logoport_width= logoport_width,
@@ -191,9 +203,15 @@ damageLogo_six <- function(theta_pool,
       damageLogo_six.skeleton(pwm = prop_patterns_list[[l]],
                               probs = prob_mutation[l,],
                               breaks_theta_vec = breaks_theta[,l, drop=FALSE],
+                              prob_limits = prob_limits,
+                              prob_breaks = prob_breaks,
                               mutlogo.control = mutlogo.control,
                               breaklogo.control = breaklogo.control,
-                              bg = base_probs_mat,
+                              background = base_probs_list,
+                              clip = clip,
+                              mut_ranges = mut_ranges,
+                              break_ranges = break_ranges,
+                              flanking_bases = flanking_bases,
                               logoport_x = logoport_x,
                               logoport_y= logoport_y,
                               logoport_width= logoport_width,
@@ -212,12 +230,18 @@ damageLogo_six <- function(theta_pool,
 }
 
 
-damagelogo_six.skeleton <- function(pwm,
+damageLogo_six.skeleton <- function(pwm,
                                     probs,
                                     breaks_theta_vec,
+                                    prob_limits,
+                                    prob_breaks,
                                     mutlogo.control = list(),
                                     breaklogo.control = list(),
-                                    bg = NULL,
+                                    background = NULL,
+                                    clip = 0,
+                                    mut_ranges = c(0, 0),
+                                    break_ranges = c(0, 0),
+                                    flanking_bases = 1,
                                     logoport_x = 0.7,
                                     logoport_y= 0.5,
                                     logoport_width= 1.2,
@@ -231,6 +255,50 @@ damagelogo_six.skeleton <- function(pwm,
                                     lineport_width=1,
                                     lineport_height=1){
 
+  mut_lowrange = mut_ranges[1]
+  mut_uprange =  mut_ranges[2]
+
+  break_lowrange = break_ranges[1]
+  break_uprange =  break_ranges[2]
+
+  mutlogo.control.default <- list(logoheight = "log",
+                                  total_chars = c("A", "B", "C", "D", "E", "F", "G",
+                                                  "H", "I", "J", "K", "L", "M", "N", "O",
+                                        "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
+                                        "Z", "zero", "one", "two",
+                                    "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
+                              "dash", "colon", "semicolon", "leftarrow", "rightarrow"),
+                                   frame_width=c(1,2,1), yscale_change=TRUE,
+                                   pop_name = "Mismatch and \n flanking base composition",
+                                   addlogos = NULL, addlogos_text = NULL, newpage = FALSE,
+                                   yrange = NULL, xaxis=TRUE, yaxis=TRUE, xaxis_fontsize=23,
+                                   y_fontsize=20, main_fontsize = 25,
+                                   xlab_fontsize=25,
+                                   start=0.001, xlab = "", ylab = "Enrichment Score",
+                                   col_line_split="grey80", control = list(epsilon=0.25,gap_ylab=3.5, gap_xlab = 4,
+                                                                           round_off = 1, posbins = 3, negbins = 3,
+                                                                           lowrange = mut_lowrange, uprange = mut_uprange,
+                                                                           size_port = 1, symm = FALSE))
+
+  breaklogo.control.default <- list( logoheight = "log",
+                                  total_chars = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+                                                   "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "zero", "one", "two",
+                                                   "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
+                                                   "dash", "colon", "semicolon", "leftarrow", "rightarrow"),
+                                   frame_width=NULL, yscale_change=TRUE,
+                                   pop_name = "base composition \n 5' of  strand break \n",
+                                   addlogos = NULL, addlogos_text = NULL, newpage = FALSE,
+                                   yrange = NULL, xaxis=FALSE, yaxis=TRUE, xaxis_fontsize=10,
+                                   xlab_fontsize=18, y_fontsize=18, main_fontsize=25,
+                                   start=0.001, xlab = "", ylab = "Enrichment Score",
+                                   col_line_split="white", control = list(gap_ylab=3.5, epsilon = 0.01,
+                                                                          round_off = 1, symm = TRUE,
+                                                                          lowrange = break_lowrange,
+                                                                          uprange = break_uprange))
+  mutlogo.control <- modifyList(mutlogo.control.default, mutlogo.control)
+  breaklogo.control <- modifyList(breaklogo.control.default, breaklogo.control)
+
+
   cols = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category ==
                                          'qual',]
   col_vector = unlist(mapply(RColorBrewer::brewer.pal, cols$maxcolors, rownames(cols)))
@@ -240,49 +308,141 @@ damagelogo_six.skeleton <- function(pwm,
                   "dash", "colon", "semicolon", "leftarrow", "rightarrow")
 
   set.seed(20)
+  cols2 <- sample(col_vector, length(total_chars), replace=FALSE)
+  cols2[match(c("A", "C", "G", "T"), total_chars)] <- c(RColorBrewer::brewer.pal(4,name ="Spectral"))
   color_profile_1 <- list("type" = "per_symbol",
-                          "col" = sample(col_vector, length(total_chars), replace=FALSE))
+                          "col" = cols2)
 
-  rownames(tab)[match(c("C->A", "C->G", "C->T",
-                        "T->A", "T->C", "T->G"), rownames(tab))] <- c("C>A", "C>G", "C>T",
+  if(!is.null(background)){
+    base_probs_list <- background
+    base_probs_mat <- matrix(NA, 10, 3)
+    rownames(base_probs_mat) <- c("A", "C", "G", "T", "C->A", "C->G", "C->T", "T->A", "T->C", "T->G")
+    for(l in 1:(2*flanking_bases+1)){
+      base_probs_mat[match(names(base_probs_list[[l]]), rownames(base_probs_mat)),l] <- as.numeric(base_probs_list[[l]])
+    }
+    base_probs_mat <- base_probs_mat[match(rownames(pwm), rownames(base_probs_mat)),]
+  }
+
+  pwm1 <- pwm
+  rownames(pwm1)[match(c("C->A", "C->G", "C->T",
+                        "T->A", "T->C", "T->G"), rownames(pwm1))] <- c("C>A", "C>G", "C>T",
                                                                       "T>A", "T>C", "T>G")
+  colnames(pwm1) <- c("left \n flank", "mismatch", "right \n flank")
+
+
+  if(!is.null(background)){
+    rownames(base_probs_mat)[match(c("C->A", "C->G", "C->T",
+                                     "T->A", "T->C", "T->G"), rownames(base_probs_mat))] <- c("C>A", "C>G", "C>T",
+                                                                                              "T>A", "T>C", "T>G")
+    colnames(base_probs_mat) <- colnames(pwm1)
+  }
+
 
   color_profile_2 = list("type" = "per_row",
                        "col" = RColorBrewer::brewer.pal(4,name ="Spectral"))
 
-  pos_data <- data.frame(position = as.numeric(names(probs)),
-                         val = as.numeric(probs))
 
 
   Logolas::get_viewport_logo(1, 3)
 
   seekViewport(paste0("plotlogo", 1))
-  vp1 <- viewport(x=logoport.x, y=logoport.y, width=logoport.width, height=logoport.height)
+  vp1 <- viewport(x=logoport_x, y=logoport_y, width=logoport_width, height=logoport_height)
   pushViewport(vp1)
-  do.call(nlogomaker, append(list(table = pwm,
-                             color_profile = color_profile_1,
-                             bg = base_probs_list,
-                             newpage = FALSE),
-                             mutlogo.control))
+  if(!is.null(background)){
+    do.call(nlogomaker, append(list(table = pwm1,
+                                    color_profile = color_profile_1,
+                                    bg = base_probs_mat),
+                               mutlogo.control))
+  }else{
+    do.call(nlogomaker, append(list(table = pwm1,
+                                    color_profile = color_profile_1,
+                                    bg = NULL),
+                               mutlogo.control))
+  }
   upViewport(0)
 
-  seekViewport(paste0("plotlogo", 2))
-  vp2 <- viewport(x=breaklogoport_x, y=breaklogoport_y, width=breaklogoport_width, height=breaklogoport_height)
-  pushViewport(vp2)
-  do.call(nlogomaker, append(list(table = breaks_theta_vec,
-                                  color_profile = color_profile_2,
-                                  col_line_split = "white",
-                                  newpage = FALSE),
-                             breaklogo.control))
-  upViewport(0)
+  if(is.null(background)){
+
+    pos_data <- data.frame(position = as.numeric(names(probs)),
+                           val = as.numeric(probs))
+
+    seekViewport(paste0("plotlogo", 2))
+    vp2 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
+    p <- ggplot(data=pos_data, aes(x=position,y=val)) +
+      geom_point(size = 3, aes(colour = "red")) +
+      geom_line(aes(colour = "red"))+
+      ggtitle("Location of \n mismatch in read" ) +
+      labs(x="position in read",y="probability of mismatch") +
+      scale_x_continuous(limits = c(0, 20))  +
+      scale_y_continuous(limits = prob_limits,
+                         breaks = prob_breaks) +
+      theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+      theme(axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20)) +
+      theme(axis.text.x = element_text(colour="black", hjust=0.8, size = 18),
+            axis.text.y = element_text(size = 18, hjust=0.8, colour = "black")) +
+      theme(axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
+      theme(axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0))) +
+      theme(plot.title = element_text(size = 25)) +
+      theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
+      theme(plot.title = element_text(hjust = 0.5))+
+      theme(legend.position="none") +
+      theme(axis.ticks.length=unit(0.3,"cm")) +
+      geom_hline(yintercept=0, linetype="dashed")
+    print(p, vp = vp2)
+
+  }else{
+    bg_pos_vec <- base_probs_list[[(2*flanking_bases+3)]]
+    probs1 <- (probs+1e-10) - (bg_pos_vec[match(names(probs), names(bg_pos_vec))]+1e-10)
+   # probs1 <- probs1 - median(probs1)
+    num_pos <- length(as.numeric(probs1))
+    pos_data <- data.frame(position = as.numeric(names(probs)[(clip+1):num_pos]),
+                           val = as.numeric(probs1)[(clip+1):num_pos])
+    seekViewport(paste0("plotlogo", 2))
+    vp2 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
+    p <- ggplot(data=pos_data, aes(x=position,y=val)) +
+      geom_point(size = 3, aes(colour = "red")) +
+      geom_line(aes(colour = "red"))+
+      ggtitle("Location of \n mismatch in read" ) +
+      labs(x="position in read",y="enrichment in probability") +
+      scale_x_continuous(limits = c(0, 20))  +
+      scale_y_continuous(limits = prob_limits,
+                         breaks = prob_breaks) +
+      theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+      theme(axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20)) +
+      theme(axis.text.x = element_text(colour="black", hjust=0.8, size = 18),
+            axis.text.y = element_text(size = 18, hjust=0.8, colour = "black")) +
+      theme(axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
+      theme(axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0))) +
+      theme(plot.title = element_text(size = 25)) +
+      theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
+      theme(plot.title = element_text(hjust = 0.5))+
+      theme(legend.position="none") +
+      theme(axis.ticks.length=unit(0.3,"cm")) +
+      geom_hline(yintercept=0, linetype="dashed")
+    print(p, vp = vp2)
+
+  }
+
 
   seekViewport(paste0("plotlogo", 3))
+  vp3 <- viewport(x=breaklogoport_x, y=breaklogoport_y, width=breaklogoport_width, height=breaklogoport_height)
+  pushViewport(vp3)
+  if(!is.null(background)){
+    bg_breaks_theta_vec <- matrix(base_probs_list[[(2*flanking_bases+2)]], ncol=1)
+    rownames(bg_breaks_theta_vec) <- names(base_probs_list[[(2*flanking_bases+2)]])
+    colnames(bg_breaks_theta_vec) <- colnames(breaks_theta_vec)
+    do.call(nlogomaker, append(list(table = breaks_theta_vec,
+                                    color_profile = color_profile_2,
+                                    bg = bg_breaks_theta_vec),
+                               breaklogo.control))
+  }else{
+    do.call(nlogomaker, append(list(table = breaks_theta_vec,
+                                    color_profile = color_profile_2,
+                                    bg = NULL),
+                               breaklogo.control))
+  }
 
-  vp3 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
-  p <- ggplot(data=pos_data, aes(x=position,y=val)) + geom_point() +
-    ggtitle("Probability of mismatch along the read") +
-    labs(x="position from end of read",y="probability of mismatch") +
-    scale_x_continuous(limits = c(0, 20))
-  print(p, vp = vp3)
-
+  upViewport(0)
 }

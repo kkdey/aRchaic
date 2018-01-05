@@ -47,18 +47,15 @@ aRchaic_view = function(file,
   }
 
 
-  logo.control.default <- list(sig_names = NULL, ic.scale=TRUE,
-                               max_pos = 20, flanking_bases=1,
-                               yscale_change = TRUE, xaxis=TRUE,
-                               yaxis=TRUE, xlab = " ", xaxis_fontsize=30,
-                               xlab_fontsize=10, title_aligner = 15,
-                               y_fontsize=27, title_fontsize = 35,
-                               mut_width=2, start=0.0001,
-                               renyi_alpha = 5, inflation_factor = c(2,1,2), pop_names= title,
-                               logoport_x = 0.25, logoport_y= 0.50, logoport_width= 0.25, logoport_height= 0.50,
-                               lineport_x = 0.9, lineport_y=0.40, lineport_width=0.32, lineport_height=0.28,
-                               breaklogoport_x = 0.94, breaklogoport_y = 0.40, breaklogoport_width=0.30, breaklogoport_height=0.45,
-                               barport_x = 0.60, barport_y=0.60, barport_width=0.25, barport_height=0.35,
+  logo.control.default <- list(sig_names = NULL,  max_pos = 20,
+                               flanking_bases=1,mutlogo.control = list(),
+                               breaklogo.control = list(), base_probs_list = NULL,
+                               clip = 0, mut_ranges  = c(0, 0), break_ranges = c(0, 0),
+                               logoport_x = 0.7, logoport_y= 0.5, logoport_width= 1.2,
+                               logoport_height= 1.2, breaklogoport_x = 0.6,
+                               breaklogoport_y = 0.45, breaklogoport_width=0.4,
+                               breaklogoport_height=1, lineport_x = 0.8,
+                               lineport_y=0.5, lineport_width=1,lineport_height=1.4,
                                output_width = 1200, output_height = 700)
 
   logo.control <- modifyList(logo.control.default, logo.control)
@@ -92,7 +89,7 @@ aRchaic_view = function(file,
   }
 
 
-  do.call(damageLogo_five, append(list(theta_pool = temp,
+  do.call(damageLogo_six, append(list(theta_pool = temp,
                                        output_dir = output_dir),
                                   logo.control))
   }
