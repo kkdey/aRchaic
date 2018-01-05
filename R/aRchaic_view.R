@@ -28,7 +28,8 @@ aRchaic_view = function(file,
                         flanking_bases =1,
                         logo.control = list(),
                         title = NULL,
-                        output_dir = NULL){
+                        output_dir = NULL,
+                        filename = "logo"){
 
   header <- head(strsplit(rev((as.vector(strsplit(file, "/" )[[1]])))[1], ".csv")[[1]],1)
   if(is.null(title)){
@@ -62,7 +63,7 @@ aRchaic_view = function(file,
 
 
   if(file.exists(paste0(dir, tail(strsplit(dir, "/")[[1]],1), ".rda"))){
-    message("MutationFeatureFormat file present: skipping the signature aggregation step")
+    message("Aggregated MFF (.rda) file present: skipping the signature aggregation step")
     mff_dat <- get(load(paste0(dir, tail(strsplit(dir, "/")[[1]],1), ".rda")))
     index <- grep(paste0(header), rownames(mff_dat))
     clubbed_counts <- mff_dat[index, ]
@@ -72,7 +73,7 @@ aRchaic_view = function(file,
     rownames(temp) <- names(clubbed_counts_norm)
 
   }else{
-    message("MutationFeatureFormat file not present: performing the signature aggregation step ")
+    message("Aggregated MFF (.rda) file not present: performing the signature aggregation step ")
     pattern = header
     out <- aggregate_signature_counts(dir = dir,
                                       pattern = paste0(pattern, ".csv"),
@@ -90,6 +91,7 @@ aRchaic_view = function(file,
 
 
   do.call(damageLogo_six, append(list(theta_pool = temp,
-                                       output_dir = output_dir),
+                                       output_dir = output_dir,
+                                       filename = filename),
                                   logo.control))
   }

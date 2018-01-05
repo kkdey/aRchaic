@@ -12,7 +12,7 @@ damageLogo_six(theta_pool, sig_names = NULL, max_pos = 20,
   breaklogoport_x = 0.5, breaklogoport_y = 0.4, breaklogoport_width = 0.7,
   breaklogoport_height = 1, lineport_x = 0.4, lineport_y = 0.5,
   lineport_width = 1, lineport_height = 1, output_dir = NULL,
-  output_width = 1200, output_height = 700)
+  filename = NULL, output_width = 1200, output_height = 700)
 }
 \arguments{
 \item{theta_pool}{The theta matrix obtained from running the grade of membership model that stores for each cluster, the

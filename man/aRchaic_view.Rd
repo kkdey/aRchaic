@@ -5,7 +5,8 @@
 \title{Logo plot representation of an MFF file.}
 \usage{
 aRchaic_view(file, breaks = c(-1, seq(1, 20, 1)), flanking_bases = 1,
-  logo.control = list(), title = NULL, output_dir = NULL)
+  logo.control = list(), title = NULL, output_dir = NULL,
+  filename = "logo")
 }
 \arguments{
 \item{file}{a MFF file.}

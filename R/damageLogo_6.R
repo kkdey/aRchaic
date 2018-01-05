@@ -59,6 +59,7 @@ damageLogo_six <- function(theta_pool,
                             lineport_width=1,
                             lineport_height=1,
                             output_dir = NULL,
+                            filename = NULL,
                             output_width = 1200,
                             output_height = 700){
   library(grid)
@@ -171,7 +172,10 @@ damageLogo_six <- function(theta_pool,
   grob_list <- list()
   if(flag == 1){
     l = 1
-    png(paste0(output_dir, "logo", ".png"), width=output_width, height = output_height)
+    if(is.null(filename)){
+      filename <- "logo"
+    }
+    png(paste0(output_dir, filename, ".png"), width=output_width, height = output_height)
     damageLogo_six.skeleton(pwm = prop_patterns_list[[l]],
                             probs = prob_mutation[l,],
                             breaks_theta_vec = breaks_theta[,l, drop=FALSE],
