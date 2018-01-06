@@ -5,7 +5,7 @@
 \title{Read length distribution plots for an MFF file}
 \usage{
 read_length_distribution(file, end_break = 5, cols = c("red", "green",
-  "blue"), cex_legend = 0.5, title = NULL, cex.main = 1, ylimit = NULL)
+  "blue"), cex_legend = 0.4, title = NULL, cex.main = 1, ylimit = NULL)
 }
 \arguments{
 \item{file}{an MFF file}

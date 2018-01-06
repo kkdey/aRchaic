@@ -24,7 +24,7 @@
 read_length_distribution <- function(file,
                                      end_break = 5,
                                      cols = c("red", "green", "blue"),
-                                     cex_legend = 0.5,
+                                     cex_legend = 0.4,
                                      title = NULL,
                                      cex.main = 1,
                                      ylimit = NULL){
@@ -42,12 +42,15 @@ read_length_distribution <- function(file,
     indices2 <- which(tab1$V2 < end_break | tab1$V3 < end_break)
     indices_matched <- intersect(indices, indices2)
     read_length_3 <- (tab1[indices_matched, ]$V2 + tab1[indices_matched, ]$V3)
-    if(is.null(ylim)){ylimit  <-  max(table(read_length)/sum(table(read_length)))}
+    if(is.null(ylimit)){ylimit  <-  max(table(read_length)/sum(table(read_length)))}
     plot(table(read_length)/sum(table(read_length)), type="o", col=cols[1],
-         main=paste0(title), cex.main = cex.main, xlab="read pos", ylab="prop of occur",
+         main=paste0(title), cex.main = cex.main,
+         xlab="length of the read",
+         ylab="probability",
          ylim =c(0, ylimit))
     points(table(read_length_CtoT)/sum(table(read_length_CtoT)), type="o", col=cols[2])
     points(table(read_length_3)/ sum(table(read_length_3)), type="o", col=cols[3])
     legend("topright", fill=c("red", "green", "blue"),
-           legend = c("all", "CtoT", paste0("CtoT < ", end_break)), cex=cex_legend)
+           legend = c("all reads", "reads with \n CtoT mismatches",
+                      paste0("reads with CtoT mismatches < ", end_break, " positions from end")), cex=cex_legend)
 }
