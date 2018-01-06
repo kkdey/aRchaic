@@ -12,6 +12,7 @@
 #'                     Check the input parameters of \code{damageLogo5()} for the control parameters.
 #' @param title The name of the sample. If not provided, defaults to the filename.
 #' @param output_dir The directory where the logo plot is saved.
+#' @param filename The name of the saved logo image file. Defaults to "logo".
 #' @return The function creates a logo plot representation of the mutational features for a single
 #'         MFF file.
 #' @keywords aRchaic_view
@@ -63,7 +64,7 @@ aRchaic_view = function(file,
 
 
   if(file.exists(paste0(dir, tail(strsplit(dir, "/")[[1]],1), ".rda"))){
-    message("Aggregated MFF (.rda) file present: skipping the signature aggregation step")
+    message("Aggregated MFF (.rda) file present: skipping the feature aggregation step")
     mff_dat <- get(load(paste0(dir, tail(strsplit(dir, "/")[[1]],1), ".rda")))
     index <- grep(paste0(header), rownames(mff_dat))
     clubbed_counts <- mff_dat[index, ]
@@ -73,7 +74,7 @@ aRchaic_view = function(file,
     rownames(temp) <- names(clubbed_counts_norm)
 
   }else{
-    message("Aggregated MFF (.rda) file not present: performing the signature aggregation step ")
+    message("Aggregated MFF (.rda) file not present: performing the feature aggregation step ")
     pattern = header
     out <- aggregate_signature_counts(dir = dir,
                                       pattern = paste0(pattern, ".csv"),

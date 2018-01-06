@@ -22,6 +22,8 @@ Check the input parameters of \code{damageLogo5()} for the control parameters.}
 \item{title}{The name of the sample. If not provided, defaults to the filename.}
 
 \item{output_dir}{The directory where the logo plot is saved.}
+
+\item{filename}{The name of the saved logo image file. Defaults to "logo".}
 }
 \value{
 The function creates a logo plot representation of the mutational features for a single

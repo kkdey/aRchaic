@@ -42,11 +42,11 @@ model respectively.}
 \item{run_index}{The index vector of files to be included for each folder in the vector \code{folders}.
 Defaults to using all files in the folder.}
 
-\item{breaks}{The breaks used for binning the distance from ends of the reads of the mutations, when
+\item{breaks}{The breaks used for binning the distance from ends of the reads of the mismatches, when
 processing the MFF files. Defaults to assigning each base as one bin from
 end of the read to 20 bases.}
 
-\item{flanking_bases}{The numbe rof flanking bases to the mutation considered. Defaults to 1.}
+\item{flanking_bases}{The numbe rof flanking bases to the mismatch considered. Defaults to 1.}
 
 \item{gom_method}{The GoM method type. Defaults to \code{independent} model proposed by
 Y. Shiraichi and M. Stephens. The other option is to use the \code{full}
@@ -84,7 +84,7 @@ representing the cluster k -  all in the \code{output_dir} provided. For \code{g
 respectively, if they are already present.
 }
 \description{
-Performs GoM model clustering of aDNA samples using DNA damage patterns- mutation,
+Performs GoM model clustering of aDNA samples using DNA damage patterns- mismatch,
 flanking base, distance from read end, strand and strand break information. Upon performing the
 model fit, it performs model visualizations and saves the figures in a user defined directory.
 }

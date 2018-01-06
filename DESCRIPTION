@@ -18,6 +18,7 @@ Encoding: UTF-8
 Imports: ggplot2, 
          slam, 
          e1071, 
+         Rtsne,
          gridExtra, 
          gridBase, 
          limma, 

@@ -56,6 +56,7 @@
 #' @import ggplot2
 #' @import gridBase
 #' @import grid
+#' @import Rtsne
 #' @export
 
 
@@ -165,9 +166,9 @@ aRchaic_tsne =  function(folders,
     message("Fitting t-SNE and saving it to file")
     if(normalize){
       voom_pooled_data <- t(limma::voom(t(pooled_data))$E);
-      tsne_out <- tsne::tsne(voom_pooled_data, k=dims)
+      tsne_out <- Rtsne::Rtsne(voom_pooled_data, dims=dims)
     }else{
-      tsne_out <- tsne::tsne(pooled_data, k=dims)
+      tsne_out <- Rtsne::Rtsne(pooled_data, dims=dims)
     }
     save(tsne_out, file = paste0(output_dir, "tsne.rda"))
   }else if(run_from == "plot"){
@@ -175,9 +176,9 @@ aRchaic_tsne =  function(folders,
       message("Fitting t-SNE and saving it to file")
       if(normalize){
         voom_pooled_data <- t(limma::voom(t(pooled_data))$E);
-        tsne_out <- tsne::tsne(voom_pooled_data, k=dims)
+        tsne_out <- Rtsne::Rtsne(voom_pooled_data, dims=dims)
       }else{
-        tsne_out <- tsne::tsne(pooled_data, k = dims)
+        tsne_out <- Rtsne::Rtsne(pooled_data, dims = dims)
       }
       save(tsne_out, file = paste0(output_dir, "tsne.rda"))
     }else{

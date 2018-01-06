@@ -1,6 +1,6 @@
 #' @title Grade of Membership (GoM) model clustering of aDNA samples using DNA damage patterns
 #'
-#' @description Performs GoM model clustering of aDNA samples using DNA damage patterns- mutation,
+#' @description Performs GoM model clustering of aDNA samples using DNA damage patterns- mismatch,
 #' flanking base, distance from read end, strand and strand break information. Upon performing the
 #' model fit, it performs model visualizations and saves the figures in a user defined directory.
 #'
@@ -24,10 +24,10 @@
 #'                 model respectively.
 #' @param run_index The index vector of files to be included for each folder in the vector \code{folders}.
 #'                  Defaults to using all files in the folder.
-#' @param breaks The breaks used for binning the distance from ends of the reads of the mutations, when
+#' @param breaks The breaks used for binning the distance from ends of the reads of the mismatches, when
 #'               processing the MFF files. Defaults to assigning each base as one bin from
 #'               end of the read to 20 bases.
-#' @param flanking_bases The numbe rof flanking bases to the mutation considered. Defaults to 1.
+#' @param flanking_bases The numbe rof flanking bases to the mismatch considered. Defaults to 1.
 #' @param gom_method The GoM method type. Defaults to \code{independent} model proposed by
 #'                   Y. Shiraichi and M. Stephens. The other option is to use the \code{full}
 #'                   model which is uses the \code{maptpx} package by Matt Taddy.
@@ -164,12 +164,12 @@ aRchaic_cluster = function(folders,
     }
   }
 
-  #########################  Run aggregation functions on MutationFeatureFormat #############################################
+  #########################  Run aggregation functions on MismatchFeatureFormat #############################################
 
 
   for(i in 1:length(folders)){
     if(!file.exists(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda"))){
-      message (paste0("Processing the MutationFeatureFormat files in the directory", folders[i]))
+      message (paste0("Processing the MismatchFeatureFormat files in the directory", folders[i]))
       out <- aggregate_signature_counts(dir = paste0(folders[i]),
                                         pattern = NULL,
                                         breaks = breaks,
