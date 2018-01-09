@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1515455782387.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1242752956",
+    "id" : "4E52F771",
+    "lastKnownWriteTime" : 1515456207,
+    "last_content_update" : 1515456207298,
+    "path" : "~/Documents/aRchaic/R/aRchaic_cluster.R",
+    "project_path" : "R/aRchaic_cluster.R",
+    "properties" : {
+        "cursorPosition" : "65,15",
+        "scrollLine" : "49"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

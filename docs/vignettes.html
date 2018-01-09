@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <meta charset='utf-8'>
+
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <meta name="viewport" content="width=device-width*0.8, initial-scale=2, maximum-scale=2">
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Copse">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+ </head>
+
+<body style="background-color:#ffffff;">
+
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Copse">
+
+<p></p>
+<p></p>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../articles/logo_design.svg" align="top" style="width:800px;height:400px;"></p>
+</div>
+
+&nbsp; &nbsp; <div style="width:950px; margin:0 auto;">
+<a href="#Introduction"> <img src = "../articles/skeleton.svg" width = "120px" height="80px" alt="test" title = "click here for introduction"> <span style="color:black;">
+<font size="3"> <b> Introduction </b></font>
+</span></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<a href="#Installation"> <img src = "../articles/Bone4.svg"
+width = "120px" height="80px" alt="" title = "click here for demo"> <span style="color:black;">
+<font size="3"  title = "click here for demo"> <b> Installation </b></font>
+</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<a href="#Tutorial"> <img src = "../articles/skull.svg"
+width = "120px" height="80px" alt=""  title = "click here for tutorial"> <span style="color:black;">
+<font size="3" title = "click here for tutorial"> <b> Tutorial </b></font>
+</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<a href="#Extras"> <img src = "../articles/bone.svg"
+width = "120px" height="80px" alt="" title = "click here for extras"> <span style="color:black;">
+<font size="3" title = "click here for extras"> <b> Extras </b></font>
+</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</div>
+
+
+<!-- <div style="width:800px; margin:0 auto;">
+<p><img src="../articles/logo_design.svg" align="top" style="width:800px;height:400px;"></p>
+</div> -->
+
+
+<style>
+  .bottom-three {
+     margin-bottom: 2cm;
+  }
+</style>
+
+<style>
+  .margin {
+     padding-bottom: 0.1cm;
+     padding-left: 2cm;
+     padding-right: 4cm;
+     padding-top: 1 cm;
+     color: black;
+
+  }
+</style>
+
+<style>
+  .list {
+     padding-bottom: 0.1cm;
+     padding-left: 3cm;
+     padding-right: 4cm;
+     padding-top: 1 cm;
+     color: black;
+  }
+</style> 
+
+
+<p class="bottom-three">
+</p>
+<p class="bottom-three">
+</p>
+<p class="bottom-three">
+</p>
+
+<p class="bottom-three">
+</p>
+
+
+<p class ="margin" id = "Introduction"><span style="color:brown;"> <font size="7"><color = "brown;"><strong> Introduction </strong></color></font></span></p>
+
+
+<p class = "margin"><font size="5"> <strong>aRchaic</strong> is a R/python software interface developed by <a href="https://kkdey.github.io/">Kushal K Dey</a> and <a href="https://halasadi.wordpress.com/">Hussein Al Asadi</a> at the University of Chicago. It is primarily a tool for clustering and visualization of DNA damage patterns in ancient DNA samples, possibly generated from multiple studies. </font> </p>
+
+<p class = "margin"><font size="5">  <b> Why aRchaic?  </b> </font> </p>
+
+<p class = "margin"><font size="5"> One of the challenges in working with ancient DNA samples pertains from the fact that such samples often have low endogenous DNA and may be contaminated by modern DNA at extraction or processing stages. DNA damage has been shown to be an important marker for authenticating aDNA samples. One popular tool that addresses this problem is <i> <b> mapDamage </b> </i>. However, mapDamage treats each aDNA sample separately and this acts as a roadblock when analysing many aDNA samples jointly. With some of the current aDNA research articles sequencing hundreds of aDNA samples, this is a matter of considerable interest. aRchaic addresses this problem through a model based clustering and visualization of DNA damage patterns from aDNA samples, possibly taken from multiple studies, as well as modern DNA samples. Also, different aDNA studies involve different sets of technical artifacts - namely library preparation protocols (UDG treatment versus non UDG treatment), different PCR enzymes etc. aRchaic has been shown to identify these technical differences as well. </font> </p>
+
+
+
+<p class ="margin" id = "Installation"><span style="color:brown;"> <font size="7"><color = "brown;"><strong> Installation </strong></color></font></span></p>
+
+
+<p class = "margin"><font size="5"> To run aRchaic on your own examples or reproduce the results from this vignette, first install <a href = "https://git-scm.com/"> <font size="5" style="color: #1b3ee8"> Git </font> </a>. Then, clone the following Github repository at a desired location in your local machine. </font><p>
+
+<pre><code>
+  git clone https://github.com/kkdey/aRchaic-pages 
+</code></pre>
+
+<p class = "margin"><font size="5"> Go inside the created folder </font><p>
+
+<pre><code>
+  cd aRchaic-pages
+</code></pre>
+
+<p class = "margin"><font size="5">  Then install  <a href = "https://www.python.org/"> <font size="5" style="color: #1b3ee8"> Python </font> </a>  via the command line and export the path to the directory <i> bin  </i> to the <i> $PATH </i> variable. </font></p>
+
+<p class = "margin"><font size="5"> Next, install the <a href="http://pysam.readthedocs.io/en/latest/installation.html"> <font size="5" style="color: #1b3ee8"> pysam </font> </a> package following the instructions in the link. It requires that <a href="http://cython.org/"> <font size="5" style="color: #1b3ee8"> Cython  </font></a> is installed beforehand. The user is also required to install the python package <a href="https://pypi.python.org/pypi/pyfaidx"> pyfaidx </a>. The python environment can be set up by the following command in the command line. </font></p>
+
+
+<pre><code>
+ python setup.py install
+</code></pre>
+
+
+<p class = "margin"><font size="5"> Once python environment has been set up, the user is required to install the latest version of  <a ref = "https://www.r-project.org/"> <font size="5" style="color: #1b3ee8"> R </font> </a>. We recommend the user to use <a href="https://www.rstudio.com/"> <font size="5" style="color: #1b3ee8"> Rstudio </font> </a>, a very well manintained GUI for R. Start a session od R/RStudio and then install the dependency packages for aRchaic. </font></p>
+
+<pre><code>
+install.packages("devtools")
+devtools::install_github("kkdey/CountClust")
+devtools::install_github("kkdey/Logolas")
+devtools::install_github("TaddyLab/maptpx")
+</code></pre>
+
+<p class = "margin"><font size="5"> Once these packages are installed, the user can install <b> aRchaic </b> using <i> devtools </i> </font></p>
+
+<pre><code>
+  devtools::install_github("kkdey/aRchaic")
+</code></pre>
+
+<p class = "margin"><font size="5"> and load the package in R </font></p>
+
+<pre><code>
+library(aRchaic)
+</code></pre>
+
+<p class = "margin"><font size="5"> To check or understand the underlying codes or to contribute to the aRchaic R pakcage, you can clone the repository with all the codes and documentation here. </font></p>
+
+<pre><code>
+  git clone https://github.com/kkdey/aRchaic
+</pre></code>
+
+
+
+
+<p class ="margin" id = "Tutorial"><span style="color:brown;"> <font size="7"><color = "brown;"><strong> Tutorial </strong></color></font></span></p>
+
+<p class = "margin"><font size="5">  The first step in the <b> aRchaic </b> workflow involves generating a <b> Mismatch Feature Format (<i> MFF </i> ) </b> file, for which the user needs as input </font></p>
+
+<ul class="list"><style="list-style-type:circle">
+<li><p> <font size="4"> a valid SAM/BAM file (<i> example.bam </i> ) with a correct header </font></p></li>
+<li><p> <font size="4"> a FASTA file (<i> example.fa </i>) corresponding to the 2009 assembly of the human genome (hg19, GRCh37 Genome Reference Consortium Human Reference 37). This file can be obtained from <a href = "http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.gz"> 1000 Genomes website </a> </font></p></li>
+</style></ul>
+
+<p class = "margin"><font size="5"> The user is required to first index the BAM file using <a href = "http://samtools.sourceforge.net/"> samtools </a>
+</font></p>. 
+
+<pre><code>
+  samtools index example.bam
+</pre></code>
+
+<p class = "margin"><font size="5"> Then the MFF file can be generated in a CSV format (<i> example.csv </i>) by running the following command from the command line. </font></p>
+
+<pre><code>
+python generate_summary_bams.py -b example.bam -f example.fa -o example.csv 
+</code></pre>
+
+<p class = "margin"><font size="5"> Some versions of the FASTA file contain the <i> chr </i>  prefix to indicate the chromosome in the contig names, while others do not. In case the prefix is absent, use the <i> --add-chr </i> option as shown below. </font></p>
+
+<pre><code>
+python generate_summary_bams.py -b example.bam -f example.fa -o --add-chr
+</code></pre>
+
+<p class = "margin"><font size="5"> The full documentation of the <i> generate_summary_bams.py </i> can be obtained by running </font></p>
+
+<pre><code>
+python --help generate_summary_bams.py
+</code></pre>
+
+<pre><code>
+usage: python [option] ... [-c cmd | -m mod | file | -] [arg] ...
+Options and arguments (and corresponding environment variables):
+-b     : issue warnings about str(bytes_instance), str(bytearray_instance)
+         and comparing bytes/bytearray with str. (-bb: issue errors)
+-B     : don't write .py[co] files on import; also PYTHONDONTWRITEBYTECODE=x
+-c cmd : program passed in as string (terminates option list)
+-d     : debug output from parser; also PYTHONDEBUG=x
+-E     : ignore PYTHON* environment variables (such as PYTHONPATH)
+-h     : print this help message and exit (also --help)
+-i     : inspect interactively after running script; forces a prompt even
+         if stdin does not appear to be a terminal; also PYTHONINSPECT=x
+-I     : isolate Python from the user's environment (implies -E and -s)
+-m mod : run library module as a script (terminates option list)
+-O     : optimize generated bytecode slightly; also PYTHONOPTIMIZE=x
+-OO    : remove doc-strings in addition to the -O optimizations
+-q     : don't print version and copyright messages on interactive startup
+-s     : don't add user site directory to sys.path; also PYTHONNOUSERSITE
+-S     : don't imply 'import site' on initialization
+-u     : unbuffered binary stdout and stderr, stdin always buffered;
+         also PYTHONUNBUFFERED=x
+         see man page for details on internal buffering relating to '-u'
+-v     : verbose (trace import statements); also PYTHONVERBOSE=x
+         can be supplied multiple times to increase verbosity
+-V     : print the Python version number and exit (also --version)
+         when given twice, print more information about the build
+-W arg : warning control; arg is action:message:category:module:lineno
+         also PYTHONWARNINGS=arg
+-x     : skip first line of source, allowing use of non-Unix forms of #!cmd
+-X opt : set implementation-specific option
+file   : program read from script file
+-      : program read from stdin (default; interactive mode if a tty)
+arg ...: arguments passed to program in sys.argv[1:]
+
+Other environment variables:
+PYTHONSTARTUP: file executed on interactive startup (no default)
+PYTHONPATH   : ':'-separated list of directories prefixed to the
+               default module search path.  The result is sys.path.
+PYTHONHOME   : alternate <prefix> directory (or <prefix>:<exec_prefix>).
+               The default module search path uses <prefix>/pythonX.X.
+PYTHONCASEOK : ignore case in 'import' statements (Windows).
+PYTHONIOENCODING: Encoding[:errors] used for stdin/stdout/stderr.
+PYTHONFAULTHANDLER: dump the Python traceback on fatal errors.
+PYTHONHASHSEED: if this variable is set to 'random', a random value is used
+   to seed the hashes of str, bytes and datetime objects.  It can also be
+   set to an integer in the range [0,4294967295] to get hash values with a
+   predictable seed.
+PYTHONMALLOC: set the Python memory allocators and/or install debug hooks
+   on Python memory allocators. Use PYTHONMALLOC=debug to install debug
+   hooks.
+
+</code></pre>
+
+<p class = "margin"><font size="5"> The basic structure of the MFF file is as follows  </font></p>
+
+<pre><code>
+....................
+....................
+CC->TA,82,10,T,C,-,1
+CC->TT,87,5,T,C,-,1
+CT->AA,88,4,T,C,-,1
+AA->CC,90,2,T,C,-,1
+CC->TC,28,53,C,C,-,2
+CC->TA,40,47,A,C,-,3
+CC->TT,69,18,A,C,-,3
+AC->AC,79,8,A,C,-,3
+AC->AC,68,25,T,C,-,4
+CT->AA,78,15,T,C,-,4
+....................
+....................
+</code></pre>
+
+<p class = "margin"><font size="5"> It is a comma separated file consisting of 7 columns. Each row corresponds to a type of mismatch and the first 6 columns define the type of mismatch. The 7th column specifies the number of times that type of mismatch has been observed in the BAM file, with respect to the given reference genome. More specific details on the columns are  </font></p>
+
+
+<ul class="list"><style="list-style-type:circle">
+<li><p> <font size="4"> <i> 1st column </i> : (flanking base 5' to mismatch)(mismatch)(flanking base 3' to mismatch). 
+<b> Example </b>:  (C)(C->T)(A) for the first reported line in the example MFF file shown above. </font></p></li>
+<li><p> <font size="4"> <i> 2nd, 3rd columns </i> : distance of the mismatch from the two ends of the strand. </font></p></li>
+<li><p> <font size="4"> <i> 4th, 5th columns </i> : base immediately next to the read ends in the reference genome. One of the ends corresponds to the strand break for an aDNA sample, which can be determined from strand orientation. </font></p></li>
+<li><p> <font size="4"> <i> 6th column </i> : The orientation of the strand (+ : 5' to 3' , - : 3' to 5' strand). </font></p></li>
+<li><p> <font size="4"> <i> 7th column </i> : The number of mismatches observed with the features listed in the first 6 columns. </font></p></li>
+</style></ul>
+
+
+<p class ="margin" id = "Demo"><span style="color:brown;"> <font size="5"><color = "brown;"><strong> Logo visualization of MFF file </strong></color></font></span></p>
+
+<p class = "margin"><font size="5"> We now demonstrate the first function of the <b> aRchaic </b> package. </font></p>
+
+<p class = "margin"><font size="5"> Note that there are two data folders - <b> Skoglund </b> and <b> moderns-50 </b> in the <b> aRchaic-pages/data/ </b> directory. <b> Skoglund </b> contains MFF files for a subset of aDNA samples. We perform a logo visualization of one of the MFF files from this directory. </font></p>
+
+<pre><code>
+aRchaic_view(file = "../data/Skoglund/Gok4.hs37d5.fa.merged.q30.csv",
+             output_dir = "../output/",
+             filename = "logo_Gok4_Skoglund")
+</code></pre>
+
+<p class = "margin"><font size="5"> This function will output a <i> .png </i> file  titled <i> logo_Gok4_Skoglund.png </i> in the <i> output_dir </i> specified, that looks like the following </font></p>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../output/logo_Gok4_Skoglund.png" align="top" style="width:1000px;height:500px;"></p>
+</div>
+
+
+<p class = "margin"><font size="5"> Lets investigate the different aspects of this logo representation. There are three components to the plot - an  <a href = "https://www.biorxiv.org/content/early/2017/11/29/226597"> Enrichment Depletion Logo (<i> EDLogo </i>) </a> plot showing the enrichment or depletion of the mismatch types and the flanking bases immediate 5' and 3' of the mismatch, an <i> EDLogo </i>  plot of the strand break nucleotides composition  and a trend plot of the relative frequency of the position of mismatches from the ends of the reads. Note that the mismatches reported are only C-to-* or T-to-* mismatches, which accounts for the strand bias. Under the default, the enrichments and depletions are with respect to a background that assigns equal probability to all features. However, one can use a different background. One particular background of interest is that of modern DNA damage. </font></p>
+
+
+<pre><code>
+base_probs_list <- get(load("../output/base_probs_temp_2.rda"))
+aRchaic_view(file = "../data/Skoglund/Gok4.hs37d5.fa.merged.q30.csv",
+             output_dir = "../output/",
+              logo.control = list(base_probs_list = base_probs_list),
+             filename = "logo_Gok4_Skoglund")
+</code></pre>
+
+
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../output/logo_Gok4_Skoglund_2.png" align="top" style="width:1000px;height:500px;"></p>
+</div>
+
+
+
+
+<p class ="margin" id = "Demo"><span style="color:brown;"> <font size="5"><color = "brown;"><strong> Summarising multiple MFF files </strong></color></font></span></p>
+
+<p class = "margin"><font size="5"> For joint analysis, the user needs to aggregate the MFF files either from one study or from across multiple studies for cross study comparison. aRchaic provides a function <codeline> aRchaic_pool </codeline> that allows the user to aggregate the MFF .CSV files from a folder into a .RData object. </font></p>
+
+<pre><code>
+out <- aRchaic_pool(folders = "../data/Skoglund/")
+</code></pre>
+
+<p class = "margin"><font size="5">  this function outputs  .RData files in the folder (s) specified, named after the folder. for example - in this example, it will create a file named <i> Skoglund.rda </i> in the directory <b> Skoglund </b> as specified in the <i> folders </i> argument above. The output is also stored in the variable <i> out </i> in this case. </font></p>
+
+<p class = "margin"><font size="5"> This object is a data matrix with the number of rows equal to the number of MFF files in the folder and the number of columns equal to the number of distinct <i> mismatch signatures </i>drawn from from the first 6 columns of the MFF file - an example column name would be may be AC->AA_-_A_1 - indicating a C->A mismatch flanked by A's on both sides and occurring in the first position from 5' end of a read obtained from a - strand with an A base at the position immediately preceding the strand break. The data in the matrix corresponds to the 7th column of the MFF file, recording the count of how many times a signature such as the one above would occur in each sample MFF file. </font></p>
+
+<p class = "margin"><font size="5">  The first 5 rows and 5 columns of <i> out </i> are the following </font></p>
+
+<pre><code>
+                           AC->AA_-_A_1 AC->AA_-_A_10 AC->AA_-_A_11
+Ajv52.hs37d5.fa.merged.q30          789            45            50
+Ajv59.hs37d5.fa.merged.q30           25             0             1
+Gok4.hs37d5.fa.merged.q30           318            47            27
+Gok5.hs37d5.fa.merged.q30            61             1             1
+Gok7.hs37d5.fa.merged.q30            20             3             0
+                           AC->AA_-_A_12 AC->AA_-_A_13
+Ajv52.hs37d5.fa.merged.q30            44            43
+Ajv59.hs37d5.fa.merged.q30             1             1
+Gok4.hs37d5.fa.merged.q30             28            38
+Gok5.hs37d5.fa.merged.q30              0             5
+Gok7.hs37d5.fa.merged.q30              0             1
+</code></pre>
+
+<p class = "margin"><font size="5">  Argument <i> folders </i> in the input to <codeline> aRchaic_pool () </codeline> is a vector of folder names in which case, it outputs a .RData file for each folder. </font></p>
+
+<p class = "margin"><font size="5">  Note that all the functions in <b> aRchaic </b> - for example, the <codeline> aRchaic_view() </codeline> above or the functions we discuss first checks if the aggregated .RData file is present in the folder or not. If present, it will try to use this .RData file to draw the necessary inputs. </font></p>
+
+
+
+<p class ="margin" id = "Demo"><span style="color:brown;"> <font size="5"><color = "brown;"><strong> Clustering and Visualization  </strong></color></font></span></p>
+
+<p class = "margin"><font size="5"> Now we discuss the primary function of the <b> aRchaic  </b> package, namely 
+<codeline> aRchaic_cluster </codeline>, which performs clustering and visualization of the MFF files from one or more studies. 
+Our clustering model is a type of Grade of Membership (GoM) model, much like the STRUCTURE model in population genetics, but which 
+takes into account different features of the mismatches  pertaining to DNA damage to assign grades of membership of the aDNA samples 
+to different clusters. </font></p>
+
+<p class = "margin"><font size="5"> Each cluster is represented by a distribution on the different mismatch features, which can be 
+displayed by a logo plot similar to the one in <codeline> aRchaic_view() </codeline> function discussed above. </font></p>
+
+<p class = "margin"><font size="5"> As an example, we run <codeline> aRchaic_cluster </codeline> on the MFF files from 
+the <b> ../data/Skoglund/ </b> folder. </font></p>
+
+<pre><code>
+labs <- c(rep("Skoglund",6))
+clus <- aRchaic_cluster_2(folders = c("../data/Skoglund/"),
+                K = 2, 
+                tol = 1,
+                labs = labs,
+                run_from = "plot",
+                output_dir = "../output/skoglund_2/")
+</code></pre>
+
+<p class = "margin"><font size="5"> This function fits the GoM model and creates output files in the <i> output_dir </i> specified. The output includes three components </font></p> 
+
+<ul class="list"><style="list-style-type:circle">
+<li><p> <font size="4"><codeline> model.rda </codeline> - file containing all the outputs from the GoM model fit - including the grades of memberships 
+for the samples (omega) and the cluster distribution on mismatch features (theta) </font></p></li>
+<li><p> <font size="4"><codeline>structure.png</codeline> - file showing the grades of membership of samples grouped by labels in 
+                                            a STRUCTURE plot type representation </font></p></li>
+<li><p> <font size="4"><codeline>logo_clus_&quot;k&quot;.png</codeline> -  the logo plot for each cluster <i> k </i> in similar lines to 
+<codeline> aRchaic_view() </codeline>.</font></p></li>
+</ul>
+
+<p class = "margin"><font size="5"> A combined plot of the STRUCTURE plot output and the logo plots output is presented below </font></p>.
+
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../output/aRchaic_cluster/aRchaic_cluster.001.png" align="top" style="width:600px;height:500px;"></p>
+</div>
+
+
+<p class = "margin"><font size="5"> We now present a second example, where we pool in data from two different studies - one modern 
+study (subset of 1000 Genomes) saved in the folder <b> moderns-50 </b> in the <b> data </b> folder and the aDNA example data folder 
+from above. Consciously, we have just put the aggregated MFF .RData file in <b> moderns-50 </b> folder and not the individual MFF 
+files to highlight the fact that under the default option (corresponding to <codeline> run_from = "plot" </codeline>), 
+<codeline> aRchaic_cluster </codeline> uses the .RData file only and if it does not find it, it runs <codeline> aRchaic_pool </codeline> 
+on the individual MFF files to build this .RData object. </font></p>
+
+
+<pre><code>
+labs <- c(rep("Skoglund",6), rep("moderns-50",50))
+clus <- aRchaic_cluster(folders = c("../data/Skoglund/", "../data/moderns-50/"),
+                        K = 2, 
+                        tol = 1,
+                        labs = labs,
+                        run_from = "plot",
+                        output_dir = "../output/skoglund_moderns_2/")
+</code></pre>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../output/aRchaic_cluster/aRchaic_cluster.002.png" align="top" style="width:600px;height:500px;"></p>
+</div>
+
+
+<p class = "margin"><font size="5"> The input <codeline> run_from </codeline> is an important argument that allows the user to choose 
+which steps to run while re-running the <codeline> aRchaic_cluster </codeline> function on the same data, possibly for different number 
+of clusters, or different settings for the logo plots. When <codeline> run_from = start </codeline>, the function builds the aggregated 
+MFF file (.RData) from the MFF csv files from srcatch in each inuput directory listed in `folders`. Then it pools the aggregated MFF files 
+from all the listed input directories, merges them and then runs the GoM model on the merged data. </font></p>
+
+<p class = "margin"><font size="5"> When <codeline> run_from = gom </codeline>, the function first checks if the .RData file is present 
+in each of the input directories listed in <codeline> folders </codeline>. Only when this file is not present in one of the folders would 
+the function generate it. The rest of the steps are similar to the <codeline> run_from = start </codeline> option. </font></p>
+
+<p class = "margin"><font size="5"> When <codeline> run_from = plot </codeline>, the function checks if the <codeline> model.rda </codeline> 
+file is present in the output directory. If present, it just runs the visualization functions on the saved  <codeline> model.rda </codeline> 
+file. If the file is not present, the  it switches to  <codeline> run_from = gom </codeline>, runs the model and creates the 
+<codeline> model.rda </codeline> file in the output directory. </font></p>
+
+<p class = "margin"><font size="5"> Just like in <codeline> aRchaic_view() </codeline>, one can scale the logo plots generated for clusters 
+by a specified background, for example, a modern background profile. </font></p>
+
+
+<pre><code>
+labs <- c(rep("Skoglund",6), rep("moderns-50",50))
+base_probs_list <- get(load("../output/base_probs_temp_2.rda"))
+
+clus <- aRchaic_cluster_2(folders = c("../data/Skoglund/", "../data/moderns-50/"),
+                          K = 2, 
+                          tol = 1,
+                          labs = labs,
+                          run_from = "plot",
+                          logo.control = list(base_probs_list = base_probs_list,
+                                              mut_ranges = c(1,1.5),
+                                              break_ranges = c(0.5,0.5)),
+                          output_dir = "../output/skoglund_moderns_2_background/")
+</code></pre>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../output/aRchaic_cluster/aRchaic_cluster.003.png" align="top" style="width:600px;height:500px;"></p>
+</div>
+
+<p class = "margin"><font size="5"> <codeline> mut_ranges </codeline>  and <codeline> break_ranges </codeline>  options are used to 
+maintain same scale of the Y axes for the mismatch EDLogo and the strand break EDLogo plots across different clusters. When not specified, 
+optimal Y axes scaling is performed separately for each cluster and for each EDLogo plot and hence the scales of the plots would likely 
+vary from one logo representation to another. </font></p>
+
+
+<p class ="margin" id = "Demo"><span style="color:brown;"> <font size="5"><color = "brown;"><strong> Additional Functions  </strong></color></font></span></p>
+
+<p class = "margin"><font size="5"> Apart from the <codeline> aRchaic_cluster </codeline> function, <b> aRchaic </b> also allows the user 
+to plot the principal components derived from the DNA damage patterns across multiple samples. An example is given below. </font></p>
+
+<pre><code>
+labs <- c(rep("Skoglund",6), rep("moderns-50",50))
+library(gridExtra)
+clus <- aRchaic_pca(folders = c("../data/Skoglund/", "../data/moderns-50/"),
+                    labs = labs,
+                    run_from = "plot",
+                    pcs_to_plot = c("PC1", "PC2", "PC3"),
+                    output_dir = "../output/skoglund_moderns_2_background/")
+</code></pre>
+
+<p class = "margin"><font size="5"> The function plots the scatter plot for the first 3 PCs in the <i> output_dir </i> argument. </font></p>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../output/skoglund_moderns_2_background/pca.png" align="top" style="width:600px;height:500px;"></p>
+</div>
+
+<p class = "margin"><font size="5"> <b> aRchaic </b> also provides tools to plot the frequency distribution of the position of mismatches
+ on the read for all reads as well as reads containing probable DNA damage in the form of C-to-T mismatches. An example is provided below.
+ </font></p>
+
+<pre><code>
+read_length_distribution(file = "../data/Skoglund/Ajv52.hs37d5.fa.merged.q30.csv")
+</code></pre>
+
+<div style="width:800px; margin:0 auto;">
+<p><img src="../output/read_length.png" align="top" style="width:600px;height:500px;"></p>
+</div>
+
+
+<p class ="margin" id = "Extras"><span style="color:brown;"> <font size="7"><color = "brown;"><strong> Extras </strong></color></font></span></p>
+
+
+<p class = "margin"><font size="5"> <b> aRchaic </b> is distributed under GPL (>= 2) license. </font></p>
+
+<p class = "margin"><font size="5"> We thank  Matthew Stephens and John Novembre for their mentoring. We also thank Anna Di Rienzo, 
+Anna Gosling, David Witonsky, John Lindo, Choonwong Jeong, Benjamin Peter, Arjun Biddanda, Joseph Marcus, Peter Carbonetto, John Blischak, 
+Dongyue Xie and all members of Stephens Lab, Novembre Lab and Di Rienzo Lab. </font></p>
+
+<p class = "margin"><font size="5"> For any queries related to <b> aRchaic </b>, please contact Kushal K. Dey (kkdey@uchicago.edu) or Hussein Al-Asadi (halasadi@uchicago.edu). </font></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
