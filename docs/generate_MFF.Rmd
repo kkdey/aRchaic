@@ -168,7 +168,7 @@ In the first example, we run our model on the MFF files from only one study, sto
 
 ```{r eval=FALSE}
 labs <- c(rep("Skoglund",5))
-clus <- aRchaic_cluster_2(folders = c("../data/Skoglund/"),
+clus <- aRchaic_cluster(folders = c("../data/Skoglund/"),
                 K = 2, 
                 tol = 1,
                 labs = labs,
@@ -188,7 +188,7 @@ We now present a second example, where we pool in data from two different studie
 
 ```{r eval=FALSE}
 labs <- c(rep("Skoglund",5), rep("moderns-50",50))
-clus <- aRchaic_cluster_2(folders = c("../data/Skoglund/", "../data/moderns-50/"),
+clus <- aRchaic_cluster(folders = c("../data/Skoglund/", "../data/moderns-50/"),
                 K = 2, 
                 tol = 1,
                 labs = labs,
@@ -202,7 +202,7 @@ The logo representation plots enrichment of each of the mismatch features compar
 labs <- c(rep("Skoglund",5), rep("moderns-50",50))
 base_probs_list <- get(load("../output/base_probs_temp_2.rda"))
 
-clus <- aRchaic_cluster_2(folders = c("../data/Skoglund/", "../data/moderns-50/"),
+clus <- aRchaic_cluster(folders = c("../data/Skoglund/", "../data/moderns-50/"),
                 K = 2, 
                 tol = 1,
                 labs = labs,
@@ -215,7 +215,7 @@ clus <- aRchaic_cluster_2(folders = c("../data/Skoglund/", "../data/moderns-50/"
 
 Note that `mut_ranges` and `break_ranges` options are used to maintain same scale of the Y axes for the mismatch EDLogo and the strand break EDLogo plots across different clusters. When not specified, optimal Y axes scaling is performed separately for each cluster and for each EDLogo plot and hence may vary between clusters.
 
-*aRchaic_cluster_2()* provides an input argument `run_from` that allows the user to select which steps to perform while re-running the model and visualization on the same example. The three possible options for `run_from` input are `start`, `gom` and `plot`.
+*aRchaic_cluster()* provides an input argument `run_from` that allows the user to select which steps to perform while re-running the model and visualization on the same example. The three possible options for `run_from` input are `start`, `gom` and `plot`.
 
 When `run_from = start`, the function starts from scratch, builds the aggregated MFF file (.rda) from the MFF csv files in each inuput directory listed in `folders` using `aRchaic_pool()`. Then it pools the aggregated MFF files from all the listed input directories, merges them and then runs the GoM model and saves the results. 
 
