@@ -240,7 +240,8 @@ clus <- aRchaic_pca(folders = c("../data/Skoglund/", "../data/moderns-50/"),
 This creates a **pca.png** file storing the PCA results for the first three PCs in the **output_dir**.
 
 ```{r}
-read_length_distribution(file = "../data/Skoglund/Ajv52.hs37d5.fa.merged.q30.csv")
+read_length_distribution(file = "data/Skoglund/Ajv59.hs37d5.fa.merged.q30.csv",
+                        cex_legend = 0.6)
 ```
 
 ```{r}

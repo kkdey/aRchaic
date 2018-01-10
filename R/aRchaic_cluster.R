@@ -98,8 +98,7 @@ aRchaic_cluster = function(folders,
                                     legend_text_size = 8)
 
 
-  logo.control.default <- list(sig_names = NULL,
-                               max_pos = 20, flanking_bases=1,
+  logo.control.default <- list(max_pos = 20, flanking_bases=1,
                                mutlogo.control = list(), breaklogo.control = list(),
                                base_probs_list = NULL,
                                clip = 0,
@@ -218,16 +217,18 @@ aRchaic_cluster = function(folders,
   if(is.null(output_dir)){
     output_dir <- paste0(getwd(), "/")
   }
+  
+  pooled_data_2 <- filter_out_strand(pooled_data)
 
   if(run_from == "gom" | run_from == "start"){
     if(gom_method == "full"){
       message("Fitting the Grade of Membership Model - full version - due to Matt Taddy")
-      suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
+      suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data_2, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
       save(topic_clus, file = paste0(output_dir, "model.rda"))
     }else if(gom_method == "independent"){
       message("Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens")
 
-      signature_set <- colnames(pooled_data)
+      signature_set <- colnames(pooled_data_2)
       sig_split <- t(sapply(1:length(signature_set), function(x) return(strsplit(signature_set[x], "")[[1]][1:8])))
       new_sig_split <- matrix(0, dim(sig_split)[1], 3);
       new_sig_split[,1] <- sig_split[,flanking_bases]
@@ -257,21 +258,21 @@ aRchaic_cluster = function(folders,
       signatures <- mat;
       signature_pos <- cbind.data.frame(signatures, pos)
 
-      suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
+      suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data_2, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
       save(topic_clus, file = paste0(output_dir, "model.rda"))
     }
   }else if(run_from == "plot"){
     if(gom_method == "full"){
       if(!file.exists(paste0(output_dir, "model.rda"))){
         # message("Fitting the Grade of Membership Model - full version - due to Matt Taddy")
-        suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
+        suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data_2, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
         save(topic_clus, file = paste0(output_dir, "model.rda"))
       }else{
         topic_clus <- get(load(paste0(output_dir, "model.rda")))
       }
     }else if(gom_method == "independent"){
       # message("Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens")
-      signature_set <- colnames(pooled_data)
+      signature_set <- colnames(pooled_data_2)
       sig_split <- t(sapply(1:length(signature_set), function(x) return(strsplit(signature_set[x], "")[[1]][1:8])))
       new_sig_split <- matrix(0, dim(sig_split)[1], 3);
       new_sig_split[,1] <- sig_split[,1]
@@ -302,7 +303,7 @@ aRchaic_cluster = function(folders,
       signature_pos <- cbind.data.frame(signatures, pos)
 
       if(!file.exists(paste0(output_dir, "model.rda"))){
-        suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data, K=K, tol=tol, model = "independent", signatures = signature_pos), topics.control)))
+        suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data_2, K=K, tol=tol, model = "independent", signatures = signature_pos), topics.control)))
         save(topic_clus, file = paste0(output_dir, "model.rda"))
       }else{
         topic_clus <- get(load(paste0(output_dir, "model.rda")))
@@ -337,16 +338,16 @@ aRchaic_cluster = function(folders,
   if(positive_logo){
     if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
     plot.new()
-    do.call(damageLogo_six, append(list(theta_pool = topic_clus$theta,
+    do.call(Logo_aRchaic_cluster, append(list(theta_pool = topic_clus$theta,
                                          output_dir = output_dir),
                                     logo.control))
     graphics.off()
   }else{
     if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
     plot.new()
-    do.call(damageLogo_six, append(list(theta_pool = topic_clus$theta,
-                                             output_dir = output_dir),
-                                        logo.control))
+    do.call(Logo_aRchaic_cluster, append(list(theta_pool = topic_clus$theta,
+                                              output_dir = output_dir),
+                                              logo.control))
     graphics.off()
   }
 
