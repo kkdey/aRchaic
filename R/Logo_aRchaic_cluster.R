@@ -326,6 +326,8 @@ damageLogo_six.skeleton <- function(pwm,
                            val = as.numeric(probs))
     
     seekViewport(paste0("plotlogo", 2))
+   
+    
     vp2 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
     p <- ggplot(data=pos_data, aes(x=position,y=val)) +
       geom_point(size = 3, aes(colour = "red")) +
@@ -346,8 +348,8 @@ damageLogo_six.skeleton <- function(pwm,
       theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
       theme(plot.title = element_text(hjust = 0.5))+
       theme(legend.position="none") +
-      theme(axis.ticks.length=unit(0.3,"cm")) +
-      geom_hline(yintercept=0, linetype="dashed")
+      theme(axis.ticks.length=unit(0.3,"cm")) 
+     # geom_hline(yintercept=0, linetype="dashed")
     print(p, vp = vp2)
     
   }else{
