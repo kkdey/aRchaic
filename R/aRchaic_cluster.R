@@ -152,12 +152,14 @@ aRchaic_cluster = function(folders,
     }
     if(sum(run_index - 1:length(folders))^2 == 0){
       for(i in 1:length(folders)){
-        file.remove(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda"))
+        if(file.exists(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda")))
+          file.remove(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda"))
       }
     }else{
       folders1 <- folders[run_index]
       for(i in 1:length(folders1)){
-        file.remove(paste0(folders1[i], tail(strsplit(folders1[i], "/")[[1]],1), ".rda"))
+        if(file.exists(paste0(folders[i], tail(strsplit(folders1[i], "/")[[1]],1), ".rda")))
+          file.remove(paste0(folders1[i], tail(strsplit(folders1[i], "/")[[1]],1), ".rda"))
       }
     }
   }

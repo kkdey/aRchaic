@@ -20,7 +20,7 @@
 
 aggregate_signature_counts <- function(dir,
                                        pattern = NULL,
-                                       breaks = NULL,
+                                       breaks = c(-1, seq(1,20,1)),
                                        flanking_bases = 1,
                                        output_rda = NULL){
   if(is.null(pattern)){
@@ -115,11 +115,13 @@ damage_build_bin_counts =  function(file,
                                     breaks=NULL,
                                     type=1)
 {
-  file <-  read.csv(file=file, header=TRUE);
-  file <- file[,-7] ## remove the read name
+  if(is.null(breaks))  breaks = c(-1, seq(1,20,1))
+  file <- read.csv(paste0(dir, ancient_files[num]), header = TRUE, stringsAsFactors = FALSE)
+  #file <- file[,-7] ## remove the read name
 
-  colnames(file) <- c("mut", "leftpos", "rightpos", "lsb", "rsb", "strand")
-  library(dplyr)
+  colnames(file) <- c("mut", "leftpos", "rightpos", "lsb", "rsb", "strand", "counts")
+ 
+   library(dplyr)
   tab <- dplyr::tbl_df(file) %>% dplyr::group_by(mut, leftpos, rightpos, lsb, rsb, strand) %>% dplyr::summarize(n= n())
   tab2 <- as.data.frame(tab)
 
@@ -130,31 +132,39 @@ damage_build_bin_counts =  function(file,
     tab2[which(tab2[,2]==-1), 2] <- 0
   }
 
+  bases <- apply(tab2, 1, function(x) {
+    idx <- which.min(c(x[2],x[3]))
+    if(idx == 1) 
+      return (x[4])
+    else if (idx == 2) 
+      return (gsub3("ACGT", "TGCA", x[5]))
+  })
+  
+  breakbases <- bases
   min_dist_from_end <- as.numeric(apply(tab2[,2:3], 1, function(x) return(min(x))))
-
-
-  if(is.null(breaks)){
-    bins <- c(0, 5, 10, 15, 20, max(min_dist_from_end))
-  }else{
-   # message("breaks values provided : adjusting")
-    bins <- c(intersect(breaks, (-1):max(min_dist_from_end)),max(min_dist_from_end))
-  }
+  bins <- c(intersect(breaks, (-1):max(min_dist_from_end)),max(min_dist_from_end))
 
   bin_values <- .bincode(min_dist_from_end, bins, TRUE)
 
-  modified_file <- cbind.data.frame(tab2[,1], tab2[,4], tab2[,5], tab2[,6], tab2[,7], bin_values)
-  colnames(modified_file) <- c("pattern", "base.lsb", "base.rsb", "strand", "counts", "bin_values")
+  modified_file <- cbind.data.frame(tab2[,1], breakbases, tab2[,6], tab2[,7], bin_values)
+  colnames(modified_file) <- c("pattern", "breakbase", "strand", "counts", "bin_values")
 
   library(plyr)
-  df1 <- plyr::ddply(modified_file, .(pattern, strand, base.lsb, base.rsb, strand, bin_values), plyr::summarise, newvar = sum(counts))
-  colnames(df1) <- c("pattern", "strand", "base.lsb", "base.rsb", "bin", "counts")
+  df1 <- plyr::ddply(modified_file, .(pattern, strand, breakbases, strand, bin_values), plyr::summarise, newvar = sum(counts))
+  colnames(df1) <- c("pattern", "strand", "breakbase", "bin", "counts")
 
   if(type==2){
-    df2 <- cbind.data.frame(paste0(df1[,1], "_", df1[,2], "_", df1[,3], "_", df1[,4], "_", df1[,5]), df1[,6])
+    df2 <- cbind.data.frame(paste0(df1[,1], "_", df1[,2], "_", df1[,3], "_", df1[,4]), df1[,5])
     colnames(df2) <- c("pattern-strand-breaks-bin", "counts")
     out <- df2
   }else{
     out <- df1
   }
+}
+
+gsub3 <- function(pattern, replacement, x, ...) {
+  for(i in 1:length(pattern))
+    x <- chartr(pattern[i], replacement[i], x, ...)
+  x
 }
 

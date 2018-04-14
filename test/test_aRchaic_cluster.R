@@ -53,7 +53,9 @@ output_width = 1200
 output_height = 700
 
 
-clus <- aRchaic_cluster(folders = c("../docs/data/Skoglund/", "../docs/data/moderns-50/"),
+labs <- c(rep("Skoglund",5), rep("moderns-50",50))
+clus <- aRchaic_cluster(folders = c("../docs/data/Skoglund/", 
+                                    "../docs/data/moderns-50/"),
                         K = 2, 
                         tol = 1,
                         labs = labs,

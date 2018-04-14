@@ -71,21 +71,10 @@ signatureclub2 <- function(signature_set, flanking_bases){
       temp_split[(5+flanking_bases):(4+2*flanking_bases)] <- rev(side1)
       temp_split[1:flanking_bases] <- rev(side2)
       sign <- temp_split[6+2*flanking_bases]
-      if(sign == "+"){
-        breakbase <- temp_split[8+2*flanking_bases]
-      }else if (sign == "-"){
-        breakbase <- toupper(to[match(temp_split[10+2*flanking_bases], from)])
-      }
     }else{
       temp_split <- strsplit(as.character(signature_set[m]), split="")[[1]]
-      sign <- temp_split[6+2*flanking_bases]
-      if(sign == "+"){
-        breakbase <- temp_split[8+2*flanking_bases]
-      }else if (sign == "-"){
-        breakbase <- toupper(to[match(temp_split[10+2*flanking_bases], from)])
-      }
     }
-    temp_new <- paste0(c(temp_split[1:(7+2*flanking_bases)], breakbase, temp_split[(11+2*flanking_bases):(length(temp_split))]), collapse = "")
+    temp_new <- paste0(temp_split, collapse = "")
     signature_set_mod[m] <- temp_new
   }
   return(signature_set_mod)

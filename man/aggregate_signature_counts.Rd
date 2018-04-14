@@ -4,8 +4,8 @@
 \alias{aggregate_signature_counts}
 \title{Bin signatures and aggregate counts of signatures from an MFF file.}
 \usage{
-aggregate_signature_counts(dir, pattern = NULL, breaks = NULL,
-  flanking_bases = 1, output_rda = NULL)
+aggregate_signature_counts(dir, pattern = NULL, breaks = c(-1, seq(1, 20,
+  1)), flanking_bases = 1, output_rda = NULL)
 }
 \arguments{
 \item{dir}{The directory containing the MFF files.}
