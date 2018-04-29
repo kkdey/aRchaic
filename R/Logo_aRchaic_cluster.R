@@ -102,22 +102,24 @@ Logo_aRchaic_cluster <- function(theta_pool,
   # prob_mutation <- filter_by_pos(t(theta_pool), max_pos = max_pos)
   prob_mutation <- filter_signatures_only_location(t(theta_pool),
                                                    max_pos = max_pos, flanking_bases = flanking_bases)
+
   prob_mutation <- t(apply(prob_mutation, 1, function(x) {
     y <- x[!is.na(x)];
     return(y/sum(y))
   }))
+  clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
   
   max_prob <- max(prob_mutation);
-  clipped_bases <- setdiff(1:20, as.numeric(colnames(prob_mutation)))
+  clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
   
   if(is.null(base_probs_list)){
-    prob_limits = c(round(min(prob_mutation), 2)-0.01, round(max(prob_mutation), 2) + 0.01)
+    prob_limits = c(round(min(prob_mutation, na.rm=TRUE), 2)-0.01, round(max(prob_mutation, na.rm=TRUE), 2) + 0.01)
     prob_breaks = c(0, round(min(prob_mutation),2)-0.01,
-                    round(0.5*(min(prob_mutation)+max(prob_mutation)), 2),
+                    round(0.5*(min(prob_mutation, na.rm=TRUE)+max(prob_mutation, na.rm=TRUE)), 2),
                     round(max(prob_mutation), 2)+0.01)
   }else{
     if(length(clipped_bases) > 0){
-      prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])[-clipped_bases]))
+      prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])[-(clipped_bases+1)]))
     }else{
       prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])))
     }
@@ -219,13 +221,15 @@ damageLogo_six.skeleton <- function(pwm,
   
   break_lowrange = break_ranges[1]
   break_uprange =  break_ranges[2]
-  
-  mutlogo.control.default <- list(logoheight = "log",
+ 
+  mutlogo.control.default <- list(ic = FALSE,
+                                  score = "log",
                                   total_chars = c("A", "B", "C", "D", "E", "F", "G",
                                                   "H", "I", "J", "K", "L", "M", "N", "O",
                                                   "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
                                                   "Z", "zero", "one", "two",
-                                                  "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
+                                                  "three", "four", "five", "six", "seven", "eight",
+                                                  "nine", "dot", "comma",
                                                   "dash", "colon", "semicolon", "leftarrow", "rightarrow"),
                                   frame_width=c(1,2,1), yscale_change=TRUE,
                                   pop_name = "Mismatch and \n flanking base composition",
@@ -239,7 +243,8 @@ damageLogo_six.skeleton <- function(pwm,
                                                                           lowrange = mut_lowrange, uprange = mut_uprange,
                                                                           size_port = 1, symm = FALSE))
   
-  breaklogo.control.default <- list( logoheight = "log",
+  breaklogo.control.default <- list( ic = FALSE, 
+                                     score = "log",
                                      total_chars = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
                                                      "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "zero", "one", "two",
                                                      "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
@@ -308,12 +313,12 @@ damageLogo_six.skeleton <- function(pwm,
   vp1 <- viewport(x=logoport_x, y=logoport_y, width=logoport_width, height=logoport_height)
   pushViewport(vp1)
   if(!is.null(background)){
-    do.call(Logolas::nlogomaker, append(list(table = pwm1,
-                                    color_profile = color_profile_1,
-                                    bg = base_probs_mat),
+    do.call(nlogomaker, append(list(table = pwm1,
+                                             color_profile = color_profile_1,
+                                          bg = base_probs_mat),
                                mutlogo.control))
   }else{
-    do.call(Logolas::nlogomaker, append(list(table = pwm1,
+    do.call(nlogomaker, append(list(table = pwm1,
                                     color_profile = color_profile_1,
                                     bg = NULL),
                                mutlogo.control))

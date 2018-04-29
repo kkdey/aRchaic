@@ -15,19 +15,8 @@
 
 
 filter_signatures_only_location <-  function(mat, max_pos = 20, flanking_bases=1){
-  input_pos <- 1:max_pos;
-  # leftflank <- grep("left", colnames(mat))
-  # rightflank <- grep("right", colnames(mat))
-  # if(length(leftflank) > 0 | length(rightflank) > 0){
-  #   mat <- mat[, - c(leftflank, rightflank)]
-  # }
-
-  pos <- as.numeric(sapply(as.character(colnames(mat)), function(l)
-  {
-    sym <- strsplit(as.character(l), "")[[1]]
-    return(paste(sym[((4+2*flanking_bases)+4):length(sym)], collapse=""))
-  }))
-
+  input_pos <- 0:max_pos;
+  pos <- as.numeric(sapply(as.character(colnames(mat)), function(x) return (tail(strsplit(x, "_")[[1]], 1))))
   reduced_dat <- mat[,which(!is.na(match(pos, input_pos)))]
   pos2 <- pos[which(!is.na(match(pos, input_pos)))];
   pos2fac <- factor(pos2, levels=input_pos)
@@ -36,6 +25,5 @@ filter_signatures_only_location <-  function(mat, max_pos = 20, flanking_bases=1
   for(m in 1:dim(mat)[1]){
     pos_mat <- rbind(pos_mat, tapply(reduced_dat[m,], pos2fac, sum));
   }
-
   return(pos_mat)
 }

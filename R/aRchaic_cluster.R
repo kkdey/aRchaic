@@ -170,7 +170,7 @@ aRchaic_cluster = function(folders,
   for(i in 1:length(folders)){
     if(!file.exists(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda"))){
       message (paste0("Processing the MutationFeatureFormat files in the directory", folders[i]))
-      out <- aggregate_signature_counts(dir = paste0(folders[i]),
+      out <- aggregate_signature_counts(directory = as.character(paste0(folders[i])),
                                         pattern = NULL,
                                         breaks = breaks,
                                         flanking_bases = flanking_bases)
@@ -267,7 +267,9 @@ aRchaic_cluster = function(folders,
     if(gom_method == "full"){
       if(!file.exists(paste0(output_dir, "model.rda"))){
         # message("Fitting the Grade of Membership Model - full version - due to Matt Taddy")
-        suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data_2, K=K, tol=tol, model = "full", signatures = NULL), topics.control)))
+        suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data_2, K=K, tol=tol, 
+                                                                           model = "full", signatures = NULL
+                                                                           ), topics.control)))
         save(topic_clus, file = paste0(output_dir, "model.rda"))
       }else{
         topic_clus <- get(load(paste0(output_dir, "model.rda")))
@@ -305,7 +307,7 @@ aRchaic_cluster = function(folders,
       signature_pos <- cbind.data.frame(signatures, pos)
 
       if(!file.exists(paste0(output_dir, "model.rda"))){
-        suppressWarnings(topic_clus <- do.call(maptpx::topics, append(list(counts = pooled_data_2, K=K, tol=tol, model = "independent", signatures = signature_pos), topics.control)))
+        suppressWarnings(topic_clus <- do.call(topics, append(list(counts = pooled_data_2, K=K, tol=tol, model = "independent", signatures = signature_pos), topics.control)))
         save(topic_clus, file = paste0(output_dir, "model.rda"))
       }else{
         topic_clus <- get(load(paste0(output_dir, "model.rda")))

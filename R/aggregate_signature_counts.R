@@ -18,15 +18,15 @@
 #' @export
 
 
-aggregate_signature_counts <- function(dir,
+aggregate_signature_counts <- function(directory,
                                        pattern = NULL,
                                        breaks = c(-1, seq(1,20,1)),
                                        flanking_bases = 1,
                                        output_rda = NULL){
   if(is.null(pattern)){
-    ancient_files <- setdiff(list.files(dir, pattern = ".csv"), list.files(dir, pattern = ".csv#"))
+    ancient_files <- setdiff(list.files(directory, pattern = ".csv"), list.files(directory, pattern = ".csv#"))
   }else{
-    ancient_files <- list.files(dir, pattern = pattern)
+    ancient_files <- list.files(directory, pattern = pattern)
   }
 
   signature_ancient <- vector(mode="list")
@@ -34,12 +34,12 @@ aggregate_signature_counts <- function(dir,
 
 
   for(num in 1:length(ancient_files)){
-    tmp_dat <- damage_build_bin_counts(paste0(dir, ancient_files[num]),
+    tmp_dat <- damage_build_bin_counts(file = paste0(directory, ancient_files[num]),
                                        breaks=breaks,
                                        type=2)
     signature_counts_ancient[[num]] <- tmp_dat[,2];
     signature_ancient[[num]] <- as.character(tmp_dat[,1]);
-    cat("Reading file ", paste0(dir, ancient_files[num]), "\n")
+    cat("Reading file ", paste0(directory, ancient_files[num]), "\n")
   }
 
   merged_signature_ancient <- signature_ancient[[1]]
@@ -111,19 +111,28 @@ aggregate_signature_counts <- function(dir,
   }
 }
 
-damage_build_bin_counts =  function(file,
+damage_build_bin_counts =  function(filename,
                                     breaks=NULL,
-                                    type=1)
+                                    type=2)
 {
   if(is.null(breaks))  breaks = c(-1, seq(1,20,1))
-  file <- read.csv(paste0(dir, ancient_files[num]), header = TRUE, stringsAsFactors = FALSE)
+  file <- read.csv(filename, header = FALSE, stringsAsFactors = FALSE)
+  file[,7] <- rep(1, dim(file)[1])
   #file <- file[,-7] ## remove the read name
 
   colnames(file) <- c("mut", "leftpos", "rightpos", "lsb", "rsb", "strand", "counts")
  
-   library(dplyr)
+  library(dplyr)
   tab <- dplyr::tbl_df(file) %>% dplyr::group_by(mut, leftpos, rightpos, lsb, rsb, strand) %>% dplyr::summarize(n= n())
   tab2 <- as.data.frame(tab)
+  
+  
+  
+  
+  min_dist_from_end_pre <- as.numeric(apply(tab2[,2:3], 1, function(x) return(min(x))))
+  idx <- which(min_dist_from_end_pre <= tail(breaks, 1))
+  tab2 <- tab2[idx,]
+  min_dist_from_end <- min_dist_from_end_pre[idx]
 
   if(length(which(tab2[,3]==-1)) !=0){
     tab2[which(tab2[,3]==-1), 3] <- 0
@@ -141,16 +150,16 @@ damage_build_bin_counts =  function(file,
   })
   
   breakbases <- bases
-  min_dist_from_end <- as.numeric(apply(tab2[,2:3], 1, function(x) return(min(x))))
-  bins <- c(intersect(breaks, (-1):max(min_dist_from_end)),max(min_dist_from_end))
+ # bins <- c(intersect(breaks, (-1):max(min_dist_from_end)),max(min_dist_from_end))
+ # bins <- 0:tail(breaks,1)
 
-  bin_values <- .bincode(min_dist_from_end, bins, TRUE)
+ # bin_values <- .bincode(min_dist_from_end, bins, TRUE)
 
-  modified_file <- cbind.data.frame(tab2[,1], breakbases, tab2[,6], tab2[,7], bin_values)
+  modified_file <- cbind.data.frame(tab2[,1], breakbases, tab2[,6], tab2[,7], min_dist_from_end)
   colnames(modified_file) <- c("pattern", "breakbase", "strand", "counts", "bin_values")
 
   library(plyr)
-  df1 <- plyr::ddply(modified_file, .(pattern, strand, breakbases, strand, bin_values), plyr::summarise, newvar = sum(counts))
+  df1 <- plyr::ddply(modified_file, .(pattern, strand, breakbases, strand, bin_values), plyr::summarise, newvar = sum(as.numeric(counts)))
   colnames(df1) <- c("pattern", "strand", "breakbase", "bin", "counts")
 
   if(type==2){
