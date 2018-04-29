@@ -45,7 +45,12 @@ model_aRchaic <- function(dirs,
   
   datalist <- list()
   for(numdir in 1:length(dirs)){
-    datalist[[i]] <- get(load(paste0(folders[i], tail(strsplit(folders[i], "/")[[1]],1), ".rda")))
+    if(file.exists(paste0(folders[numdir], tail(strsplit(folders[numdir], "/")[[1]],1), ".rda"))){
+      datalist[[numdir]] <- get(load(paste0(folders[numdir], tail(strsplit(folders[numdir], "/")[[1]],1), ".rda")))
+      cat("Read .RData file from the folder, ", folders[numdir], "\n")
+    }else{
+      
+    }
   }
   
   sig_names <- colnames(datalist[[1]])

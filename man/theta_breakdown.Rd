@@ -17,13 +17,12 @@ and rows representing the mutational signatures.}
 \value{
 Returns a list with number of items equal to number of clusters. Each item of this
         list is another list which comprises of the individual probability distribution of types of
-        mutation, flanking base, strand break, distance from end of read and strand break composition
+        mutation, flanking base, distance from end of read and strand break composition
         separately.
 }
 \description{
-Breaking down a theta matrix into component probabilities for strand composition (
-        probability that a mutation comes from positive or negative strand for each cluster
-        represented by the theta matrix), strand break composition (probability it is A, C, G or T),
+Breaking down a theta matrix into component probabilities for strand break 
+         composition (probability it is A, C, G or T),
         the distance from the end of the read and the mutation and flanking base.
 }
 \keyword{theta_breakdown}
