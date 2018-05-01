@@ -1,21 +1,21 @@
-#' @title STRUCTURE plot and logo plot representation of the clusterring 
+#' @title STRUCTURE plot and logo plot representation of the clusterring
 #' model from model_archaic
-#' 
+#'
 #' @description Takes the clustering model fit  from \code{model_archaic}
-#' as an input and plots the clusters using as EDLogo plots (Dey et al 2018) 
-#' and the proportional mixing of the clusters for each sample using a 
+#' as an input and plots the clusters using as EDLogo plots (Dey et al 2018)
+#' and the proportional mixing of the clusters for each sample using a
 #' STRUCTURE plot (Pritchard et al 2000) representation.
-#' 
-#' @param model Fitted model from \code{model_archaic}. 
-#' @param max_pos The maximum position from the ends of the reads for which 
-#'  mismatches are considered in aRchaic. 
+#'
+#' @param model Fitted model from \code{model_archaic}.
+#' @param max_pos The maximum position from the ends of the reads for which
+#'  mismatches are considered in aRchaic.
 #' @param output_rda If non-NULL, the processed data for each
 #'  directory in \code{dirs} is saved as a .Rdata file.
 #'
-#' @return Returns a matrix with rows being the samples (each MFF file), 
+#' @return Returns a matrix with rows being the samples (each MFF file),
 #' columns representing the mismatch signatures (comprising of features like
-#' mismatch type, flanking bases and strand break information). 
-#' The cells contain counts of the number of mutational signatures observed in 
+#' mismatch type, flanking bases and strand break information).
+#' The cells contain counts of the number of mutational signatures observed in
 #' that MFF file.
 #'
 #' @keywords aggregate_counts
@@ -32,8 +32,9 @@ plot_archaic <- function(model,
                          structure.control = list(),
                          logo.control = list(),
                          output_dir = NULL){
-  
-  labs <- model$labs 
+
+  labs <- model$labs
+  K <- dim(model$omega)
   if(is.null(levels(labs))) levels <- unique(labs)
   structure.control.default <- list(yaxis_label = "aRchaic pops",
                                     order_sample = FALSE,
@@ -48,7 +49,7 @@ plot_archaic <- function(model,
                                     legend_text_size = 8,
                                     structure_width = 5,
                                     structure_height = 8)
-  
+
   logo.control.default <- list(max_pos = 20, flanking_bases=1,
                                mutlogo.control = list(), breaklogo.control = list(),
                                base_probs_list = NULL,
@@ -56,13 +57,13 @@ plot_archaic <- function(model,
                                mut_ranges = c(0,0),
                                break_ranges = c(0,0),
                                logoport_x = 0.7,
-                               logoport_y= 0.5, 
+                               logoport_y= 0.5,
                                logoport_width= 1, logoport_height= 1.2,
                                breaklogoport_x = 0.55, breaklogoport_y = 0.4, breaklogoport_width=0.7,
                                breaklogoport_height=1, lineport_x = 0.65, lineport_y=0.5,
                                lineport_width=0.8, lineport_height=1.3,
                                output_width = 1200, output_height = 700)
-  
+
   if(background == "null"){
     logo.control.default$base_probs_list = NULL
   }else{
@@ -71,25 +72,25 @@ plot_archaic <- function(model,
     logo.control.default$mut_ranges = c(1, 1)
     logo.control.default$break_ranges = c(1, 1)
   }
-  
-  
+
+
   structure.control <- modifyList(structure.control.default, structure.control)
   logo.control <- modifyList(logo.control.default, logo.control)
-  
-  
+
+
   structure.control.two <- structure.control
   structure.control.two$structure_height = NULL
   structure.control.two$structure_width = NULL
-  
-  
+
+
   message ("Structure plot and Logo plot representations of clusters")
-  
+
   omega <- model$omega
   annotation <- data.frame(
     sample_id = paste0("X", c(1:NROW(omega))),
     tissue_label = factor(labs, levels = levels)
   )
-  
+
   if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
   plot.new()
   grid::grid.newpage()
@@ -97,19 +98,19 @@ plot_archaic <- function(model,
                                                    annotation = annotation,
                                                    palette = topic_cols),
                                               structure.control.two))
-  ggplot2::ggsave(paste0(output_dir, "structure.png"), 
+  ggplot2::ggsave(paste0(output_dir, "structure.png"),
                   width =  structure.control$structure_width,
                   height = structure.control$structure_height)
-  
+
   ###################   Logo plot representation  #########################
-  
-  
+
+
   plot.new()
   do.call(Logo_aRchaic_cluster, append(list(theta_pool = model$theta,
                                             output_dir = output_dir),
                                        logo.control))
   graphics.off()
-  
+
   message ("Finished")
 }
 
@@ -176,12 +177,12 @@ Logo_aRchaic_cluster <- function(theta_pool,
                                  filename = NULL,
                                  output_width = 1200,
                                  output_height = 700){
-  
+
   library(grid)
   library(gridBase)
   library(ggplot2)
-  
-  
+
+
   if(is.null(output_dir)){output_dir <- getwd();}
   flag <- 0
   if(dim(theta_pool)[2] == 1){
@@ -199,9 +200,9 @@ Logo_aRchaic_cluster <- function(theta_pool,
     as.data.frame()
   rownames(theta2) <-  theta2[,1]
   theta2 <- theta2[,-1, drop=FALSE]
-  
+
   breakbase <- substring(signature_set, 6+2*flanking_bases,  6+2*flanking_bases)
-  
+
   theta_break <- dplyr::tbl_df(data.frame(theta_pool)) %>%
     dplyr::mutate(sig = breakbase) %>%
     dplyr::group_by(sig) %>%
@@ -209,25 +210,25 @@ Logo_aRchaic_cluster <- function(theta_pool,
     as.data.frame()
   rownames(theta_break) <- theta_break[,1]
   theta_break <- theta_break[,-1]
-  
+
   theta_break <- theta_break[match(c("A", "C", "G", "T"), rownames(theta_break)),]
   breaks_theta <- theta_break
-  
+
   sig_names <- rownames(theta_pool)
-  
+
   # prob_mutation <- filter_by_pos(t(theta_pool), max_pos = max_pos)
   prob_mutation <- filter_signatures_only_location(t(theta_pool),
                                                    max_pos = max_pos, flanking_bases = flanking_bases)
-  
+
   prob_mutation <- t(apply(prob_mutation, 1, function(x) {
     y <- x[!is.na(x)];
     return(y/sum(y))
   }))
   clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
-  
+
   max_prob <- max(prob_mutation);
   clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
-  
+
   if(is.null(base_probs_list)){
     prob_limits = c(round(min(prob_mutation, na.rm=TRUE), 2)-0.01, round(max(prob_mutation, na.rm=TRUE), 2) + 0.01)
     prob_breaks = c(0, round(min(prob_mutation),2)-0.01,
@@ -245,37 +246,37 @@ Logo_aRchaic_cluster <- function(theta_pool,
                     round(0.5*(min(prob1_mutation)+max(prob1_mutation)), 2),
                     round(max(prob1_mutation), 2)+0.01)
   }
-  
+
   sig_split <- do.call(rbind,
                        lapply(sig_names,
                               function(x) strsplit(as.character(x), split="")[[1]][1:(4+2*flanking_bases)]))
-  
+
   ncol_sig <- (4+2*flanking_bases)
-  
+
   if(flanking_bases%%1 != 0){
     stop("flanking bases not evenly distributed")
   }
-  
-  
+
+
   sub_pattern <- sapply(1:dim(sig_split)[1],
                         function(x) paste(sig_split[x,(flanking_bases+1):(flanking_bases+4)], collapse=""))
-  
+
   new_sig_split <- cbind(sig_split[,1:flanking_bases], sub_pattern, sig_split[,((ncol_sig - flanking_bases +1):ncol_sig)])
   colnames(new_sig_split) = NULL
-  
+
   prop_patterns_list <- list()
-  
+
   for(l in 1:dim(theta_pool)[2]){
     prop_patterns_list[[l]] <- numeric();
     for(j in 1:ncol(new_sig_split)){
       temp2 <- tapply(theta_pool[,l], factor(new_sig_split[,j], levels=c("A", "C", "G", "T",
                                                                          "C->T", "C->A", "C->G",
                                                                          "T->A", "T->C", "T->G")), sum)
-      
+
       prop_patterns_list[[l]] <- cbind(prop_patterns_list[[l]], temp2)
     }
   }
-  
+
   grob_list <- list()
   for(l in 1:length(prop_patterns_list)){
     png(paste0(output_dir, "logo_clus_", l, ".png"), width=output_width, height = output_height)
@@ -331,13 +332,13 @@ damageLogo_six.skeleton <- function(pwm,
                                     lineport_y=0.5,
                                     lineport_width=1,
                                     lineport_height=1){
-  
+
   mut_lowrange = mut_ranges[1]
   mut_uprange =  mut_ranges[2]
-  
+
   break_lowrange = break_ranges[1]
   break_uprange =  break_ranges[2]
-  
+
   mutlogo.control.default <- list(ic = FALSE,
                                   score = "log",
                                   total_chars = c("A", "B", "C", "D", "E", "F", "G",
@@ -358,8 +359,8 @@ damageLogo_six.skeleton <- function(pwm,
                                                                           round_off = 1, posbins = 3, negbins = 3,
                                                                           lowrange = mut_lowrange, uprange = mut_uprange,
                                                                           size_port = 1, symm = FALSE))
-  
-  breaklogo.control.default <- list( ic = FALSE, 
+
+  breaklogo.control.default <- list( ic = FALSE,
                                      score = "log",
                                      total_chars = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
                                                      "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "zero", "one", "two",
@@ -377,8 +378,8 @@ damageLogo_six.skeleton <- function(pwm,
                                                                             uprange = break_uprange))
   mutlogo.control <- modifyList(mutlogo.control.default, mutlogo.control)
   breaklogo.control <- modifyList(breaklogo.control.default, breaklogo.control)
-  
-  
+
+
   cols = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category ==
                                          'qual',]
   col_vector = unlist(mapply(RColorBrewer::brewer.pal, cols$maxcolors, rownames(cols)))
@@ -386,13 +387,13 @@ damageLogo_six.skeleton <- function(pwm,
                   "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "zero", "one", "two",
                   "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
                   "dash", "colon", "semicolon", "leftarrow", "rightarrow")
-  
+
   set.seed(20)
   cols2 <- sample(col_vector, length(total_chars), replace=FALSE)
   cols2[match(c("A", "C", "G", "T"), total_chars)] <- c(RColorBrewer::brewer.pal(4,name ="Spectral"))
   color_profile_1 <- list("type" = "per_symbol",
                           "col" = cols2)
-  
+
   if(!is.null(background)){
     base_probs_list <- background
     base_probs_mat <- matrix(NA, 10, 3)
@@ -402,29 +403,29 @@ damageLogo_six.skeleton <- function(pwm,
     }
     base_probs_mat <- base_probs_mat[match(rownames(pwm), rownames(base_probs_mat)),]
   }
-  
+
   pwm1 <- pwm
   rownames(pwm1)[match(c("C->A", "C->G", "C->T",
                          "T->A", "T->C", "T->G"), rownames(pwm1))] <- c("C>A", "C>G", "C>T",
                                                                         "T>A", "T>C", "T>G")
   colnames(pwm1) <- c("left \n flank", "mismatch", "right \n flank")
-  
-  
+
+
   if(!is.null(background)){
     rownames(base_probs_mat)[match(c("C->A", "C->G", "C->T",
                                      "T->A", "T->C", "T->G"), rownames(base_probs_mat))] <- c("C>A", "C>G", "C>T",
                                                                                               "T>A", "T>C", "T>G")
     colnames(base_probs_mat) <- colnames(pwm1)
   }
-  
-  
+
+
   color_profile_2 = list("type" = "per_row",
                          "col" = RColorBrewer::brewer.pal(4,name ="Spectral"))
-  
-  
-  
+
+
+
   Logolas::get_viewport_logo(1, 3)
-  
+
   seekViewport(paste0("plotlogo", 1))
   vp1 <- viewport(x=logoport_x, y=logoport_y, width=logoport_width, height=logoport_height)
   pushViewport(vp1)
@@ -440,15 +441,15 @@ damageLogo_six.skeleton <- function(pwm,
                                mutlogo.control))
   }
   upViewport(0)
-  
+
   if(is.null(background)){
-    
+
     pos_data <- data.frame(position = as.numeric(names(probs)),
                            val = as.numeric(probs))
-    
+
     seekViewport(paste0("plotlogo", 2))
-    
-    
+
+
     vp2 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
     p <- ggplot(data=pos_data, aes(x=position,y=val)) +
       geom_point(size = 3, aes(colour = "red")) +
@@ -469,10 +470,10 @@ damageLogo_six.skeleton <- function(pwm,
       theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
       theme(plot.title = element_text(hjust = 0.5))+
       theme(legend.position="none") +
-      theme(axis.ticks.length=unit(0.3,"cm")) 
+      theme(axis.ticks.length=unit(0.3,"cm"))
     # geom_hline(yintercept=0, linetype="dashed")
     print(p, vp = vp2)
-    
+
   }else{
     bg_pos_vec <- base_probs_list[[(2*flanking_bases+3)]]
     probs1 <- (probs+1e-10) - (bg_pos_vec[match(names(probs), names(bg_pos_vec))]+1e-10)
@@ -504,10 +505,10 @@ damageLogo_six.skeleton <- function(pwm,
       theme(axis.ticks.length=unit(0.3,"cm")) +
       geom_hline(yintercept=0, linetype="dashed")
     print(p, vp = vp2)
-    
+
   }
-  
-  
+
+
   seekViewport(paste0("plotlogo", 3))
   vp3 <- viewport(x=breaklogoport_x, y=breaklogoport_y, width=breaklogoport_width, height=breaklogoport_height)
   pushViewport(vp3)
@@ -525,6 +526,6 @@ damageLogo_six.skeleton <- function(pwm,
                                              bg = NULL),
                                         breaklogo.control))
   }
-  
+
   upViewport(0)
 }

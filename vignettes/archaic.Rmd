@@ -187,25 +187,42 @@ Alternatively, one can also input the study folder vector directly into
 `model_archaic()`.
 
 ```{r}
-model <- model_archaic(c("../inst/extdata/moderns/", "../inst/extdata/ancients/"), K = 2)
+model <- model_archaic(c("../inst/extdata/moderns/", "../inst/extdata/ancients/"), K = 2,
+                       output_dir = "../inst/extdata/archaic_results/")
 ```
 
 the output `model` consists of 
 
-- omega : the grades of membership to be plotted by stacked bar chart
-- theta : cluster profiles - with each column a probability distribution on
+- **omega** : the grades of membership to be plotted by stacked bar chart
+- **theta** : cluster profiles - with each column a probability distribution on
           coded mismatch features 
-- assessment : assessment of model fit : BIC and loglikelihood
+- **assessment** : assessment of model fit : BIC and loglikelihood
 
 
-                
+              
+## plot_archaic()
+
+The model output, in particular **omega** and **theta** can be visualized using 
+the `plot_archaic()` command.
+
+```{r warning = FALSE, message = FALSE}
+plot_archaic(model, output_dir = "../inst/extdata/archaic_results/", background = "modern")
+```
+
+After running this, go to the output directory `../inst/extdata/archaic_results`. 
+You should see there is a `structure.png` file for the stacked bar chart 
+representation of the **omega** output from `model_archaic` and for each 
+$k=1,2$, a `logo_clus_k.png` file visualizing the mismatch profile for each 
+cluster. 
+Also notice that the method clearly separates out the example modern samples 
+from the ancient samples 
 
 
-## Generate MFF file 
+## SessionInfo
 
-
-
-
+```{r}
+sessionInfo()
+```
 
 
 

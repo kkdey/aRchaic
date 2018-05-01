@@ -12,7 +12,7 @@ model_archaic(dat, K, tol = 0.1, labs = NULL, gom_method = "independent",
 
 \item{tol}{The tolerance level of convergence of the GoM model fit}
 
-\item{labs}{The factor of labels used to group the samples in visualization. 
+\item{labs}{The factor of labels used to group the samples in visualization.
 May be used to distinguish
 samples from different labs, or different library prep.}
 
@@ -22,7 +22,7 @@ model which is uses the \code{maptpx} package by Matt Taddy.}
 
 \item{gom.control}{Control parameters for the GoM model fit.}
 
-\item{output_dir}{The output directory where the model is saved. 
+\item{output_dir}{The output directory where the model is saved.
 If NULL, it picks the current working directory.}
 }
 \value{
@@ -31,8 +31,8 @@ Fits the GoM model on the aggregated data from \code{prepare_archaic}
   assessment scores like the BIC.
 }
 \description{
-Performs GoM model clustering of aDNA samples using DNA damage 
-patterns- mutation, flanking base, distance from read end and strand 
-break information. The default implementation of this model follows the 
+Performs GoM model clustering of aDNA samples using DNA damage
+patterns- mutation, flanking base, distance from read end and strand
+break information. The default implementation of this model follows the
 modeling framework of Shiraishi et al (2015).
 }

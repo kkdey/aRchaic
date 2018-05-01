@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_archaic.R
 \name{plot_archaic}
 \alias{plot_archaic}
-\title{STRUCTURE plot and logo plot representation of the clusterring 
+\title{STRUCTURE plot and logo plot representation of the clusterring
 model from model_archaic}
 \usage{
 plot_archaic(model, topic_cols = c("red", "blue", "darkgoldenrod1", "cyan",
@@ -14,23 +14,23 @@ plot_archaic(model, topic_cols = c("red", "blue", "darkgoldenrod1", "cyan",
 \arguments{
 \item{model}{Fitted model from \code{model_archaic}.}
 
-\item{max_pos}{The maximum position from the ends of the reads for which 
+\item{max_pos}{The maximum position from the ends of the reads for which
 mismatches are considered in aRchaic.}
 
 \item{output_rda}{If non-NULL, the processed data for each
 directory in \code{dirs} is saved as a .Rdata file.}
 }
 \value{
-Returns a matrix with rows being the samples (each MFF file), 
+Returns a matrix with rows being the samples (each MFF file),
 columns representing the mismatch signatures (comprising of features like
-mismatch type, flanking bases and strand break information). 
-The cells contain counts of the number of mutational signatures observed in 
+mismatch type, flanking bases and strand break information).
+The cells contain counts of the number of mutational signatures observed in
 that MFF file.
 }
 \description{
 Takes the clustering model fit  from \code{model_archaic}
-as an input and plots the clusters using as EDLogo plots (Dey et al 2018) 
-and the proportional mixing of the clusters for each sample using a 
+as an input and plots the clusters using as EDLogo plots (Dey et al 2018)
+and the proportional mixing of the clusters for each sample using a
 STRUCTURE plot (Pritchard et al 2000) representation.
 }
 \keyword{aggregate_counts}

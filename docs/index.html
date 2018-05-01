@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">aRchaic</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jdblischak/workflowr">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<div class="figure">
+<img src="logo_design.svg" alt="." />
+<p class="caption">.</p>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><strong>aRchaic</strong> is a R/python software environment that performs model based clustering and visualization of ancient and modern DNA samples from one or more studies. This model can be used to identify distinct patterns of DNA damage and is capable of reflecting relative rates of contamination in contaminated aDNA samples.</p>
+<p>Here is a visual representation of <strong>aRchaic</strong> on <em>moderns</em>, ancient samples treated with UDG library protocol and ancient samples not treated with UDG library protocol.</p>
+<div style="width:500px; height:500px">
+<div class="figure">
+<img src="fig.png" />
+
+</div>
+</div>
+</div>
+<div id="archaic-workflow" class="section level2">
+<h2>aRchaic workflow</h2>
+<p>For every mismatch in a BAM file with respect to a reference genome, <strong>aRchaic</strong> records the various features of the mismatch - mismatch type, flanking bases, strand break base, strand and position of mismatch from the ends of read - into a .csv file which we call the <em>Mismatch Feature Format (MFF)</em> file.</p>
+<p>Next, <strong>aRchaic</strong> fits a mixed membership model on the mismatch feature data that allows each sample to have partial memberships in more than one cluster where the clusters represent distinct mismatch feature profiles.</p>
+<p>The cluster memberships from model fit are represented in a stacked bar chart grouped by studies (Figure 1 left), while the clusters are represented as logo plots of enrichment of their mismatch profiles against a modern background (Figure 1 right).</p>
+<p>For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns and shows no enrichment in mismatch profile with respect to modern background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and highlghts enrichment of C-to-G mismatches happening at the ends of the reads, with a depletion of G on right flanking base - due to scarcity of CpG sites in genome. Cluster 3 (orange) is represented in UDG ancients and shows enrichment of C-to-G mismatches at mainly the terminal position of read with further enrichment of these mismatches at CpG sites.</p>
+<p>In the next sections, we present a tutorial on how to generate images (like in Figure 1) starting from the BAM files for the samples.</p>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>First and foremost, the user is required to install <a href="https://www.python.org/downloads/">python</a> and <a href="https://www.rstudio.com/">R/RStudio</a>.</p>
+<p>Next, the user needs to install the Python packages <a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a> and <a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a>.</p>
+<p>Next, start a new R session and install the R dependency libraries.</p>
+<pre class="r"><code>install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;TaddyLab/maptpx&quot;)
+devtools::install_github(&quot;kkdey/CountClust&quot;)
+install.packages(&quot;ggplot2&quot;)
+install.packages(&quot;dplyr&quot;)
+install.packages(&quot;plyr&quot;)
+source(&quot;https://bioconductor.org/biocLite.R&quot;)
+biocLite(&quot;Logolas&quot;)</code></pre>
+<p>Once you have run through the above steps, install the R package <strong>aRchaic</strong></p>
+<pre class="r"><code>devtools::install_github(&quot;kkdey/aRchaic&quot;)</code></pre>
+<p>Finally, load aRchaic into R</p>
+<pre class="r"><code>library(aRchaic)</code></pre>
+</div>
+<div id="archaic-input---mff-file" class="section level2">
+<h2>aRchaic input - MFF file</h2>
+<p>The <strong>aRchaic</strong> R package requires as input a MismatchFeatureFormat (MFF) file, which is a special type of .csv formatted file. A typical example MFF file looks like the following</p>
+<pre class="r"><code>mff &lt;- read.csv(&quot;../inst/extdata/ancients/NE2_subsampled.csv&quot;, header = FALSE)
+head(mff)</code></pre>
+<pre><code>##       V1 V2 V3 V4 V5 V6      V7
+## 1 AC-&gt;TC 17 48  A  A  - 1557694
+## 2 AG-&gt;AC 47  9  A  T  + 4607735
+## 3 TG-&gt;AT 93  1  A  C  - 5166724
+## 4 TC-&gt;TT 16 50  G  G  - 4581952
+## 5 AC-&gt;TG 48 31  A  C  +  207160
+## 6 GG-&gt;AG 33  5  G  G  - 2912042</code></pre>
+<p>The first column represents mismatch type and flanking bases : (left flank base)(mismatch)(right flank base) &lt;-&gt; (A)(C-&gt;T)(C). The second and third columns represent the position of mismatch from 5’ and 3’ ends of reads after mapped to reference. The fourth and 5th columns represent the base 1 base upstream from 5’ end of read and 1 base downstream from 3’ end of read respectively. The 6th column contains information of which strand the read comes from, and the 7th column is an identifier for the read containing the mismatch.</p>
+</div>
+<div id="prepare_archaic" class="section level2">
+<h2>prepare_archaic()</h2>
+<p>Suppose you have two folders of MFF files corresponding to two studies - one for moderns and one for ancients</p>
+<ul>
+<li>Modern files :</li>
+</ul>
+<pre class="r"><code>list.files(&quot;../inst/extdata/moderns/&quot;, pattern = &quot;.csv&quot;)</code></pre>
+<pre><code>## [1] &quot;NA19788_subsampled.csv&quot; &quot;NA19789_subsampled.csv&quot;
+## [3] &quot;NA19792_subsampled.csv&quot; &quot;NA19794_subsampled.csv&quot;
+## [5] &quot;NA19795_subsampled.csv&quot;</code></pre>
+<ul>
+<li>Ancient files :</li>
+</ul>
+<pre class="r"><code>list.files(&quot;../inst/extdata/ancients/&quot;, pattern = &quot;.csv&quot;)</code></pre>
+<pre><code>## [1] &quot;NE2_subsampled.csv&quot; &quot;NE3_subsampled.csv&quot; &quot;NE4_subsampled.csv&quot;
+## [4] &quot;NE5_subsampled.csv&quot; &quot;NE6_subsampled.csv&quot;</code></pre>
+<p>Each of the folders has 5 MFF files corresponding to 5 samples.</p>
+<p>First we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
+<pre class="r"><code>out &lt;- prepare_archaic(dirs = c(&quot;../inst/extdata/moderns/&quot;, &quot;../inst/extdata/ancients/&quot;))</code></pre>
+<p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, with cells of the matrix recording counts of the number of times a coded mismatch pattern occurs in a sample.</p>
+</div>
+<div id="model_archaic" class="section level2">
+<h2>model_archaic()</h2>
+<p>We fit the mixed membership model in <strong>aRchaic</strong> onthe output from <code>prepare_archaic()</code>. We choose the number of clusters <span class="math inline">\(K=2\)</span></p>
+<pre class="r"><code>model &lt;- model_archaic(out, K = 2)</code></pre>
+<pre><code>## The data is read as a list of matrices - processed by prepare_archaic()</code></pre>
+<pre><code>## Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens</code></pre>
+<pre><code>## 
+## Estimating on a 10 samples collection.
+## Fitting the 2 clusters/topics model.
+## log posterior increase: 14428.6, 129.4, 13.1, 5.6, 7.4, 1.4, 1.6, done.</code></pre>
+<p>the output <code>model</code> consists of</p>
+<ul>
+<li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
+<li><strong>theta</strong> : cluster profiles - with each column a probability distribution on coded mismatch features</li>
+<li><strong>assessment</strong> : assessment of model fit : BIC and loglikelihood</li>
+</ul>
+</div>
+<div id="plot_archaic" class="section level2">
+<h2>plot_archaic()</h2>
+<p>The model output, in particular <strong>omega</strong> and <strong>theta</strong> can be visualized using the <code>plot_archaic()</code> command.</p>
+<pre class="r"><code>plot_archaic(model, output_dir = &quot;../inst/extdata/archaic_results/&quot;, background = &quot;modern&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>After running this, go to the output directory <code>../inst/extdata/archaic_results</code>. You should see there is a <code>structure.png</code> file for the stacked bar chart representation of the <strong>omega</strong> output from <code>model_archaic</code> and for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster. Also notice that the method clearly separates out the example modern samples from the ancient samples</p>
+</div>
+<div id="sessioninfo" class="section level2">
+<h2>SessionInfo</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.4.4 (2018-03-15)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] grid      stats     graphics  grDevices utils     datasets  methods  
+## [8] base     
+## 
+## other attached packages:
+## [1] dplyr_0.7.4    ggplot2_2.2.1  gridBase_0.4-7 aRchaic_0.1.0 
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.16       RColorBrewer_1.1-2 bindr_0.1         
+##  [4] pillar_1.1.0       compiler_3.4.4     plyr_1.8.4        
+##  [7] tools_3.4.4        boot_1.3-20        digest_0.6.15     
+## [10] nlme_3.1-131.1     evaluate_0.10.1    tibble_1.4.2      
+## [13] gtable_0.2.0       lattice_0.20-35    mgcv_1.8-23       
+## [16] pkgconfig_2.0.1    rlang_0.2.0        Matrix_1.2-12     
+## [19] yaml_2.1.18        parallel_3.4.4     bindrcpp_0.2      
+## [22] cluster_2.0.6      stringr_1.3.0      knitr_1.20        
+## [25] Logolas_1.3.1      gtools_3.5.0       CountClust_1.6.1  
+## [28] stats4_3.4.4       rprojroot_1.3-2    nnet_7.3-12       
+## [31] cowplot_0.9.2      glue_1.2.0         R6_2.2.2          
+## [34] maptpx_1.9-5       flexmix_2.3-14     rmarkdown_1.9     
+## [37] limma_3.34.9       reshape2_1.4.3     magrittr_1.5      
+## [40] MASS_7.3-47        backports_1.1.2    scales_0.5.0.9000 
+## [43] htmltools_0.3.6    modeltools_0.2-21  assertthat_0.2.0  
+## [46] permute_0.9-4      ape_5.0            picante_1.6-2     
+## [49] colorspace_1.3-2   labeling_0.3       stringi_1.1.6     
+## [52] lazyeval_0.2.1     munsell_0.4.3      slam_0.1-42       
+## [55] SQUAREM_2017.10-1  vegan_2.4-4</code></pre>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+    This <a href="http://rmarkdown.rstudio.com">R Markdown</a> site was created with <a href="https://github.com/jdblischak/workflowr">workflowr</a>
+</p>
+<hr>
+
+<!-- To enable disqus, uncomment the section below and provide your disqus_shortname -->
+
+<!-- disqus
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'rmarkdown'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+-->
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
