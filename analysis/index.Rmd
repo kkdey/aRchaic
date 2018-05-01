@@ -115,13 +115,13 @@ from, and the 7th column is an identifier for the read containing the mismatch.
 Suppose you have two folders of MFF files corresponding to two studies - one for moderns
 and one for ancients
 
-- Modern files :
+- **Modern files** :
 
 ```{r}
 list.files("../inst/extdata/moderns/", pattern = ".csv")
 ```
 
-- Ancient files :
+- **Ancient files** :
 
 ```{r}
 list.files("../inst/extdata/ancients/", pattern = ".csv")
@@ -142,11 +142,15 @@ of the number of times a coded mismatch pattern occurs in a sample.
 
 ## model_archaic() 
 
-We fit the mixed membership model in **aRchaic** onthe output from `prepare_archaic()`.
-We choose the number of clusters $K=2$
+Before modeling and visualization, we choose a directory - `output_dir` -
+to save the model output and the visualization.
+
+Next, we fit the mixed membership model in **aRchaic** onthe output from 
+`prepare_archaic()`. We choose the number of clusters $K=2$
 
 ```{r}
-model <- model_archaic(out, K = 2)
+model <- model_archaic(out, K = 2, 
+                       output_dir = "../inst/extdata/archaic_results/")
 ```
 
 the output `model` consists of 
@@ -163,7 +167,8 @@ The model output, in particular **omega** and **theta** can be visualized using
 the `plot_archaic()` command.
 
 ```{r warning = FALSE, message = FALSE, eval=FALSE}
-plot_archaic(model, output_dir = "../inst/extdata/archaic_results/", background = "modern")
+plot_archaic(model, output_dir = "../inst/extdata/archaic_results/", 
+             background = "modern")
 ```
 
 After running this, go to the output directory `../inst/extdata/archaic_results`. 

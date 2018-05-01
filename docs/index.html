@@ -378,14 +378,14 @@ head(mff)</code></pre>
 <h2>prepare_archaic()</h2>
 <p>Suppose you have two folders of MFF files corresponding to two studies - one for moderns and one for ancients</p>
 <ul>
-<li>Modern files :</li>
+<li><strong>Modern files</strong> :</li>
 </ul>
 <pre class="r"><code>list.files(&quot;../inst/extdata/moderns/&quot;, pattern = &quot;.csv&quot;)</code></pre>
 <pre><code>## [1] &quot;NA19788_subsampled.csv&quot; &quot;NA19789_subsampled.csv&quot;
 ## [3] &quot;NA19792_subsampled.csv&quot; &quot;NA19794_subsampled.csv&quot;
 ## [5] &quot;NA19795_subsampled.csv&quot;</code></pre>
 <ul>
-<li>Ancient files :</li>
+<li><strong>Ancient files</strong> :</li>
 </ul>
 <pre class="r"><code>list.files(&quot;../inst/extdata/ancients/&quot;, pattern = &quot;.csv&quot;)</code></pre>
 <pre><code>## [1] &quot;NE2_subsampled.csv&quot; &quot;NE3_subsampled.csv&quot; &quot;NE4_subsampled.csv&quot;
@@ -397,14 +397,16 @@ head(mff)</code></pre>
 </div>
 <div id="model_archaic" class="section level2">
 <h2>model_archaic()</h2>
-<p>We fit the mixed membership model in <strong>aRchaic</strong> onthe output from <code>prepare_archaic()</code>. We choose the number of clusters <span class="math inline">\(K=2\)</span></p>
-<pre class="r"><code>model &lt;- model_archaic(out, K = 2)</code></pre>
+<p>Before modeling and visualization, we choose a directory - <code>output_dir</code> - to save the model output and the visualization.</p>
+<p>Next, we fit the mixed membership model in <strong>aRchaic</strong> onthe output from <code>prepare_archaic()</code>. We choose the number of clusters <span class="math inline">\(K=2\)</span></p>
+<pre class="r"><code>model &lt;- model_archaic(out, K = 2, 
+                       output_dir = &quot;../inst/extdata/archaic_results/&quot;)</code></pre>
 <pre><code>## The data is read as a list of matrices - processed by prepare_archaic()</code></pre>
 <pre><code>## Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 14428.6, 129.4, 13.1, 5.6, 7.4, 1.4, 1.6, done.</code></pre>
+## log posterior increase: 58012.5, 1686.4, 25.4, 9.8, 3.5, 1.6, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -415,7 +417,8 @@ head(mff)</code></pre>
 <div id="plot_archaic" class="section level2">
 <h2>plot_archaic()</h2>
 <p>The model output, in particular <strong>omega</strong> and <strong>theta</strong> can be visualized using the <code>plot_archaic()</code> command.</p>
-<pre class="r"><code>plot_archaic(model, output_dir = &quot;../inst/extdata/archaic_results/&quot;, background = &quot;modern&quot;)</code></pre>
+<pre class="r"><code>plot_archaic(model, output_dir = &quot;../inst/extdata/archaic_results/&quot;, 
+             background = &quot;modern&quot;)</code></pre>
 <p>After running this, go to the output directory <code>../inst/extdata/archaic_results</code>. You should see there is a <code>structure.png</code> file for the stacked bar chart representation of the <strong>omega</strong> output from <code>model_archaic</code> and for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster. Also notice that the method clearly separates out the example modern samples from the ancient samples</p>
 </div>
 <div id="sessioninfo" class="section level2">
