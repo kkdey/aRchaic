@@ -1,2 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^analysis/
+^docs/
+^code/
+^bin/
+^LICENSE
+^output/
+^test/
