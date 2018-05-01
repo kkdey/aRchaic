@@ -42,14 +42,14 @@ grouped by studies (Figure 1 left), while the clusters are represented as logo
 plots of enrichment of their mismatch profiles against a modern background
 (Figure 1 right).
 
-For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns
-and shows no enrichment in mismatch profile with respect to modern 
-background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and 
-highlghts enrichment of C-to-G mismatches happening at the ends of the reads,
-with a depletion of G on right flanking base - due to scarcity of CpG sites in
-genome.  Cluster 3 (orange) is represented in UDG ancients and shows enrichment
-of C-to-G mismatches at mainly the terminal position of read with further
-enrichment of these mismatches at CpG sites.
+<!-- For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns -->
+<!-- and shows no enrichment in mismatch profile with respect to modern  -->
+<!-- background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and  -->
+<!-- highlghts enrichment of C-to-G mismatches happening at the ends of the reads, -->
+<!-- with a depletion of G on right flanking base - due to scarcity of CpG sites in -->
+<!-- genome.  Cluster 3 (orange) is represented in UDG ancients and shows enrichment -->
+<!-- of C-to-G mismatches at mainly the terminal position of read with further -->
+<!-- enrichment of these mismatches at CpG sites. -->
 
 
 In the next sections, we present a tutorial on how to generate images  (like in
@@ -162,7 +162,7 @@ the output `model` consists of
 The model output, in particular **omega** and **theta** can be visualized using 
 the `plot_archaic()` command.
 
-```{r warning = FALSE, message = FALSE}
+```{r warning = FALSE, message = FALSE, eval=FALSE}
 plot_archaic(model, output_dir = "../inst/extdata/archaic_results/", background = "modern")
 ```
 

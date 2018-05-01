@@ -332,7 +332,14 @@ div.section {
 <p>For every mismatch in a BAM file with respect to a reference genome, <strong>aRchaic</strong> records the various features of the mismatch - mismatch type, flanking bases, strand break base, strand and position of mismatch from the ends of read - into a .csv file which we call the <em>Mismatch Feature Format (MFF)</em> file.</p>
 <p>Next, <strong>aRchaic</strong> fits a mixed membership model on the mismatch feature data that allows each sample to have partial memberships in more than one cluster where the clusters represent distinct mismatch feature profiles.</p>
 <p>The cluster memberships from model fit are represented in a stacked bar chart grouped by studies (Figure 1 left), while the clusters are represented as logo plots of enrichment of their mismatch profiles against a modern background (Figure 1 right).</p>
-<p>For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns and shows no enrichment in mismatch profile with respect to modern background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and highlghts enrichment of C-to-G mismatches happening at the ends of the reads, with a depletion of G on right flanking base - due to scarcity of CpG sites in genome. Cluster 3 (orange) is represented in UDG ancients and shows enrichment of C-to-G mismatches at mainly the terminal position of read with further enrichment of these mismatches at CpG sites.</p>
+<!-- For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns -->
+<!-- and shows no enrichment in mismatch profile with respect to modern  -->
+<!-- background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and  -->
+<!-- highlghts enrichment of C-to-G mismatches happening at the ends of the reads, -->
+<!-- with a depletion of G on right flanking base - due to scarcity of CpG sites in -->
+<!-- genome.  Cluster 3 (orange) is represented in UDG ancients and shows enrichment -->
+<!-- of C-to-G mismatches at mainly the terminal position of read with further -->
+<!-- enrichment of these mismatches at CpG sites. -->
 <p>In the next sections, we present a tutorial on how to generate images (like in Figure 1) starting from the BAM files for the samples.</p>
 </div>
 <div id="installation" class="section level2">
@@ -397,7 +404,7 @@ head(mff)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 62726.1, 332.1, 19.7, 5.3, 3.7, done.</code></pre>
+## log posterior increase: 14428.6, 129.4, 13.1, 5.6, 7.4, 1.4, 1.6, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -409,7 +416,6 @@ head(mff)</code></pre>
 <h2>plot_archaic()</h2>
 <p>The model output, in particular <strong>omega</strong> and <strong>theta</strong> can be visualized using the <code>plot_archaic()</code> command.</p>
 <pre class="r"><code>plot_archaic(model, output_dir = &quot;../inst/extdata/archaic_results/&quot;, background = &quot;modern&quot;)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>After running this, go to the output directory <code>../inst/extdata/archaic_results</code>. You should see there is a <code>structure.png</code> file for the stacked bar chart representation of the <strong>omega</strong> output from <code>model_archaic</code> and for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster. Also notice that the method clearly separates out the example modern samples from the ancient samples</p>
 </div>
 <div id="sessioninfo" class="section level2">
@@ -427,32 +433,29 @@ head(mff)</code></pre>
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] grid      stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] dplyr_0.7.4    ggplot2_2.2.1  gridBase_0.4-7 aRchaic_0.1.0 
+## [1] aRchaic_0.1.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.16       RColorBrewer_1.1-2 bindr_0.1         
-##  [4] pillar_1.1.0       compiler_3.4.4     plyr_1.8.4        
-##  [7] tools_3.4.4        boot_1.3-20        digest_0.6.15     
-## [10] nlme_3.1-131.1     evaluate_0.10.1    tibble_1.4.2      
-## [13] gtable_0.2.0       lattice_0.20-35    mgcv_1.8-23       
-## [16] pkgconfig_2.0.1    rlang_0.2.0        Matrix_1.2-12     
-## [19] yaml_2.1.18        parallel_3.4.4     bindrcpp_0.2      
-## [22] cluster_2.0.6      stringr_1.3.0      knitr_1.20        
-## [25] Logolas_1.3.1      gtools_3.5.0       CountClust_1.6.1  
-## [28] stats4_3.4.4       rprojroot_1.3-2    nnet_7.3-12       
-## [31] cowplot_0.9.2      glue_1.2.0         R6_2.2.2          
-## [34] maptpx_1.9-5       flexmix_2.3-14     rmarkdown_1.9     
-## [37] limma_3.34.9       reshape2_1.4.3     magrittr_1.5      
-## [40] MASS_7.3-47        backports_1.1.2    scales_0.5.0.9000 
-## [43] htmltools_0.3.6    modeltools_0.2-21  assertthat_0.2.0  
-## [46] permute_0.9-4      ape_5.0            picante_1.6-2     
-## [49] colorspace_1.3-2   labeling_0.3       stringi_1.1.6     
-## [52] lazyeval_0.2.1     munsell_0.4.3      slam_0.1-42       
-## [55] SQUAREM_2017.10-1  vegan_2.4-4</code></pre>
+##  [1] Rcpp_0.12.16      pillar_1.1.0      compiler_3.4.4   
+##  [4] plyr_1.8.4        tools_3.4.4       boot_1.3-20      
+##  [7] digest_0.6.15     nlme_3.1-131.1    evaluate_0.10.1  
+## [10] tibble_1.4.2      gtable_0.2.0      gridBase_0.4-7   
+## [13] lattice_0.20-35   mgcv_1.8-23       rlang_0.2.0      
+## [16] Matrix_1.2-12     yaml_2.1.18       parallel_3.4.4   
+## [19] cluster_2.0.6     stringr_1.3.0     knitr_1.20       
+## [22] Logolas_1.3.1     gtools_3.5.0      CountClust_1.6.1 
+## [25] stats4_3.4.4      rprojroot_1.3-2   grid_3.4.4       
+## [28] nnet_7.3-12       cowplot_0.9.2     maptpx_1.9-5     
+## [31] flexmix_2.3-14    rmarkdown_1.9     limma_3.34.9     
+## [34] ggplot2_2.2.1     reshape2_1.4.3    magrittr_1.5     
+## [37] MASS_7.3-47       backports_1.1.2   scales_0.5.0.9000
+## [40] htmltools_0.3.6   modeltools_0.2-21 permute_0.9-4    
+## [43] ape_5.0           picante_1.6-2     colorspace_1.3-2 
+## [46] stringi_1.1.6     lazyeval_0.2.1    munsell_0.4.3    
+## [49] slam_0.1-42       SQUAREM_2017.10-1 vegan_2.4-4</code></pre>
 </div>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
