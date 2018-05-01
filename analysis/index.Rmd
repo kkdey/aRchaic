@@ -22,7 +22,7 @@ Here is a visual representation of **aRchaic** on *moderns*,
 ancient samples treated with UDG library protocol and ancient samples not 
 treated with UDG library protocol.
 
-<div style="width:600px; height:600px">
+<div style="width:650px; height:650px">
 ![](fig.png)
 </div>
 
