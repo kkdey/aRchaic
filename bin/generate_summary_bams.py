@@ -50,10 +50,11 @@ if __name__ == '__main__':
     parser.add_argument("-f", "--fasta", required=True, help = "reference file, the reference file must be indexed")
     parser.add_argument("-o", "--out", required=True, help="out file")
     parser.add_argument("--add-chr", help = "Does your reference use the chr prefix? For example, different versions of the references either use chr1 or 1 to designate chromosome 1, you can find out by running samtools idxstats <your bamfile> | head -1 ", default = False, action = 'store_true', dest = "add_chr")
-    parser.add_argument("--dont-use-tags", help = "don't use the MD and NM tags? If the tags are computed incorrectly from the alignment, you can use this option and we use a simple method to align reads to the reference (we do not recommend this option)", default = False, action = 'store_true', dest = "dont_use_tags")
+    parser.add_argument("--dont-use-tags", help = "don't use the MD and NM tags? If the tags are computed incorrectly from the alignment, you can use this option (slower option)", default = False, action = 'store_true', dest = "dont_use_tags")
     parser.add_argument("-n", "--nflanking", required=False, default = 1, help="number of flanking base-pairs around the mismatch to record, must be an integer >= 1", dest = "nflanking", type=int)
     parser.add_argument("-mq", "--mapquality", required=False, default = 20, help="min. mapping quality", dest = "mq", type = int)
     parser.add_argument("-bq", "--basequality", required=False, default = 30, help="min. base quality", dest = "bq", type = int)
+    #parser.add_argument("-id", "--add-read-id", required=False, default = False, help="add a unique read id?", action = 'store_true', dest = "add_id")
     
     args = parser.parse_args()
 
@@ -114,11 +115,10 @@ if __name__ == '__main__':
                 start = posg[i]-args.nflanking
                 end = posg[i]+args.nflanking
                 ref = fastafile[(chr-1)][start:(end+1)]
-                patt = (ref[0:(args.nflanking+1)]).upper() + '->' + mut + (ref[(args.nflanking+1):(2*args.nflanking+1)]).upper()
+                patt = (ref[0:(args.nflanking+1)]).upper() + '->' + mut.upper() + (ref[(args.nflanking+1):(2*args.nflanking+1)]).upper()
 
-                mutStart = pos - read.qstart
-                # read.qend is not 0-based
-                mutEnd = (read.qend-1) - pos
+                mutStart = pos - read.query_alignment_start
+                mutEnd = read.qlen - (pos + 1)
 
                 read_name = read_cnt
                 
