@@ -168,7 +168,7 @@ plot enrichment of the mismatch profiles with respect to a modern background.
 
 The following is a summary of these visualizations
 
-<div style="width:650px; height:650px">
+<div style="width:750px; height:750px">
 ![](vignette_fig.png)
 </div>
 

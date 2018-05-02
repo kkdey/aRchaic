@@ -392,7 +392,7 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 14973.9, 130.6, 13.3, 13.7, 4, done.</code></pre>
+## log posterior increase: 14776.4, 143, 17, 11.7, 2.3, 1.4, 2, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -407,7 +407,7 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <p>Once the run finishes (a few seconds), go to the output directory <code>output_dir</code>. You should see there is a <code>structure.png</code> file that represents the cluster memberships in <strong>model$omega</strong> in a stacked bar chart (see Fig 1 left).</p>
 <p>Also, the <code>output_dir</code> should contain for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster as in <strong>model$theta</strong>. If <code>background = &quot;modern&quot;</code> in <code>plot_archaic</code> code above, this reresentation will plot enrichment of the mismatch profiles with respect to a modern background.</p>
 <p>The following is a summary of these visualizations</p>
-<div style="width:650px; height:650px">
+<div style="width:750px; height:750px">
 <div class="figure">
 <img src="vignette_fig.png" />
 
