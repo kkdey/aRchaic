@@ -133,18 +133,21 @@ from, and the 7th column is an identifier for the read containing the mismatch.
 ## prepare_archaic()
 
 Suppose you have two folders of MFF files corresponding to two studies - one for moderns
-and one for ancients
+and one for ancients. We incorporate them as part of the R package itself - lets call them
+`moderns` and `ancients`.
 
-- Modern files :
+- **Modern files** :
 
 ```{r}
-list.files(system.file("extdata","moderns", package = "aRchaic"), pattern = ".csv")
+moderns_dir <- system.file("extdata","moderns", package = "aRchaic")
+list.files(moderns_dir, pattern = ".csv")
 ```
 
-- Ancient files :
+- **Ancient files** :
 
 ```{r}
-list.files(system.file("extdata","ancients", package = "aRchaic"), pattern = ".csv")
+ancients_dir <- system.file("extdata","ancients", package = "aRchaic")
+list.files(ancients_dir, pattern = ".csv")
 ```
 
 Each of the folders has 5 MFF files corresponding to 5 samples. 
@@ -152,8 +155,7 @@ Each of the folders has 5 MFF files corresponding to 5 samples.
 First we prepare the input data to **aRchaic** model from the above data folders.
 
 ```{r warning = FALSE, message = FALSE}
-out <- prepare_archaic(dirs = c(paste0(system.file("extdata","moderns", package = "aRchaic"), "/"), 
-                                paste0(system.file("extdata","ancients/", package = "aRchaic"), "/")))
+out <- prepare_archaic(dirs = c(moderns_dir, ancients_dir))
 ```
 
 The output `out` should be a list with 2 elements - corresponding to 2 study 
@@ -166,9 +168,8 @@ study folder, so they can be re-used for similar analysis downstream more easily
 without needing to process the MFF files everytime. In fact, if you run
 
 ```{r}
-out2 <- prepare_archaic(dirs = c(paste0(system.file("extdata","moderns", package = "aRchaic"), "/"), 
-                                paste0(system.file("extdata","ancients/", package = "aRchaic"), "/")))
-out3 <- prepare_archaic(dirs = paste0(system.file("extdata","moderns", package = "aRchaic"), "/"))
+out2 <- prepare_archaic(dirs = c(moderns_dir, ancients_dir))
+out3 <- prepare_archaic(dirs = moderns_dir)
 ```
 
 you will see that `out2` or `out3` no longer process the .csv files in the folders
@@ -177,11 +178,15 @@ and directly read from the .Rdata file.
 
 ## model_archaic() 
 
+Before modeling and visualization, we choose a directory - `output_dir` -
+to save the model output and the visualization.
+
 We fit the mixed membership model in **aRchaic** onthe output from `prepare_archaic()`.
 We choose the number of clusters $K=2$
 
 ```{r}
-model <- model_archaic(out, K = 2)
+output_dir <- system.file("extdata","archaic_results", package = "aRchaic")
+model <- model_archaic(out, K = 2, output_dir = output_dir)
 ```
 
 
@@ -189,9 +194,7 @@ Alternatively, one can also input the study folder vector directly into
 `model_archaic()`.
 
 ```{r}
-model <- model_archaic(c(paste0(system.file("extdata","moderns", package = "aRchaic"), "/"), 
-                                paste0(system.file("extdata","ancients/", package = "aRchaic"), "/")), K = 2,
-                       output_dir = paste0(system.file("extdata","archaic_results", package = "aRchaic"), "/")) 
+model <- model_archaic(c(moderns_dir, ancients_dir), K = 2, output_dir = output_dir) 
 ```
 
 the output `model` consists of 
@@ -209,14 +212,14 @@ The model output, in particular **omega** and **theta** can be visualized using
 the `plot_archaic()` command.
 
 ```{r warning = FALSE, message = FALSE}
-plot_archaic(model, output_dir = paste0(system.file("extdata","archaic_results", package = "aRchaic"), "/"), background = "modern")
+plot_archaic(model, output_dir = output_dir, background = "modern")
 ```
 
-After running this, go to the output directory `../inst/extdata/archaic_results`. 
+After running this, go to the output directory `output_dir`. 
 You should see there is a `structure.png` file for the stacked bar chart 
 representation of the **omega** output from `model_archaic` and for each 
-$k=1,2$, a `logo_clus_k.png` file visualizing the mismatch profile for each 
-cluster. 
+$k=1,2$, a `logo_clus_k.png` file visualizing the mismatch profile in 
+**theta** for each cluster. 
 Also notice that the method clearly separates out the example modern samples 
 from the ancient samples 
 

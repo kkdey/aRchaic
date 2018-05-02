@@ -318,33 +318,7 @@ div.section {
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p><strong>aRchaic</strong> is a R/python software environment that performs model based clustering and visualization of ancient and modern DNA samples from one or more studies. This model can be used to identify distinct patterns of DNA damage and is capable of reflecting relative rates of contamination in contaminated aDNA samples.</p>
-<p>Here is a visual representation of <strong>aRchaic</strong> on <em>moderns</em>, ancient samples treated with UDG library protocol and ancient samples not treated with UDG library protocol.</p>
-<p>
-</p>
-<p>
-</p>
-<div style="width:650px; height:650px">
-<div class="figure">
-<img src="fig.png" />
-
-</div>
-</div>
-</div>
-<div id="archaic-workflow" class="section level2">
-<h2>aRchaic workflow</h2>
-<p>For every mismatch in a BAM file with respect to a reference genome, <strong>aRchaic</strong> records the various features of the mismatch - mismatch type, flanking bases, strand break base, strand and position of mismatch from the ends of read - into a .csv file which we call the <em>Mismatch Feature Format (MFF)</em> file.</p>
-<p>Next, <strong>aRchaic</strong> fits a mixed membership model on the mismatch feature data that allows each sample to have partial memberships in more than one cluster where the clusters represent distinct mismatch feature profiles.</p>
-<p>The cluster memberships from model fit are represented in a stacked bar chart grouped by studies (Figure 1 left), while the clusters are represented as logo plots of enrichment of their mismatch profiles against a modern background (Figure 1 right).</p>
-<!-- For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns -->
-<!-- and shows no enrichment in mismatch profile with respect to modern  -->
-<!-- background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and  -->
-<!-- highlghts enrichment of C-to-G mismatches happening at the ends of the reads, -->
-<!-- with a depletion of G on right flanking base - due to scarcity of CpG sites in -->
-<!-- genome.  Cluster 3 (orange) is represented in UDG ancients and shows enrichment -->
-<!-- of C-to-G mismatches at mainly the terminal position of read with further -->
-<!-- enrichment of these mismatches at CpG sites. -->
-<p>In the next sections, we present a tutorial on how to generate images (like in Figure 1) starting from the BAM files for the samples.</p>
+<p><strong>aRchaic</strong> is a R/python software environment that performs model based clustering and visualization of ancient and modern DNA samples from one or more studies (see <code>plot_archaic()</code> section for example visualization). This model can be used to identify distinct patterns of DNA damage and is capable of reflecting relative rates of contamination in contaminated aDNA samples.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
@@ -366,8 +340,10 @@ biocLite(&quot;Logolas&quot;)</code></pre>
 </div>
 <div id="archaic-input---mff-file" class="section level2">
 <h2>aRchaic input - MFF file</h2>
-<p>The <strong>aRchaic</strong> R package requires as input a MismatchFeatureFormat (MFF) file, which is a special type of .csv formatted file. A typical example MFF file looks like the following</p>
-<pre class="r"><code>mff &lt;- read.csv(&quot;../inst/extdata/ancients/NE2_subsampled.csv&quot;, header = FALSE)
+<p>For every mismatch in a BAM file with respect to a reference genome, <strong>aRchaic</strong> records various features of the mismatch - mismatch type, flanking bases, strand break base, strand and position of mismatch from the ends of read - into a .csv file which we call the <em>Mismatch Feature Format (MFF)</em> file.</p>
+<p>A typical example MFF file looks like the following</p>
+<pre class="r"><code>mff &lt;- read.csv(system.file(&quot;extdata&quot;,&quot;ancients&quot;,&quot;NE2_subsampled.csv&quot;,package = &quot;aRchaic&quot;),
+                header = FALSE)
 head(mff)</code></pre>
 <pre><code>##       V1 V2 V3 V4 V5 V6      V7
 ## 1 AC-&gt;TC 17 48  A  A  - 1557694
@@ -376,41 +352,47 @@ head(mff)</code></pre>
 ## 4 TC-&gt;TT 16 50  G  G  - 4581952
 ## 5 AC-&gt;TG 48 31  A  C  +  207160
 ## 6 GG-&gt;AG 33  5  G  G  - 2912042</code></pre>
-<p>The first column represents mismatch type and flanking bases : (left flank base)(mismatch)(right flank base) &lt;-&gt; (A)(C-&gt;T)(C). The second and third columns represent the position of mismatch from 5’ and 3’ ends of reads after mapped to reference. The fourth and 5th columns represent the base 1 base upstream from 5’ end of read and 1 base downstream from 3’ end of read respectively. The 6th column contains information of which strand the read comes from, and the 7th column is an identifier for the read containing the mismatch.</p>
+<p>The first column represents mismatch type and flanking bases : (left flank base)(mismatch)(right flank base) &lt;-&gt; (A)(C-&gt;T)(C). The second and third columns represent the position of mismatch from 5’ and 3’ ends of reads after mapped to reference. The 4th (5th) columns represent the base 1 base upstream (downstream) from 5’ (3’) end of read respectively. The 6th column contains information of which strand the read comes from, and the 7th column is an identifier for the read containing the mismatch.</p>
+<p>We provide scripts to generate the MFF files from the BAM/SAM files <a href="https://github.com/kkdey/aRchaic/tree/master/bin">here</a>. The simple one line code to use for indexed BAM file is</p>
+<pre class="r"><code>python generate_summary_bams.py -b /path/to/bam/example.bam -f /path/to/reference/hs37d5
+.fa -o /path/to/mff/example_mff.csv --add-chr</code></pre>
 </div>
 <div id="prepare_archaic" class="section level2">
 <h2>prepare_archaic()</h2>
-<p>Suppose you have two folders of MFF files corresponding to two studies - one for moderns and one for ancients</p>
+<p>Suppose you have multiple folders of MFF files corresponding to different studies - comprising of ancient and/or modern samples. We present an example here where we incorporate two folders like that in the package - <code>inst/extdata/moderns</code> and <code>inst/extdata/ancients</code> corresponding to separate studies for 5 moderns and 5 ancients.</p>
 <ul>
-<li><strong>Modern files</strong> :</li>
+<li><strong>Modern study</strong> :</li>
 </ul>
-<pre class="r"><code>list.files(&quot;../inst/extdata/moderns/&quot;, pattern = &quot;.csv&quot;)</code></pre>
+<pre class="r"><code>moderns_dir &lt;- system.file(&quot;extdata&quot;,&quot;moderns&quot;, package = &quot;aRchaic&quot;)
+list.files(moderns_dir, pattern = &quot;.csv&quot;)</code></pre>
 <pre><code>## [1] &quot;NA19788_subsampled.csv&quot; &quot;NA19789_subsampled.csv&quot;
 ## [3] &quot;NA19792_subsampled.csv&quot; &quot;NA19794_subsampled.csv&quot;
 ## [5] &quot;NA19795_subsampled.csv&quot;</code></pre>
 <ul>
-<li><strong>Ancient files</strong> :</li>
+<li><strong>Ancient study</strong> :</li>
 </ul>
-<pre class="r"><code>list.files(&quot;../inst/extdata/ancients/&quot;, pattern = &quot;.csv&quot;)</code></pre>
+<pre class="r"><code>ancients_dir &lt;- system.file(&quot;extdata&quot;,&quot;ancients&quot;, package = &quot;aRchaic&quot;)
+list.files(ancients_dir, pattern = &quot;.csv&quot;)</code></pre>
 <pre><code>## [1] &quot;NE2_subsampled.csv&quot; &quot;NE3_subsampled.csv&quot; &quot;NE4_subsampled.csv&quot;
 ## [4] &quot;NE5_subsampled.csv&quot; &quot;NE6_subsampled.csv&quot;</code></pre>
 <p>Each of the folders has 5 MFF files corresponding to 5 samples.</p>
-<p>First we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
-<pre class="r"><code>out &lt;- prepare_archaic(dirs = c(&quot;../inst/extdata/moderns/&quot;, &quot;../inst/extdata/ancients/&quot;))</code></pre>
-<p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, with cells of the matrix recording counts of the number of times a coded mismatch pattern occurs in a sample.</p>
+<p>Next we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
+<pre class="r"><code>out &lt;- prepare_archaic(dirs = c(moderns_dir, ancients_dir))</code></pre>
+<p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, and a cell in the matrix record counts of the number of times a coded mismatch pattern occurs in a sample.</p>
 </div>
 <div id="model_archaic" class="section level2">
 <h2>model_archaic()</h2>
-<p>Before modeling and visualization, we choose a directory - <code>output_dir</code> - to save the model output and the visualization.</p>
-<p>Next, we fit the mixed membership model in <strong>aRchaic</strong> onthe output from <code>prepare_archaic()</code>. We choose the number of clusters <span class="math inline">\(K=2\)</span></p>
-<pre class="r"><code>model &lt;- model_archaic(out, K = 2, 
-                       output_dir = &quot;../inst/extdata/archaic_results/&quot;)</code></pre>
+<p><strong>aRchaic</strong> fits a mixed membership model on the prepared mismatch feature data from <code>prepare_archaic()</code> that allows each sample to have partial memberships in more than one cluster where the clusters represent distinct mismatch feature profiles.</p>
+<p>We first choose a directory - <code>output_dir</code> - to save the model output and visualization.</p>
+<p>Next we run the <code>model_archaic</code> function to fit the mixed membership model. We choose the number of clusters <span class="math inline">\(K=2\)</span></p>
+<pre class="r"><code>output_dir &lt;- system.file(&quot;extdata&quot;,&quot;archaic_results&quot;, package = &quot;aRchaic&quot;)
+model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## The data is read as a list of matrices - processed by prepare_archaic()</code></pre>
 <pre><code>## Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 14527.2, 110.8, 10.1, 5, 4, 3.3, 1.6, done.</code></pre>
+## log posterior increase: 14973.9, 130.6, 13.3, 13.7, 4, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -420,10 +402,17 @@ head(mff)</code></pre>
 </div>
 <div id="plot_archaic" class="section level2">
 <h2>plot_archaic()</h2>
-<p>The model output, in particular <strong>omega</strong> and <strong>theta</strong> can be visualized using the <code>plot_archaic()</code> command.</p>
-<pre class="r"><code>plot_archaic(model, output_dir = &quot;../inst/extdata/archaic_results/&quot;, 
-             background = &quot;modern&quot;)</code></pre>
-<p>After running this, go to the output directory <code>../inst/extdata/archaic_results</code>. You should see there is a <code>structure.png</code> file for the stacked bar chart representation of the <strong>omega</strong> output from <code>model_archaic</code> and for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster. Also notice that the method clearly separates out the example modern samples from the ancient samples</p>
+<p>The model output, in particular <strong>model<span class="math inline">\(omega** and **model\)</span>theta</strong> can be visualized using the <code>plot_archaic()</code> command.</p>
+<pre class="r"><code>plot_archaic(model, output_dir = output_dir, background = &quot;modern&quot;)</code></pre>
+<p>Once the run finishes (a few seconds), go to the output directory <code>output_dir</code>. You should see there is a <code>structure.png</code> file that represents the cluster memberships in <strong>model$omega</strong> in a stacked bar chart (see Fig 1 left).</p>
+<p>Also, the <code>output_dir</code> should contain for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster as in <strong>model$theta</strong>. If <code>background = &quot;modern&quot;</code> in <code>plot_archaic</code> code above, this reresentation will plot enrichment of the mismatch profiles with respect to a modern background.</p>
+<p>The following is a summary of these visualizations</p>
+<div style="width:650px; height:650px">
+<div class="figure">
+<img src="vignette_fig.png" />
+
+</div>
+</div>
 </div>
 <div id="sessioninfo" class="section level2">
 <h2>SessionInfo</h2>
