@@ -34,7 +34,7 @@ plot_archaic <- function(model,
                          output_dir = NULL){
 
   labs <- model$labs
-  K <- dim(model$omega)
+  K <- dim(model$omega)[2]
   if(is.null(levels(labs))) levels <- unique(labs)
   structure.control.default <- list(yaxis_label = "aRchaic pops",
                                     order_sample = FALSE,
@@ -408,7 +408,7 @@ damageLogo_six.skeleton <- function(pwm,
   rownames(pwm1)[match(c("C->A", "C->G", "C->T",
                          "T->A", "T->C", "T->G"), rownames(pwm1))] <- c("C>A", "C>G", "C>T",
                                                                         "T>A", "T>C", "T>G")
-  colnames(pwm1) <- c("left \n flank", "mismatch", "right \n flank")
+  colnames(pwm1) <- c("5' \n flank", "mismatch", "3' \n flank")
 
 
   if(!is.null(background)){
