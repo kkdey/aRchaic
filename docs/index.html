@@ -388,7 +388,7 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 18175.5, 150.8, 22.8, 14.8, 3.8, 3.8, -0.1, done.</code></pre>
+## log posterior increase: 21421.9, 71.2, 11.9, 10.2, 5, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -398,10 +398,10 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 </div>
 <div id="plot_archaic" class="section level2">
 <h2>plot_archaic()</h2>
-<p>The model output, in particular <strong>model<span class="math inline">\(omega** and **model\)</span>theta</strong> can be visualized using the <code>plot_archaic()</code> command.</p>
+<p>The model output, in particular <strong>omega</strong> and <strong>theta</strong> can be visualized using the <code>plot_archaic()</code> command.</p>
 <pre class="r"><code>plot_archaic(model, output_dir = output_dir, background = &quot;modern&quot;)</code></pre>
-<p>Once the run finishes (a few seconds), go to the output directory <code>output_dir</code>. You should see there is a <code>structure.png</code> file that represents the cluster memberships in <strong>model$omega</strong> in a stacked bar chart (see Fig 1 left).</p>
-<p>Also, the <code>output_dir</code> should contain for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster as in <strong>model$theta</strong>. If <code>background = &quot;modern&quot;</code> in <code>plot_archaic</code> code above, this reresentation will plot enrichment of the mismatch profiles with respect to a modern background.</p>
+<p>Once the run finishes (a few seconds), go to the output directory <code>output_dir</code>. You should see there is a <code>structure.png</code> file that represents the cluster memberships in <strong>omega</strong> in a stacked bar chart (see Fig 1 left).</p>
+<p>Also, the <code>output_dir</code> should contain for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster as in <strong>theta</strong>. If <code>background = &quot;modern&quot;</code> in <code>plot_archaic</code> code above, this reresentation will plot enrichment of the mismatch profiles with respect to a modern background.</p>
 <p>The following is a summary of these visualizations</p>
 <div style="width:750px; height:750px">
 <div class="figure">
