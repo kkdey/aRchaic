@@ -91,7 +91,10 @@ plot_archaic <- function(model,
     tissue_label = factor(labs, levels = levels)
   )
 
-  if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
+  if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}else{
+    if(nchar(output_dir) != "/"){output_dir <- paste0(output_dir, "/")}
+  }
+
   plot.new()
   grid::grid.newpage()
   do.call(CountClust::StructureGGplot, append(list(omega= omega,

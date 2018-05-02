@@ -118,7 +118,7 @@ a special type of .csv formatted file. A typical example MFF file looks like the
 following 
 
 ```{r}
-mff <- read.csv("../inst/extdata/ancients/NE2_subsampled.csv", header = FALSE)
+mff <- read.csv(system.file("extdata","ancients","NE2_subsampled.csv",package = "aRchaic"), header = FALSE)
 head(mff)
 ```
 
@@ -138,13 +138,13 @@ and one for ancients
 - Modern files :
 
 ```{r}
-list.files("../inst/extdata/moderns/", pattern = ".csv")
+list.files(system.file("extdata","moderns", package = "aRchaic"), pattern = ".csv")
 ```
 
 - Ancient files :
 
 ```{r}
-list.files("../inst/extdata/ancients/", pattern = ".csv")
+list.files(system.file("extdata","ancients", package = "aRchaic"), pattern = ".csv")
 ```
 
 Each of the folders has 5 MFF files corresponding to 5 samples. 
@@ -152,7 +152,8 @@ Each of the folders has 5 MFF files corresponding to 5 samples.
 First we prepare the input data to **aRchaic** model from the above data folders.
 
 ```{r warning = FALSE, message = FALSE}
-out <- prepare_archaic(dirs = c("../inst/extdata/moderns/", "../inst/extdata/ancients/"))
+out <- prepare_archaic(dirs = c(paste0(system.file("extdata","moderns", package = "aRchaic"), "/"), 
+                                paste0(system.file("extdata","ancients/", package = "aRchaic"), "/")))
 ```
 
 The output `out` should be a list with 2 elements - corresponding to 2 study 
@@ -165,8 +166,9 @@ study folder, so they can be re-used for similar analysis downstream more easily
 without needing to process the MFF files everytime. In fact, if you run
 
 ```{r}
-out2 <- prepare_archaic(dirs = c("../inst/extdata/moderns/", "../inst/extdata/ancients/"))
-out3 <- prepare_archaic(dirs = c("../inst/extdata/moderns/"))
+out2 <- prepare_archaic(dirs = c(paste0(system.file("extdata","moderns", package = "aRchaic"), "/"), 
+                                paste0(system.file("extdata","ancients/", package = "aRchaic"), "/")))
+out3 <- prepare_archaic(dirs = paste0(system.file("extdata","moderns", package = "aRchaic"), "/"))
 ```
 
 you will see that `out2` or `out3` no longer process the .csv files in the folders
@@ -187,8 +189,9 @@ Alternatively, one can also input the study folder vector directly into
 `model_archaic()`.
 
 ```{r}
-model <- model_archaic(c("../inst/extdata/moderns/", "../inst/extdata/ancients/"), K = 2,
-                       output_dir = "../inst/extdata/archaic_results/")
+model <- model_archaic(c(paste0(system.file("extdata","moderns", package = "aRchaic"), "/"), 
+                                paste0(system.file("extdata","ancients/", package = "aRchaic"), "/")), K = 2,
+                       output_dir = paste0(system.file("extdata","archaic_results", package = "aRchaic"), "/")) 
 ```
 
 the output `model` consists of 
@@ -206,7 +209,7 @@ The model output, in particular **omega** and **theta** can be visualized using
 the `plot_archaic()` command.
 
 ```{r warning = FALSE, message = FALSE}
-plot_archaic(model, output_dir = "../inst/extdata/archaic_results/", background = "modern")
+plot_archaic(model, output_dir = paste0(system.file("extdata","archaic_results", package = "aRchaic"), "/"), background = "modern")
 ```
 
 After running this, go to the output directory `../inst/extdata/archaic_results`. 

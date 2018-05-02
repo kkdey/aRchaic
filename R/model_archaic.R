@@ -66,8 +66,11 @@ model_archaic <- function(dat,
     }
   }else if(class(dat) == "character"){
     if(is.null(labs)) labs <- c()
-    message("The data is read as names of folders")
+    message("The dat is read as names of folders")
     folders <- dat
+    for(numdir in 1:length(folders)){
+      if(nchar(folders[numdir]) != "/") folders[numdir] <- paste0(folders[numdir], "/")
+    }
     datalist <- list()
     for(numdir in 1:length(folders)){
       if(file.exists(paste0(folders[numdir], tail(strsplit(folders[numdir], "/")[[1]],1), ".rda"))){
@@ -169,7 +172,9 @@ model_archaic <- function(dat,
              "theta" = topic_clus$theta,
              "assessment" = model_assessment,
              "labs" = labs)
-  if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}
+  if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}else{
+    if(nchar(output_dir) != "/"){output_dir <- paste0(output_dir, "/")}
+  }
   save(ll, file = paste0(output_dir, "model.rda"))
   return(ll)
 }
