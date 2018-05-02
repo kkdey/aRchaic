@@ -280,15 +280,12 @@ div.tocify {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="about.html">About</a>
-</li>
-<li>
   <a href="license.html">License</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jdblischak/workflowr">
+  <a href="https://github.com/kkdey/aRchaic">
     <span class="fa fa-github"></span>
      
   </a>
@@ -322,9 +319,8 @@ div.section {
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>First and foremost, the user is required to install <a href="https://www.python.org/downloads/">python</a> and <a href="https://www.rstudio.com/">R/RStudio</a>.</p>
-<p>Next, the user needs to install the Python packages <a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a> and <a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a>.</p>
-<p>Next, start a new R session and install the R dependency libraries.</p>
+<p>First and foremost, the user is required to install <a href="https://www.python.org/downloads/">python</a> and <a href="https://www.rstudio.com/">R/RStudio</a>. Next, the user needs to install the Python packages <a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a> and <a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a>.</p>
+<p>Start a new R session and install the R dependency libraries.</p>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
 devtools::install_github(&quot;TaddyLab/maptpx&quot;)
 devtools::install_github(&quot;kkdey/CountClust&quot;)
@@ -333,9 +329,9 @@ install.packages(&quot;dplyr&quot;)
 install.packages(&quot;plyr&quot;)
 source(&quot;https://bioconductor.org/biocLite.R&quot;)
 biocLite(&quot;Logolas&quot;)</code></pre>
-<p>Once you have run through the above steps, install the R package <strong>aRchaic</strong></p>
+<p>On completion of the above steps, install the R package <strong>aRchaic</strong></p>
 <pre class="r"><code>devtools::install_github(&quot;kkdey/aRchaic&quot;)</code></pre>
-<p>Finally, load aRchaic into R</p>
+<p>Load aRchaic into R</p>
 <pre class="r"><code>library(aRchaic)</code></pre>
 </div>
 <div id="archaic-input---mff-file" class="section level2">
@@ -392,7 +388,7 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 14776.4, 143, 17, 11.7, 2.3, 1.4, 2, done.</code></pre>
+## log posterior increase: 18175.5, 150.8, 22.8, 14.8, 3.8, 3.8, -0.1, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>

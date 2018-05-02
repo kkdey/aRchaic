@@ -22,13 +22,11 @@ samples.
 
 First and foremost, the user is required to install 
 [python](https://www.python.org/downloads/) and 
-[R/RStudio](https://www.rstudio.com/).
-
-Next, the user needs to install the Python packages 
+[R/RStudio](https://www.rstudio.com/). Next, the user needs to install the Python packages 
 [pysam](http://pysam.readthedocs.io/en/latest/installation.html) and
 [pyfaidx](https://pythonhosted.org/pyfaidx/#installation).
 
-Next, start a new R session and install the R dependency libraries.
+Start a new R session and install the R dependency libraries.
 
 ```{r echo=TRUE, eval = FALSE}
 install.packages("devtools")
@@ -41,13 +39,13 @@ source("https://bioconductor.org/biocLite.R")
 biocLite("Logolas")
 ```
 
-Once you have run through the above steps, install the R package **aRchaic**
+On completion of the above steps, install the R package **aRchaic**
 
 ```{r echo=TRUE, eval=FALSE}
 devtools::install_github("kkdey/aRchaic")
 ```
 
-Finally, load aRchaic into R
+Load aRchaic into R
 
 ```{r}
 library(aRchaic)
