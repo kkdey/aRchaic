@@ -10,7 +10,7 @@ How to make the csv file to input in R
 .fa -o example_mff.csv --add-chr
 
 
-To run view all the options, please type
+To view the possible options, please type
 
 `python --help generate_summary_bams.py`
 
