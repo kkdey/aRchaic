@@ -42,12 +42,15 @@ model_archaic <- function(dat,
 
   gom.control <- modifyList(gom.control.default, gom.control)
   if(class(dat) == "list"){
-    if(is.null(labs)) labs <- c()
+    if(is.null(labs)) {
+      labs <- c()
+      for(numdir in 1:length(datalist)){
+        labs <- c(labs, rep(names(datalist)[numdir], dim(datalist[[numdir]])[1]))
+      }
+    }
     cat("The data is read as a list of matrices - processed by prepare_archaic() \n")
     datalist <- dat
-    for(numdir in 1:length(datalist)){
-      labs <- c(labs, rep(names(datalist)[numdir], dim(datalist[[numdir]])[1]))
-    }
+
     sig_names <- colnames(datalist[[1]])
     row_names_pool <- rownames(datalist[[1]])
     if(length(datalist) >= 2){
@@ -65,11 +68,10 @@ model_archaic <- function(dat,
                   match(colnames(datalist[[num]]), sig_names)] <- as.matrix(datalist[[num]])
     }
   }else if(class(dat) == "character"){
-    if(is.null(labs)) labs <- c()
     message("The dat is read as names of folders")
     folders <- dat
     for(numdir in 1:length(folders)){
-      if(nchar(folders[numdir]) != "/") folders[numdir] <- paste0(folders[numdir], "/")
+      if(regmatches(folders[numdir],regexpr(".$", folders[numdir])) != "/") folders[numdir] <- paste0(folders[numdir], "/")
     }
     datalist <- list()
     for(numdir in 1:length(folders)){
@@ -82,7 +84,13 @@ model_archaic <- function(dat,
         proc_out <- prepare_aRchaic(folders[numdir])
         datalist[[numdir]] <- proc_out
       }
-      labs <- c(labs, rep(tail(strsplit(folders[numdir], "/")[[1]],1), dim(datalist[[numdir]])[1]))
+    }
+
+    if(is.null(labs)){
+      labs <- c()
+      for(numdir in 1:length(folders)){
+        labs <- c(labs, rep(tail(strsplit(folders[numdir], "/")[[1]],1), dim(datalist[[numdir]])[1]))
+      }
     }
 
     sig_names <- colnames(datalist[[1]])
@@ -114,7 +122,7 @@ model_archaic <- function(dat,
   }
 
   if(length(labs) != dim(pooled_data)[1]) stop(paste0("the length of labs is :", length(labs),
-          "which does not match the dimension of the data matrix compiled: ", dim(pooled_data)[1]))
+          " which does not match the dimension of the data matrix compiled:  ", dim(pooled_data)[1]))
 
   zero_sum_rows <- which(rowSums(pooled_data) == 0)
   if(length(zero_sum_rows) > 0){
@@ -173,7 +181,7 @@ model_archaic <- function(dat,
              "assessment" = model_assessment,
              "labs" = labs)
   if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}else{
-    if(nchar(output_dir) != "/"){output_dir <- paste0(output_dir, "/")}
+    if(regmatches(output_dir,regexpr(".$", output_dir)) != "/"){output_dir <- paste0(output_dir, "/")}
   }
   save(ll, file = paste0(output_dir, "model.rda"))
   return(ll)

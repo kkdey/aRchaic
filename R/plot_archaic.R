@@ -35,7 +35,11 @@ plot_archaic <- function(model,
 
   labs <- model$labs
   K <- dim(model$omega)[2]
-  if(is.null(levels(labs))) levels <- unique(labs)
+  if(is.null(levels(labs))) {
+    levels <- unique(labs)
+  }else{
+    levels <- levels(labs)
+  }
   structure.control.default <- list(yaxis_label = "aRchaic pops",
                                     order_sample = FALSE,
                                     figure_title = paste0("  StructurePlot: K=", K,""),
@@ -92,7 +96,7 @@ plot_archaic <- function(model,
   )
 
   if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}else{
-    if(nchar(output_dir) != "/"){output_dir <- paste0(output_dir, "/")}
+    if(regmatches(output_dir,regexpr(".$", output_dir)) != "/"){output_dir <- paste0(output_dir, "/")}
   }
 
   plot.new()

@@ -26,7 +26,7 @@ prepare_archaic <- function(dirs,
                             output_rda = TRUE){
   if(class(dirs) != "character") stop("the dirs input must be names of the folders - hence of class character")
     for(numdir in 1:length(dirs)){
-      if(nchar(dirs[numdir]) != "/") dirs[numdir] <- paste0(dirs[numdir], "/")
+      if(regmatches(dirs[numdir],regexpr(".$", dirs[numdir])) != "/") dirs[numdir] <- paste0(dirs[numdir], "/")
     }
     dat_list  <- list()
     for(numdir in 1:length(dirs)){
@@ -221,7 +221,7 @@ prepare_archaic <- function(dirs,
 
           if(output_rda){
             save(final_dat, file = paste0(dirs[numdir],
-                                                   tail(strsplit(dirs[numdir], "/")[[1]],1), ".rda"))
+                             tail(strsplit(dirs[numdir], "/")[[1]],1), ".rda"))
           }
 
         }
@@ -318,7 +318,6 @@ signatureclub2 <- function(signature_set, flanking_bases){
       side2 <- temp_split[(5+flanking_bases):(4+2*flanking_bases)]
       temp_split[(5+flanking_bases):(4+2*flanking_bases)] <- rev(side1)
       temp_split[1:flanking_bases] <- rev(side2)
-      sign <- temp_split[6+2*flanking_bases]
     }else{
       temp_split <- strsplit(as.character(signature_set[m]), split="")[[1]]
     }

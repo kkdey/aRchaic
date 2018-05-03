@@ -7,8 +7,7 @@ How to make the csv file to input in R
 (2) Run the python scipt with default options
 
 `python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5\
-.fa -o example_mff.csv --add-chr
-
+.fa -o example_mff.csv
 
 To view the possible options, please type
 
