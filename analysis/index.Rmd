@@ -77,7 +77,7 @@ We provide a script to generate the MFF files from the BAM/SAM files
 also contains a small example BAM file for testing. The simple two-line 
 code to create the MFF file from this BAM file is as follows
 
-```{r, eval=FALSE}
+```
 samtools index example.bam
 python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5
 .fa -o example_mff.csv --add-chr
@@ -169,9 +169,21 @@ The following is a summary of these visualizations
 ![](vignette_fig.png)
 </div>
 
-## Authors
+## Citation
 
-**aRchaic 
+**aRchaic** has been developed by [Kushal K. Dey](kkdey.github.io) and 
+[Hussein Al-Asadi](https://halasadi.wordpress.com/) from the 
+University of Chicago.
+
+To cite **aRchaic**, cite the following paper
+
+## Acknowledgements
+
+The authors acknowledge John Lindo, John Blischak, Peter Carbonetto, Anna Di Rienzo,
+Anna Gosling, David Witonsky and Choonwong Jeong for helpful discussions about the 
+package.
+
+
 
 ## SessionInfo
 

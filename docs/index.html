@@ -346,9 +346,10 @@ head(mff)</code></pre>
 ## 5 AC-&gt;TG 48 31  A  C  +  207160
 ## 6 GG-&gt;AG 33  5  G  G  - 2912042</code></pre>
 <p>The first column represents mismatch type and flanking bases : (left flank base)(mismatch)(right flank base) &lt;-&gt; (A)(C-&gt;T)(C). The second and third columns represent the position of mismatch from 5’ and 3’ ends of reads after mapped to reference. The 4th (5th) columns represent the base 1 base upstream (downstream) from 5’ (3’) end of read respectively. The 6th column contains information of which strand the read comes from, and the 7th column is an identifier for the read containing the mismatch.</p>
-<p>We provide scripts to generate the MFF files from the BAM/SAM files <a href="https://github.com/kkdey/aRchaic/tree/master/bin">here</a>. The simple one line code to use for indexed BAM file is</p>
-<pre class="r"><code>python generate_summary_bams.py -b /path/to/bam/example.bam -f /path/to/reference/hs37d5
-.fa -o /path/to/mff/example_mff.csv --add-chr</code></pre>
+<p>We provide a script to generate the MFF files from the BAM/SAM files <a href="https://github.com/kkdey/aRchaic/tree/master/bin">here</a>. This linked folder also contains a small example BAM file for testing. The simple two-line code to create the MFF file from this BAM file is as follows</p>
+<pre><code>samtools index example.bam
+python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5
+.fa -o example_mff.csv --add-chr</code></pre>
 </div>
 <div id="prepare_archaic" class="section level2">
 <h2>prepare_archaic()</h2>
@@ -385,7 +386,7 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 20801.2, 85.9, 19.4, 9.5, 3.7, done.</code></pre>
+## log posterior increase: 55231, 1841.2, 27.5, 10.6, 3.6, 0.2, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -406,6 +407,15 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 
 </div>
 </div>
+</div>
+<div id="citation" class="section level2">
+<h2>Citation</h2>
+<p><strong>aRchaic</strong> has been developed by <a href="kkdey.github.io">Kushal K. Dey</a> and <a href="https://halasadi.wordpress.com/">Hussein Al-Asadi</a> from the University of Chicago.</p>
+<p>To cite <strong>aRchaic</strong>, cite the following paper</p>
+</div>
+<div id="acknowledgements" class="section level2">
+<h2>Acknowledgements</h2>
+<p>The authors acknowledge John Lindo, John Blischak, Peter Carbonetto, Anna Di Rienzo, Anna Gosling, David Witonsky and Choonwong Jeong for helpful discussions about the package.</p>
 </div>
 <div id="sessioninfo" class="section level2">
 <h2>SessionInfo</h2>
