@@ -322,11 +322,8 @@ div.section {
 <p>First and foremost, the user is required to install <a href="https://www.python.org/downloads/">python</a> and <a href="https://www.rstudio.com/">R/RStudio</a>. Next, the user needs to install the Python packages <a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a> and <a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a>.</p>
 <p>Start a new R session and install the R dependency libraries.</p>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;TaddyLab/maptpx&quot;)
 devtools::install_github(&quot;kkdey/CountClust&quot;)
-install.packages(&quot;ggplot2&quot;)
-install.packages(&quot;dplyr&quot;)
-install.packages(&quot;plyr&quot;)
+devtools::install_github(&quot;TaddyLab/maptpx&quot;)
 source(&quot;https://bioconductor.org/biocLite.R&quot;)
 biocLite(&quot;Logolas&quot;)</code></pre>
 <p>On completion of the above steps, install the R package <strong>aRchaic</strong></p>
@@ -388,7 +385,7 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 21421.9, 71.2, 11.9, 10.2, 5, done.</code></pre>
+## log posterior increase: 20801.2, 85.9, 19.4, 9.5, 3.7, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>

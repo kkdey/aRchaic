@@ -30,11 +30,8 @@ Start a new R session and install the R dependency libraries.
 
 ```{r echo=TRUE, eval = FALSE}
 install.packages("devtools")
-devtools::install_github("TaddyLab/maptpx")
 devtools::install_github("kkdey/CountClust")
-install.packages("ggplot2")
-install.packages("dplyr")
-install.packages("plyr")
+devtools::install_github("TaddyLab/maptpx")
 source("https://bioconductor.org/biocLite.R")
 biocLite("Logolas")
 ```
@@ -75,13 +72,15 @@ of reads after mapped to reference. The 4th (5th) columns represent the base
 respectively. The 6th column contains information of which strand the read comes
 from, and the 7th column is an identifier for the read containing the mismatch.
 
-We provide scripts to generate the MFF files from the BAM/SAM files
-[here](https://github.com/kkdey/aRchaic/tree/master/bin). The simple one line 
-code to use for indexed BAM file is 
+We provide a script to generate the MFF files from the BAM/SAM files
+[here](https://github.com/kkdey/aRchaic/tree/master/bin). This linked folder
+also contains a small example BAM file for testing. The simple two-line 
+code to create the MFF file from this BAM file is as follows
 
 ```{r, eval=FALSE}
-python generate_summary_bams.py -b /path/to/bam/example.bam -f /path/to/reference/hs37d5
-.fa -o /path/to/mff/example_mff.csv --add-chr
+samtools index example.bam
+python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5
+.fa -o example_mff.csv --add-chr
 ```
 
 
@@ -169,6 +168,10 @@ The following is a summary of these visualizations
 <div style="width:750px; height:750px">
 ![](vignette_fig.png)
 </div>
+
+## Authors
+
+**aRchaic 
 
 ## SessionInfo
 
