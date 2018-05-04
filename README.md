@@ -10,17 +10,39 @@ a R/python software for exploration, clustering, visualization and classificatio
 
 ## Installation
 
-The user can install the `aRchaic` package in R from Github via devtools.
+First and foremost, the user is required to install 
+
+* [python](https://www.python.org/downloads/)  
+* [R/RStudio](https://www.rstudio.com/) 
+* [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
+* [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
+
+Start a new R session and install the R dependency libraries.
+
+```
+install.packages("devtools")
+devtools::install_github("kkdey/CountClust")
+devtools::install_github("TaddyLab/maptpx")
+source("https://bioconductor.org/biocLite.R")
+biocLite("Logolas")
+```
+
+On completion of the above steps, install the R package **aRchaic**
 
 ```
 devtools::install_github("kkdey/aRchaic")
 ```
 
-To load the package in R
+Load aRchaic into R
 
 ```
 library(aRchaic)
 ```
+
+
+## Tutorial
+
+Get started with a short tutorial here
 
 ## Methods
 
