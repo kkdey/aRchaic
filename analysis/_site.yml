@@ -5,8 +5,6 @@ exclude: ["include"]
 navbar:
   title: aRchaic
   left:
-    - text: "Home"
-      href: index.html
   right:
     - icon: fa-github
       href: https://github.com/kkdey/aRchaic

@@ -39,9 +39,9 @@ model_archaic <- function(dat,
   gom.control.default <- list(bf = FALSE, kill = 2, ord = TRUE, verb = 1, admix = TRUE,
                                  nbundles = 1, use_squarem = FALSE, init.adapt = FALSE, type = "full",
                                  light = 1, method_admix = 1, sample_init = TRUE, tmax = 10000)
-
   gom.control <- modifyList(gom.control.default, gom.control)
   if(class(dat) == "list"){
+    datalist <- dat
     if(is.null(labs)) {
       labs <- c()
       for(numdir in 1:length(datalist)){
@@ -49,8 +49,6 @@ model_archaic <- function(dat,
       }
     }
     cat("The data is read as a list of matrices - processed by prepare_archaic() \n")
-    datalist <- dat
-
     sig_names <- colnames(datalist[[1]])
     row_names_pool <- rownames(datalist[[1]])
     if(length(datalist) >= 2){
