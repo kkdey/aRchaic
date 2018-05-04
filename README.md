@@ -2,7 +2,7 @@
 
 a R/python software for exploration, clustering, visualization and classification of DNA damage patterns 
 
-<img src="docs/vignette_fig.png" alt="Structure Plot" height="800" width="800">
+<img src="docs/vignette_fig.png" alt="Structure Plot" height="400" width="400">
 
 ## Authors
 
