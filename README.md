@@ -68,7 +68,7 @@ The repository is distributed in the hope that it will be useful, but without an
 
 ## Acknowledgements
 
-The authors would like to acknowledge Anna Di Rienzo, Choongwon Jeong, Anna Gosling, John Lindo, David Witonsky, Joseph Marcus, John Blischak and members of Stephens Lab and Novembre Lab for helpful discussions.
+The authors would like to acknowledge Anna Di Rienzo, Choongwon Jeong, Anna Gosling, John Lindo, David Witonsky, Joseph Marcus, John Blischak, Peter Carbonetto and members of Stephens Lab and Novembre Lab for helpful discussions.
 
 
 
