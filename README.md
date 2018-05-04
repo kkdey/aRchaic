@@ -1,24 +1,29 @@
 # aRchaic
 
-a R/python software for exploration, clustering, visualization and classification of DNA damage patterns 
+a R package for exploration, clustering and visualization of DNA damage patterns 
 
-<img src="docs/vignette_fig.png" alt="Structure Plot" height="400" width="400">
+<img src="docs/vignette_fig.png" alt="Structure Plot" height="500" width="600">
 
 ## Authors
 
 [Kushal K Dey*](http://kkdey.github.io/), [Hussein Al-Asadi
 *](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/), [Matthew Stephens](http://stephenslab.uchicago.edu/)
 
+* co-first authors
+
 ## Installation
 
 First and foremost, the user is required to install 
 
-* [python](https://www.python.org/downloads/)  
+* [python](https://www.python.org/downloads/) 
 * [R/RStudio](https://www.rstudio.com/) 
+
+And Python packages,
+
 * [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
 * [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
 
-Start a new R session and install the R dependency libraries.
+Upon completion of these steps, start a new R session and install the R dependency libraries.
 
 ```
 install.packages("devtools")
@@ -34,7 +39,7 @@ On completion of the above steps, install the R package **aRchaic**
 devtools::install_github("kkdey/aRchaic")
 ```
 
-Load aRchaic into R
+Finally, load aRchaic into R
 
 ```
 library(aRchaic)
