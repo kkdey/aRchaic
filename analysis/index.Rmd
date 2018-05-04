@@ -11,9 +11,8 @@ output:
 
 ## Introduction 
 
-**aRchaic** is a R/python software environment that performs model based 
-clustering and visualization of ancient and modern DNA samples from one or more 
-studies (see `plot_archaic()` section for example visualization). 
+**aRchaic** is an R package that performs model based 
+clustering and visualization of ancient and modern DNA samples (see `plot_archaic()` section for example visualization). 
 This model can be used to identify distinct patterns of DNA damage and
 is capable of reflecting relative rates of contamination in contaminated aDNA
 samples. 
@@ -21,12 +20,16 @@ samples.
 ## Installation
 
 First and foremost, the user is required to install 
-[python](https://www.python.org/downloads/) and 
-[R/RStudio](https://www.rstudio.com/). Next, the user needs to install the Python packages 
-[pysam](http://pysam.readthedocs.io/en/latest/installation.html) and
-[pyfaidx](https://pythonhosted.org/pyfaidx/#installation).
 
-Start a new R session and install the R dependency libraries.
+* [python](https://www.python.org/downloads/) 
+* [R/RStudio](https://www.rstudio.com/) 
+
+And Python packages,
+
+* [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
+* [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
+
+Upon completion of these steps, start a new R session and install the R dependency libraries.
 
 ```{r echo=TRUE, eval = FALSE}
 install.packages("devtools")
@@ -48,8 +51,7 @@ Load aRchaic into R
 library(aRchaic)
 ```
 
-
-## aRchaic input - MFF file
+## Generate aRchaic input (MFF file)
 
 For every mismatch in a BAM file with respect to a reference genome, **aRchaic**
 records various features of the mismatch - mismatch type, flanking bases,
@@ -77,20 +79,17 @@ We provide a script to generate the MFF files from the BAM/SAM files
 also contains a small example BAM file for testing. The simple two-line 
 code to create the MFF file from this BAM file is as follows
 
+
 ```
 samtools index example.bam
 python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5
-.fa -o example_mff.csv --add-chr
+.fa -o example_mff.csv
 ```
 
 
 ## prepare_archaic()
 
-Suppose you have multiple folders of MFF files corresponding to different studies - 
-comprising of ancient and/or modern samples. 
-We present an example here where we incorporate two folders like
-that in the package - `inst/extdata/moderns` and `inst/extdata/ancients`
-corresponding to separate studies for 5 moderns and 5 ancients. 
+The user is expected to organize the MFF files in seperate folders per study. Here, we provide an example with two studies, one with 5 ancient samples derived from [Gamba et. al. 2014](https://www.nature.com/articles/ncomms6257) and a second study with 5 modern samples derived from the 1000 Genomes Project. These two folders are automatically downloaded and saved under `inst/extdata/moderns` and `inst/extdata/ancients` when aRchaic is installed.
 
 - **Modern study** :
 
@@ -105,8 +104,6 @@ list.files(moderns_dir, pattern = ".csv")
 ancients_dir <- system.file("extdata","ancients", package = "aRchaic")
 list.files(ancients_dir, pattern = ".csv")
 ```
-
-Each of the folders has 5 MFF files corresponding to 5 samples. 
 
 Next we prepare the input data to **aRchaic** model from the above data folders.
 
@@ -169,24 +166,3 @@ The following is a summary of these visualizations
 ![](vignette_fig.png)
 </div>
 
-## Citation
-
-**aRchaic** has been developed by [Kushal K. Dey](kkdey.github.io) and 
-[Hussein Al-Asadi](https://halasadi.wordpress.com/) from the 
-University of Chicago.
-
-To cite **aRchaic**, cite the following paper
-
-## Acknowledgements
-
-The authors acknowledge John Lindo, John Blischak, Peter Carbonetto, Anna Di Rienzo,
-Anna Gosling, David Witonsky and Choonwong Jeong for helpful discussions about the 
-package.
-
-
-
-## SessionInfo
-
-```{r}
-sessionInfo()
-```
