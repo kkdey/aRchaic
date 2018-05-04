@@ -19,7 +19,7 @@
 #' @keywords aggregate_counts
 #' @export
 
-prepare_archaic <- function(dirs,
+archaic_prepare <- function(dirs,
                             max_pos = 20,
                             from_scratch = FALSE,
                             delete = FALSE,

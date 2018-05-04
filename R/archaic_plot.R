@@ -1,50 +1,61 @@
-#' @title Logo plot representation of an MFF file.
+#' @title STRUCTURE plot and logo plot representation of the clusterring
+#' model from archaic_fit
 #'
-#' @description Creates a logo plot representation of the probability distribution
-#' of the different mismatch features - mismatch, flanking bases, strand break and
-#' position of mismatch - for a single MFF (.csv) file.
+#' @description Takes the clustering model fit  from \code{archaic_fit}
+#' as an input and plots the clusters using as EDLogo plots (Dey et al 2018)
+#' and the proportional mixing of the clusters for each sample using a
+#' STRUCTURE plot (Pritchard et al 2000) representation.
 #'
-#' @param file a MismatchFeatureFormat (MFF) .csv file.
-#' @param logo.control The control parameters for the logo plot representation of the sample.
-#'                     Check the input parameters of \code{damageLogo5()} for the control parameters.
-#' @param title The name of the sample. If not provided, defaults to the filename.
-#' @param output_file The filename (with path) of the constructed logo plot.
+#' @param model Fitted model from \code{archaic_fit}.
+#' @param max_pos The maximum position from the ends of the reads for which
+#'  mismatches are considered in aRchaic.
+#' @param output_rda If non-NULL, the processed data for each
+#'  directory in \code{dirs} is saved as a .Rdata file.
 #'
-#' @return Creates a logo plot of the mismatch features for a single
-#'         MFF file.
-#' @keywords view_archaic
-#' @importFrom  Logolas get_viewport_logo nlogomaker
-#' @import gridBase
-#' @import grid
+#' @return Returns a matrix with rows being the samples (each MFF file),
+#' columns representing the mismatch signatures (comprising of features like
+#' mismatch type, flanking bases and strand break information).
+#' The cells contain counts of the number of mutational signatures observed in
+#' that MFF file.
+#'
+#' @keywords aggregate_counts
+#' @importFrom CountClust StructureGGplot
+#' @importFrom Logolas get_viewport_logo nlogomaker
 #' @import ggplot2
 #' @export
 
+archaic_plot <- function(model,
+                         topic_cols = c("red","blue","darkgoldenrod1","cyan","firebrick", "green",
+                                        "hotpink","burlywood","yellow","darkgray","deepskyblue","darkkhaki",
+                                        "brown4","darkorchid","magenta","yellow", "azure1","azure4"),
+                         background = "modern",
+                         structure.control = list(),
+                         logo.control = list(),
+                         output_dir = NULL){
 
-
-view_archaic = function(file,
-                        logo.control = list(),
-                        background = "modern",
-                        title = NULL,
-                        output_file = NULL){
-
-  header <- head(strsplit(rev((as.vector(strsplit(file, "/" )[[1]])))[1], ".csv")[[1]],1)
-  if(is.null(title)){
-    title <- header
-  }
-
-  if(length(strsplit(file, "/")[[1]]) == 1){
-    dir <- getwd()
+  labs <- model$labs
+  K <- dim(model$omega)[2]
+  if(is.null(levels(labs))) {
+    levels <- unique(labs)
   }else{
-    ss <- strsplit(file, "/")[[1]]
-    ll <- length(ss)
-    dir <- paste0(paste0(ss[1:(ll-1)],collapse="/"), "/")
+    levels <- levels(labs)
   }
-
-
+  structure.control.default <- list(yaxis_label = "aRchaic pops",
+                                    order_sample = FALSE,
+                                    figure_title = paste0("  StructurePlot: K=", K,""),
+                                    axis_tick = list(axis_ticks_length = .1,
+                                                     axis_ticks_lwd_y = .1,
+                                                     axis_ticks_lwd_x = .1,
+                                                     axis_label_size = 10,
+                                                     axis_label_face = "bold"),
+                                    legend_title_size = 10,
+                                    legend_key_size = 0.7,
+                                    legend_text_size = 8,
+                                    structure_width = 5,
+                                    structure_height = 8)
 
   logo.control.default <- list(max_pos = 20, flanking_bases=1,
-                               mutlogo.control = list(),
-                               breaklogo.control = list(),
+                               mutlogo.control = list(), breaklogo.control = list(),
                                base_probs_list = NULL,
                                clip = 0,
                                mut_ranges = c(0,0),
@@ -52,12 +63,11 @@ view_archaic = function(file,
                                logoport_x = 0.7,
                                logoport_y= 0.5,
                                logoport_width= 1, logoport_height= 1.2,
-                               breaklogoport_x = 0.55, breaklogoport_y = 0.4,
-                               breaklogoport_width=0.7,
-                               breaklogoport_height=1, lineport_x = 0.65,
-                               lineport_y=0.5,
+                               breaklogoport_x = 0.55, breaklogoport_y = 0.4, breaklogoport_width=0.7,
+                               breaklogoport_height=1, lineport_x = 0.65, lineport_y=0.5,
                                lineport_width=0.8, lineport_height=1.3,
                                output_width = 1200, output_height = 700)
+
   if(background == "null"){
     logo.control.default$base_probs_list = NULL
   }else{
@@ -68,92 +78,47 @@ view_archaic = function(file,
   }
 
 
+  structure.control <- modifyList(structure.control.default, structure.control)
   logo.control <- modifyList(logo.control.default, logo.control)
 
 
-  if(file.exists(paste0(dir, tail(strsplit(dir, "/")[[1]],1), ".rda"))){
-    message(".RData file present: using the .RData object to learn the feature probabilities")
-    mff_dat <- get(load(paste0(dir, tail(strsplit(dir, "/")[[1]],1), ".rda")))
-    index <- grep(paste0(header), rownames(mff_dat))
-    clubbed_counts <- mff_dat[index, ]
-    clubbed_counts_norm <- clubbed_counts/ sum(clubbed_counts)
-
-    temp <- as.matrix(clubbed_counts_norm)
-    rownames(temp) <- names(clubbed_counts_norm)
-
-  }else{
-    message(".RData file present: looking for the MFF .csv file")
-    if(!file.exists(paste0(dir, header, ".csv"))){
-      stop("The file is not found in the given directory")
-    }
-    files_to_process <- csvnames
-    csvnames2 <- substr(csvnames, 1, nchar(csvnames) - 4)
-    signature_counts_from_file <- vector(mode="list")
-    signatures_file <- vector(mode="list")
+  structure.control.two <- structure.control
+  structure.control.two$structure_height = NULL
+  structure.control.two$structure_width = NULL
 
 
-    for(numfile in 1:length(files_to_process)){
-      tmp_dat <- damage_build_bin_counts(file = paste0(dirs[numdir], files_to_process[numfile]),
-                                         max_pos = max_pos,
-                                         type=2)
-      signature_counts_from_file[[numfile]] <- tmp_dat[,2]
-      signatures_file[[numfile]] <- tmp_dat[,1]
-      cat("Reading file ", paste0(dirs[numdir], files_to_process[numfile]), "\n")
-    }
+  message ("Structure plot and Logo plot representations of clusters")
 
-    merged_signatures <- signatures_file[[1]]
+  omega <- model$omega
+  annotation <- data.frame(
+    sample_id = paste0("X", c(1:NROW(omega))),
+    tissue_label = factor(labs, levels = levels)
+  )
 
-    if(length(files_to_process) >= 2){
-      for(num in 2:length(files_to_process)){
-        merged_signatures <- union(merged_signatures, signatures_file[[num]])
-      }
-    }
-
-    ancient_counts <- matrix(0, length(files_to_process),
-                             length(merged_signatures))
-    for(num in 1:length(files_to_process)){
-      ancient_counts[num, match(signatures_file[[num]],
-                                merged_signatures)] <- signature_counts_from_file[[num]]
-    }
-
-    flanking_bases = 1
-    signature_split <- do.call(rbind, lapply(merged_signatures,
-                                             function(x) strsplit(as.character(x),
-                                                                  split="")[[1]][1:(4+2*flanking_bases+6)]))
-    indices1 <- which(signature_split[,(flanking_bases+1)]==signature_split[,(flanking_bases+4)])
-    wrong_letters <- c("B", "D", "E", "F", "H", "I", "J", "K", "L", "M", "N", "O",
-                       "P", "Q", "R", "S", "U", "V", "W", "X", "Y", "Z")
-    temp <- list()
-    for(l in 1:length(wrong_letters)){
-      temp[[l]] <- grep(paste0(wrong_letters[l]), merged_signatures)
-    }
-
-    indices2 <- Reduce(union, temp)
-    indices <- union(indices1, indices2)
-    ancient_counts_filtered <- matrix(ancient_counts[, -indices],
-                                      nrow = nrow(ancient_counts))
-
-    rownames(ancient_counts_filtered) <- csvnames2
-    if(length(indices) > 0){
-      colnames(ancient_counts_filtered) <- merged_signatures[-indices]
-    }else{
-      colnames(ancient_counts_filtered) <- merged_signatures
-    }
-
-    outdat <- club_signature_counts(ancient_counts_filtered)
-    clubbed_counts_norm <- clubbed_counts/ sum(clubbed_counts)
-
-    temp <- t(clubbed_counts_norm)
+  if(is.null(output_dir)){ output_dir <- paste0(getwd(),"/")}else{
+    if(regmatches(output_dir,regexpr(".$", output_dir)) != "/"){output_dir <- paste0(output_dir, "/")}
   }
 
-  if(is.null(output_file)){
-    output_dir <- paste0(getwd(), "/", "logo.png")
-  }
+  plot.new()
+  grid::grid.newpage()
+  do.call(CountClust::StructureGGplot, append(list(omega= omega,
+                                                   annotation = annotation,
+                                                   palette = topic_cols),
+                                              structure.control.two))
+  ggplot2::ggsave(paste0(output_dir, "structure.png"),
+                  width =  structure.control$structure_width,
+                  height = structure.control$structure_height)
 
-  do.call(damageLogo_six_temp, append(list(theta_pool = temp,
-                                       output_dir = output_dir,
-                                       filename = filename),
-                                  logo.control))
+  ###################   Logo plot representation  #########################
+
+
+  plot.new()
+  do.call(Logo_aRchaic_cluster, append(list(theta_pool = model$theta,
+                                            output_dir = output_dir),
+                                       logo.control))
+  graphics.off()
+
+  message ("Finished")
 }
 
 
@@ -165,7 +130,6 @@ view_archaic = function(file,
 #
 # @param theta_pool The theta matrix obtained from running the grade of membership model that stores for each cluster, the
 # probability distribution over all the mutational signatures.
-# @param sig_names The mutational signature names. Defaults to the rownames of the theta matrix above.
 # @param max_pos The maximum distance from the end of the read upto which mutations are considered.
 # @param flanking_bases The number of flanking bases of the mutational signature.
 # @param mutlogo.control The control parameters for the mismatch and flanking bases logo.
@@ -195,34 +159,35 @@ view_archaic = function(file,
 # @export
 
 
-damageLogo_six_temp <- function(theta_pool,
-                           sig_names = NULL,
-                           max_pos = 20,
-                           flanking_bases=1,
-                           mutlogo.control = list(),
-                           breaklogo.control = list(),
-                           base_probs_list = NULL,
-                           clip = 0,
-                           mut_ranges  = c(0, 0),
-                           break_ranges = c(0, 0),
-                           logoport_x = 0.7,
-                           logoport_y= 0.5,
-                           logoport_width= 1.2,
-                           logoport_height= 1.1,
-                           breaklogoport_x = 0.5,
-                           breaklogoport_y = 0.4,
-                           breaklogoport_width=0.7,
-                           breaklogoport_height=1,
-                           lineport_x = 0.4,
-                           lineport_y=0.5,
-                           lineport_width=1,
-                           lineport_height=1,
-                           output_dir = NULL,
-                           filename = NULL,
-                           output_width = 1200,
-                           output_height = 700){
+Logo_aRchaic_cluster <- function(theta_pool,
+                                 max_pos = 20,
+                                 flanking_bases=1,
+                                 mutlogo.control = list(),
+                                 breaklogo.control = list(),
+                                 base_probs_list = NULL,
+                                 clip = 0,
+                                 mut_ranges  = c(0, 0),
+                                 break_ranges = c(0, 0),
+                                 logoport_x = 0.7,
+                                 logoport_y= 0.5,
+                                 logoport_width= 1.2,
+                                 logoport_height= 1.1,
+                                 breaklogoport_x = 0.5,
+                                 breaklogoport_y = 0.4,
+                                 breaklogoport_width=0.7,
+                                 breaklogoport_height=1,
+                                 lineport_x = 0.4,
+                                 lineport_y=0.5,
+                                 lineport_width=1,
+                                 lineport_height=1,
+                                 output_dir = NULL,
+                                 filename = NULL,
+                                 output_width = 1200,
+                                 output_height = 700){
+
   library(grid)
   library(gridBase)
+  library(ggplot2)
 
 
   if(is.null(output_dir)){output_dir <- getwd();}
@@ -243,16 +208,7 @@ damageLogo_six_temp <- function(theta_pool,
   rownames(theta2) <-  theta2[,1]
   theta2 <- theta2[,-1, drop=FALSE]
 
-  indices_minus <- grep("_-_", signature_set)
-  strand_theta <- data.frame("minus" = colSums(theta_pool[indices_minus,]),
-                             "plus" = colSums(theta_pool[-indices_minus,]))
-
-  if(flag == 1){
-    strand_theta <- data.frame("minus" = colSums(matrix(theta_pool[indices_minus,])),
-                               "plus" = colSums(matrix(theta_pool[-indices_minus,])))
-    strand_theta <- strand_theta/2;
-  }
-  breakbase <- substring(signature_set, 8+2*flanking_bases,  8+2*flanking_bases)
+  breakbase <- substring(signature_set, 6+2*flanking_bases,  6+2*flanking_bases)
 
   theta_break <- dplyr::tbl_df(data.frame(theta_pool)) %>%
     dplyr::mutate(sig = breakbase) %>%
@@ -265,28 +221,29 @@ damageLogo_six_temp <- function(theta_pool,
   theta_break <- theta_break[match(c("A", "C", "G", "T"), rownames(theta_break)),]
   breaks_theta <- theta_break
 
-
-  if(is.null(sig_names))
-    sig_names <- rownames(theta_pool)
+  sig_names <- rownames(theta_pool)
 
   # prob_mutation <- filter_by_pos(t(theta_pool), max_pos = max_pos)
   prob_mutation <- filter_signatures_only_location(t(theta_pool),
                                                    max_pos = max_pos, flanking_bases = flanking_bases)
+
   prob_mutation <- t(apply(prob_mutation, 1, function(x) {
     y <- x[!is.na(x)];
     return(y/sum(y))
   }))
+  clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
+
   max_prob <- max(prob_mutation);
-  clipped_bases <- setdiff(1:20, as.numeric(colnames(prob_mutation)))
+  clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
 
   if(is.null(base_probs_list)){
-    prob_limits = c(round(min(prob_mutation), 2)-0.01, round(max(prob_mutation), 2) + 0.01)
+    prob_limits = c(round(min(prob_mutation, na.rm=TRUE), 2)-0.01, round(max(prob_mutation, na.rm=TRUE), 2) + 0.01)
     prob_breaks = c(0, round(min(prob_mutation),2)-0.01,
-                    round(0.5*(min(prob_mutation)+max(prob_mutation)), 2),
+                    round(0.5*(min(prob_mutation, na.rm=TRUE)+max(prob_mutation, na.rm=TRUE)), 2),
                     round(max(prob_mutation), 2)+0.01)
   }else{
     if(length(clipped_bases) > 0){
-      prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])[-clipped_bases]))
+      prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])[-(clipped_bases+1)]))
     }else{
       prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])))
     }
@@ -327,15 +284,10 @@ damageLogo_six_temp <- function(theta_pool,
     }
   }
 
-
   grob_list <- list()
-  if(flag == 1){
-    l = 1
-    if(is.null(filename)){
-      filename <- "logo"
-    }
-    png(paste0(output_dir, filename, ".png"), width=output_width, height = output_height)
-    damageLogo_six.skeleton_temp(pwm = prop_patterns_list[[l]],
+  for(l in 1:length(prop_patterns_list)){
+    png(paste0(output_dir, "logo_clus_", l, ".png"), width=output_width, height = output_height)
+    damageLogo_six.skeleton(pwm = prop_patterns_list[[l]],
                             probs = prob_mutation[l,],
                             breaks_theta_vec = breaks_theta[,l, drop=FALSE],
                             prob_limits = prob_limits,
@@ -360,40 +312,10 @@ damageLogo_six_temp <- function(theta_pool,
                             lineport_width=lineport_width,
                             lineport_height=lineport_height)
     dev.off()
-  }else{
-    for(l in 1:length(prop_patterns_list)){
-      png(paste0(output_dir, "logo_clus_", l, ".png"), width=output_width, height = output_height)
-      damageLogo_six.skeleton_temp(pwm = prop_patterns_list[[l]],
-                              probs = prob_mutation[l,],
-                              breaks_theta_vec = breaks_theta[,l, drop=FALSE],
-                              prob_limits = prob_limits,
-                              prob_breaks = prob_breaks,
-                              mutlogo.control = mutlogo.control,
-                              breaklogo.control = breaklogo.control,
-                              background = base_probs_list,
-                              clip = clip,
-                              mut_ranges = mut_ranges,
-                              break_ranges = break_ranges,
-                              flanking_bases = flanking_bases,
-                              logoport_x = logoport_x,
-                              logoport_y= logoport_y,
-                              logoport_width= logoport_width,
-                              logoport_height= logoport_height,
-                              breaklogoport_x = breaklogoport_x,
-                              breaklogoport_y = breaklogoport_y,
-                              breaklogoport_width=breaklogoport_width,
-                              breaklogoport_height=breaklogoport_height,
-                              lineport_x = lineport_x,
-                              lineport_y= lineport_y,
-                              lineport_width=lineport_width,
-                              lineport_height=lineport_height)
-      dev.off()
-    }
   }
 }
 
-
-damageLogo_six.skeleton_temp <- function(pwm,
+damageLogo_six.skeleton <- function(pwm,
                                     probs,
                                     breaks_theta_vec,
                                     prob_limits,
@@ -424,12 +346,14 @@ damageLogo_six.skeleton_temp <- function(pwm,
   break_lowrange = break_ranges[1]
   break_uprange =  break_ranges[2]
 
-  mutlogo.control.default <- list(logoheight = "log",
+  mutlogo.control.default <- list(ic = FALSE,
+                                  score = "log",
                                   total_chars = c("A", "B", "C", "D", "E", "F", "G",
                                                   "H", "I", "J", "K", "L", "M", "N", "O",
                                                   "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
                                                   "Z", "zero", "one", "two",
-                                                  "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
+                                                  "three", "four", "five", "six", "seven", "eight",
+                                                  "nine", "dot", "comma",
                                                   "dash", "colon", "semicolon", "leftarrow", "rightarrow"),
                                   frame_width=c(1,2,1), yscale_change=TRUE,
                                   pop_name = "Mismatch and \n flanking base composition",
@@ -443,7 +367,8 @@ damageLogo_six.skeleton_temp <- function(pwm,
                                                                           lowrange = mut_lowrange, uprange = mut_uprange,
                                                                           size_port = 1, symm = FALSE))
 
-  breaklogo.control.default <- list( logoheight = "log",
+  breaklogo.control.default <- list( ic = FALSE,
+                                     score = "log",
                                      total_chars = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
                                                      "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "zero", "one", "two",
                                                      "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
@@ -490,7 +415,7 @@ damageLogo_six.skeleton_temp <- function(pwm,
   rownames(pwm1)[match(c("C->A", "C->G", "C->T",
                          "T->A", "T->C", "T->G"), rownames(pwm1))] <- c("C>A", "C>G", "C>T",
                                                                         "T>A", "T>C", "T>G")
-  colnames(pwm1) <- c("left \n flank", "mismatch", "right \n flank")
+  colnames(pwm1) <- c("5' \n flank", "mismatch", "3' \n flank")
 
 
   if(!is.null(background)){
@@ -530,6 +455,8 @@ damageLogo_six.skeleton_temp <- function(pwm,
                            val = as.numeric(probs))
 
     seekViewport(paste0("plotlogo", 2))
+
+
     vp2 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
     p <- ggplot(data=pos_data, aes(x=position,y=val)) +
       geom_point(size = 3, aes(colour = "red")) +
@@ -550,8 +477,8 @@ damageLogo_six.skeleton_temp <- function(pwm,
       theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
       theme(plot.title = element_text(hjust = 0.5))+
       theme(legend.position="none") +
-      theme(axis.ticks.length=unit(0.3,"cm")) +
-      geom_hline(yintercept=0, linetype="dashed")
+      theme(axis.ticks.length=unit(0.3,"cm"))
+    # geom_hline(yintercept=0, linetype="dashed")
     print(p, vp = vp2)
 
   }else{
@@ -597,16 +524,15 @@ damageLogo_six.skeleton_temp <- function(pwm,
     rownames(bg_breaks_theta_vec) <- names(base_probs_list[[(2*flanking_bases+2)]])
     colnames(bg_breaks_theta_vec) <- colnames(breaks_theta_vec)
     do.call(Logolas::nlogomaker, append(list(table = breaks_theta_vec,
-                                    color_profile = color_profile_2,
-                                    bg = bg_breaks_theta_vec),
-                               breaklogo.control))
+                                             color_profile = color_profile_2,
+                                             bg = bg_breaks_theta_vec),
+                                        breaklogo.control))
   }else{
     do.call(Logolas::nlogomaker, append(list(table = breaks_theta_vec,
-                                    color_profile = color_profile_2,
-                                    bg = NULL),
-                               breaklogo.control))
+                                             color_profile = color_profile_2,
+                                             bg = NULL),
+                                        breaklogo.control))
   }
 
   upViewport(0)
 }
-

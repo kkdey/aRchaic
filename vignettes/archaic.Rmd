@@ -8,10 +8,6 @@ author:
   - name: Hussein Al-Asadi
     affiliation:
         - Department of Ecology and Evolution, University of Chicago 
-  - name: Matthew Stephens
-    affiliation:
-        - Department of Statistics, University of Chicago
-        - Department of Human Genetics, University of Chicago
 email: kkdey@uchicago.edu, halasadi@gmail.com
 package: aRchaic
 output:
@@ -130,7 +126,7 @@ of reads after mapped to reference. The fourth and 5th columns represent the bas
 respectively. The 6th column contains information of which strand the read comes
 from, and the 7th column is an identifier for the read containing the mismatch.
 
-## prepare_archaic()
+## archaic_prepare()
 
 Suppose you have two folders of MFF files corresponding to two studies - one for moderns
 and one for ancients. We incorporate them as part of the R package itself - lets call them
@@ -155,7 +151,7 @@ Each of the folders has 5 MFF files corresponding to 5 samples.
 First we prepare the input data to **aRchaic** model from the above data folders.
 
 ```{r warning = FALSE, message = FALSE}
-out <- prepare_archaic(dirs = c(moderns_dir, ancients_dir))
+out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
 ```
 
 The output `out` should be a list with 2 elements - corresponding to 2 study 
@@ -163,38 +159,38 @@ folders. Each element is a matrix with samples along the rows, coded
 mismatch features along columns, with cells of the matrix recording counts 
 of the number of times a coded mismatch pattern occurs in a sample. 
 
-`prepare_archaic` also saves these elements as separate .RData files in each 
+`archaic_prepare` also saves these elements as separate .RData files in each 
 study folder, so they can be re-used for similar analysis downstream more easily
 without needing to process the MFF files everytime. In fact, if you run
 
 ```{r}
-out2 <- prepare_archaic(dirs = c(moderns_dir, ancients_dir))
-out3 <- prepare_archaic(dirs = moderns_dir)
+out2 <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
+out3 <- archaic_prepare(dirs = moderns_dir)
 ```
 
 you will see that `out2` or `out3` no longer process the .csv files in the folders
 and directly read from the .Rdata file.
 
 
-## model_archaic() 
+## archaic_fit() 
 
 Before modeling and visualization, we choose a directory - `output_dir` -
 to save the model output and the visualization.
 
-We fit the mixed membership model in **aRchaic** onthe output from `prepare_archaic()`.
+We fit the mixed membership model in **aRchaic** onthe output from `archaic_prepare()`.
 We choose the number of clusters $K=2$
 
 ```{r}
 output_dir <- system.file("extdata","archaic_results", package = "aRchaic")
-model <- model_archaic(out, K = 2, output_dir = output_dir)
+model <- archaic_fit(out, K = 2, output_dir = output_dir)
 ```
 
 
 Alternatively, one can also input the study folder vector directly into 
-`model_archaic()`.
+`archaic_fit()`.
 
 ```{r}
-model <- model_archaic(c(moderns_dir, ancients_dir), K = 2, output_dir = output_dir) 
+model <- archaic_fit(c(moderns_dir, ancients_dir), K = 2, output_dir = output_dir) 
 ```
 
 the output `model` consists of 
@@ -206,18 +202,18 @@ the output `model` consists of
 
 
               
-## plot_archaic()
+## archaic_plot()
 
 The model output, in particular **omega** and **theta** can be visualized using 
-the `plot_archaic()` command.
+the `archaic_plot()` command.
 
 ```{r warning = FALSE, message = FALSE}
-plot_archaic(model, output_dir = output_dir, background = "modern")
+archaic_plot(model, output_dir = output_dir, background = "modern")
 ```
 
 After running this, go to the output directory `output_dir`. 
 You should see there is a `structure.png` file for the stacked bar chart 
-representation of the **omega** output from `model_archaic` and for each 
+representation of the **omega** output from `archaic_fit` and for each 
 $k=1,2$, a `logo_clus_k.png` file visualizing the mismatch profile in 
 **theta** for each cluster. 
 Also notice that the method clearly separates out the example modern samples 

@@ -12,7 +12,7 @@ output:
 ## Introduction 
 
 **aRchaic** is an R package that performs model based 
-clustering and visualization of ancient and modern DNA samples (see `plot_archaic()` section for example visualization). 
+clustering and visualization of ancient and modern DNA samples (see `archaic_plot()` section for example visualization). 
 This model can be used to identify distinct patterns of DNA damage and
 is capable of reflecting relative rates of contamination in contaminated aDNA
 samples. 
@@ -87,7 +87,7 @@ python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d
 ```
 
 
-## prepare_archaic()
+## archaic_prepare()
 
 The user is expected to organize the MFF files in seperate folders per study. Here, we provide an example with two studies, one with 5 ancient samples derived from [Gamba et. al. 2014](https://www.nature.com/articles/ncomms6257) and a second study with 5 modern samples derived from the 1000 Genomes Project. These two folders are automatically downloaded and saved under `inst/extdata/moderns` and `inst/extdata/ancients` when aRchaic is installed.
 
@@ -108,7 +108,7 @@ list.files(ancients_dir, pattern = ".csv")
 Next we prepare the input data to **aRchaic** model from the above data folders.
 
 ```{r warning = FALSE, message = FALSE}
-out <- prepare_archaic(dirs = c(moderns_dir, ancients_dir))
+out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
 ```
 
 The output `out` should be a list with 2 elements - corresponding to 2 study 
@@ -116,22 +116,22 @@ folders. Each element is a matrix with samples along the rows, coded
 mismatch features along columns, and a cell in the matrix record counts 
 of the number of times a coded mismatch pattern occurs in a sample. 
 
-## model_archaic() 
+## archaic_fit() 
 
 **aRchaic** fits a mixed membership  model on the prepared 
-mismatch feature data from `prepare_archaic()`  that allows each sample to 
+mismatch feature data from `archaic_prepare()`  that allows each sample to 
 have partial memberships in more than one cluster 
 where the clusters represent distinct mismatch feature profiles. 
 
 We first choose a directory - `output_dir` - to save the model output and 
 visualization.
 
-Next we run the `model_archaic` function to fit the mixed membership model.
+Next we run the `archaic_fit` function to fit the mixed membership model.
 We choose the number of clusters $K=2$
 
 ```{r}
 output_dir <- system.file("extdata","archaic_results", package = "aRchaic")
-model <- model_archaic(out, K = 2, output_dir = output_dir)
+model <- archaic_fit(out, K = 2, output_dir = output_dir)
 ```
 
 the output `model` consists of 
@@ -142,13 +142,13 @@ the output `model` consists of
 - **assessment** : assessment of model fit : BIC and loglikelihood
 
 
-## plot_archaic()
+## archaic_plot()
 
 The model output, in particular **omega** and **theta** can be visualized using 
-the `plot_archaic()` command.
+the `archaic_plot()` command.
 
 ```{r warning = FALSE, message = FALSE, eval=FALSE}
-plot_archaic(model, output_dir = output_dir, background = "modern")
+archaic_plot(model, output_dir = output_dir, background = "modern")
 ```
 
 Once the run finishes (a few seconds), go to the output directory `output_dir`. 
@@ -157,7 +157,7 @@ memberships in **omega** in a stacked bar chart (see Fig 1 left).
 
 Also, the `output_dir` should contain for each $k=1,2$, a `logo_clus_k.png` file
 visualizing the mismatch profile for each cluster as in **theta**. If
-`background = "modern"` in `plot_archaic` code above, this reresentation will
+`background = "modern"` in `archaic_plot` code above, this reresentation will
 plot enrichment of the mismatch profiles with respect to a modern background.
 
 The following is a summary of these visualizations

@@ -18,7 +18,7 @@
 #' @param output_dir The output directory where the model is saved.
 #'                   If NULL, it picks the current working directory.
 #'
-#' @return Fits the GoM model on the aggregated data from \code{prepare_archaic}
+#' @return Fits the GoM model on the aggregated data from \code{archaic_prepare}
 #'   and then saves the model output as a .RData file. Also outputs model
 #'   assessment scores like the BIC.
 #'
@@ -27,13 +27,13 @@
 #' @export
 
 
-model_archaic <- function(dat,
-                          K,
-                          tol=0.1,
-                          labs = NULL,
-                          gom_method = "independent",
-                          gom.control = list(),
-                          output_dir = NULL){
+archaic_fit <- function(dat,
+                        K,
+                        tol=0.1,
+                        labs = NULL,
+                        gom_method = "independent",
+                        gom.control = list(),
+                        output_dir = NULL){
 
   flanking_bases = 1
   gom.control.default <- list(bf = FALSE, kill = 2, ord = TRUE, verb = 1, admix = TRUE,
@@ -48,7 +48,7 @@ model_archaic <- function(dat,
         labs <- c(labs, rep(names(datalist)[numdir], dim(datalist[[numdir]])[1]))
       }
     }
-    cat("The data is read as a list of matrices - processed by prepare_archaic() \n")
+    cat("The data is read as a list of matrices - processed by archaic_prepare() \n")
     sig_names <- colnames(datalist[[1]])
     row_names_pool <- rownames(datalist[[1]])
     if(length(datalist) >= 2){
@@ -78,8 +78,8 @@ model_archaic <- function(dat,
         cat("Successfully read .RData file from the folder, ", folders[numdir], "CHECK : \n")
       }else{
         message(".RData file not found in folder", folders[numdir], "running
-             prepare_archaic on the MFF files in the folder")
-        proc_out <- prepare_aRchaic(folders[numdir])
+             archaic_prepare on the MFF files in the folder")
+        proc_out <- archaic_prepare(folders[numdir])
         datalist[[numdir]] <- proc_out
       }
     }
