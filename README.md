@@ -9,7 +9,7 @@ a R package for exploration, clustering and visualization of DNA damage patterns
 [Kushal K Dey*](http://kkdey.github.io/), [Hussein Al-Asadi
 *](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/), [Matthew Stephens](http://stephenslab.uchicago.edu/)
 
-* co-first authors
+\*\*co-first authors
 
 ## Installation
 
