@@ -2,11 +2,12 @@
 
 a R/python software for exploration, clustering, visualization and classification of DNA damage patterns 
 
+<img src="docs/vignette_fig.png" alt="Structure Plot" height="800" width="800">
+
 ## Authors
 
 [Kushal K Dey*](http://kkdey.github.io/), [Hussein Al-Asadi
 *](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/), [Matthew Stephens](http://stephenslab.uchicago.edu/)
-
 
 ## Installation
 
@@ -39,24 +40,26 @@ Load aRchaic into R
 library(aRchaic)
 ```
 
-
 ## Tutorial
 
-Get started with a short tutorial here
+Get started with a short tutorial [here](https://kkdey.github.io/aRchaic/) 
 
-## Methods
+## Support
 
-We propose a model based approach to cluster ancient (UG/non UDG) and modern samples based on known DNA damage patterns like type of mismatch, the strand breaks and position of mismatch on the read. Our model is based on a fast and more efficient version of the Grade of Membership model and we present a novel way to interpret and visualize the clusters. Additionally we also provide functions to visualize DNA damage patterns for a single BAM file, methods to classify each read in the BAM file as modern or ancient, along with model based classification techniques for moderns and ancient samples.
-
-
-Check our [Project Webpage](https://kkdey.github.io/aRchaic/)
-
-## Contact
-
-For any inquiries or questions related to the package, please open an issue in this repository. You can also contact us at [kkdey@uchicago.edu](kkdey@uchicago.edu) or [halasadi@uchicago.edu](halasadi@uchicago.edu)
-
+* Create a new [issue](https://github.com/kkdey/aRchaic/issues) to report bugs and/or request features.
+* Contact Kushal Dey (kkdey@uchicago.edu) or Hussein Al-Asadi (halasadi@uchicago.edu)
 
 Also users are welcome to contribute to the package by submitting pull request. 
+
+## Citation
+
+TBA
+
+## License
+
+Distributed under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The repository is distributed in the hope that it will be useful, but without any warranty; without even the implied warranty of merchantability or fitness for a particular purpose. Please see LICENSE for more details.
 
 ## Acknowledgements
 
