@@ -315,12 +315,21 @@ div.section {
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p><strong>aRchaic</strong> is a R/python software environment that performs model based clustering and visualization of ancient and modern DNA samples from one or more studies (see <code>plot_archaic()</code> section for example visualization). This model can be used to identify distinct patterns of DNA damage and is capable of reflecting relative rates of contamination in contaminated aDNA samples.</p>
+<p><strong>aRchaic</strong> is an R package that performs model based clustering and visualization of ancient and modern DNA samples (see <code>plot_archaic()</code> section for example visualization). This model can be used to identify distinct patterns of DNA damage and is capable of reflecting relative rates of contamination in contaminated aDNA samples.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>First and foremost, the user is required to install <a href="https://www.python.org/downloads/">python</a> and <a href="https://www.rstudio.com/">R/RStudio</a>. Next, the user needs to install the Python packages <a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a> and <a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a>.</p>
-<p>Start a new R session and install the R dependency libraries.</p>
+<p>First and foremost, the user is required to install</p>
+<ul>
+<li><a href="https://www.python.org/downloads/">python</a></li>
+<li><a href="https://www.rstudio.com/">R/RStudio</a></li>
+</ul>
+<p>And Python packages,</p>
+<ul>
+<li><a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a></li>
+<li><a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a></li>
+</ul>
+<p>Upon completion of these steps, start a new R session and install the R dependency libraries.</p>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
 devtools::install_github(&quot;kkdey/CountClust&quot;)
 devtools::install_github(&quot;TaddyLab/maptpx&quot;)
@@ -331,8 +340,8 @@ biocLite(&quot;Logolas&quot;)</code></pre>
 <p>Load aRchaic into R</p>
 <pre class="r"><code>library(aRchaic)</code></pre>
 </div>
-<div id="archaic-input---mff-file" class="section level2">
-<h2>aRchaic input - MFF file</h2>
+<div id="generate-archaic-input-mff-file" class="section level2">
+<h2>Generate aRchaic input (MFF file)</h2>
 <p>For every mismatch in a BAM file with respect to a reference genome, <strong>aRchaic</strong> records various features of the mismatch - mismatch type, flanking bases, strand break base, strand and position of mismatch from the ends of read - into a .csv file which we call the <em>Mismatch Feature Format (MFF)</em> file.</p>
 <p>A typical example MFF file looks like the following</p>
 <pre class="r"><code>mff &lt;- read.csv(system.file(&quot;extdata&quot;,&quot;ancients&quot;,&quot;NE2_subsampled.csv&quot;,package = &quot;aRchaic&quot;),
@@ -349,11 +358,11 @@ head(mff)</code></pre>
 <p>We provide a script to generate the MFF files from the BAM/SAM files <a href="https://github.com/kkdey/aRchaic/tree/master/bin">here</a>. This linked folder also contains a small example BAM file for testing. The simple two-line code to create the MFF file from this BAM file is as follows</p>
 <pre><code>samtools index example.bam
 python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5
-.fa -o example_mff.csv --add-chr</code></pre>
+.fa -o example_mff.csv</code></pre>
 </div>
 <div id="prepare_archaic" class="section level2">
 <h2>prepare_archaic()</h2>
-<p>Suppose you have multiple folders of MFF files corresponding to different studies - comprising of ancient and/or modern samples. We present an example here where we incorporate two folders like that in the package - <code>inst/extdata/moderns</code> and <code>inst/extdata/ancients</code> corresponding to separate studies for 5 moderns and 5 ancients.</p>
+<p>The user is expected to organize the MFF files in seperate folders per study. Here, we provide an example with two studies, one with 5 ancient samples derived from <a href="https://www.nature.com/articles/ncomms6257">Gamba et. al. 2014</a> and a second study with 5 modern samples derived from the 1000 Genomes Project. These two folders are automatically downloaded and saved under <code>inst/extdata/moderns</code> and <code>inst/extdata/ancients</code> when aRchaic is installed.</p>
 <ul>
 <li><strong>Modern study</strong> :</li>
 </ul>
@@ -369,7 +378,6 @@ list.files(moderns_dir, pattern = &quot;.csv&quot;)</code></pre>
 list.files(ancients_dir, pattern = &quot;.csv&quot;)</code></pre>
 <pre><code>## [1] &quot;NE2_subsampled.csv&quot; &quot;NE3_subsampled.csv&quot; &quot;NE4_subsampled.csv&quot;
 ## [4] &quot;NE5_subsampled.csv&quot; &quot;NE6_subsampled.csv&quot;</code></pre>
-<p>Each of the folders has 5 MFF files corresponding to 5 samples.</p>
 <p>Next we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
 <pre class="r"><code>out &lt;- prepare_archaic(dirs = c(moderns_dir, ancients_dir))</code></pre>
 <p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, and a cell in the matrix record counts of the number of times a coded mismatch pattern occurs in a sample.</p>
@@ -386,7 +394,7 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 55231, 1841.2, 27.5, 10.6, 3.6, 0.2, done.</code></pre>
+## log posterior increase: 14776.4, 143, 17, 11.7, 2.3, 1.4, 2, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -407,54 +415,6 @@ model &lt;- model_archaic(out, K = 2, output_dir = output_dir)</code></pre>
 
 </div>
 </div>
-</div>
-<div id="citation" class="section level2">
-<h2>Citation</h2>
-<p><strong>aRchaic</strong> has been developed by <a href="kkdey.github.io">Kushal K. Dey</a> and <a href="https://halasadi.wordpress.com/">Hussein Al-Asadi</a> from the University of Chicago.</p>
-<p>To cite <strong>aRchaic</strong>, cite the following paper</p>
-</div>
-<div id="acknowledgements" class="section level2">
-<h2>Acknowledgements</h2>
-<p>The authors acknowledge John Lindo, John Blischak, Peter Carbonetto, Anna Di Rienzo, Anna Gosling, David Witonsky and Choonwong Jeong for helpful discussions about the package.</p>
-</div>
-<div id="sessioninfo" class="section level2">
-<h2>SessionInfo</h2>
-<pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.4 (2018-03-15)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Sierra 10.12.6
-## 
-## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## other attached packages:
-## [1] aRchaic_0.1.0
-## 
-## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.16      pillar_1.1.0      compiler_3.4.4   
-##  [4] plyr_1.8.4        tools_3.4.4       boot_1.3-20      
-##  [7] digest_0.6.15     nlme_3.1-131.1    evaluate_0.10.1  
-## [10] tibble_1.4.2      gtable_0.2.0      gridBase_0.4-7   
-## [13] lattice_0.20-35   mgcv_1.8-23       rlang_0.2.0      
-## [16] Matrix_1.2-12     yaml_2.1.18       parallel_3.4.4   
-## [19] cluster_2.0.6     stringr_1.3.0     knitr_1.20       
-## [22] Logolas_1.3.1     gtools_3.5.0      CountClust_1.6.1 
-## [25] stats4_3.4.4      rprojroot_1.3-2   grid_3.4.4       
-## [28] nnet_7.3-12       cowplot_0.9.2     maptpx_1.9-5     
-## [31] flexmix_2.3-14    rmarkdown_1.9     limma_3.34.9     
-## [34] ggplot2_2.2.1     reshape2_1.4.3    magrittr_1.5     
-## [37] MASS_7.3-47       backports_1.1.2   scales_0.5.0.9000
-## [40] htmltools_0.3.6   modeltools_0.2-21 permute_0.9-4    
-## [43] ape_5.0           picante_1.6-2     colorspace_1.3-2 
-## [46] stringi_1.1.6     lazyeval_0.2.1    munsell_0.4.3    
-## [49] slam_0.1-42       SQUAREM_2017.10-1 vegan_2.4-4</code></pre>
 </div>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using

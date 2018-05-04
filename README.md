@@ -1,40 +1,70 @@
 # aRchaic
 
-a R/python software for exploration, clustering, visualization and classification of DNA damage patterns 
+a R package for exploration, clustering and visualization of DNA damage patterns 
+
+<img src="docs/vignette_fig.png" alt="Structure Plot" height="500" width="600">
 
 ## Authors
 
 [Kushal K Dey*](http://kkdey.github.io/), [Hussein Al-Asadi
 *](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/), [Matthew Stephens](http://stephenslab.uchicago.edu/)
 
+\*\*co-first authors
 
 ## Installation
 
-The user can install the `aRchaic` package in R from Github via devtools.
+First and foremost, the user is required to install 
+
+* [python](https://www.python.org/downloads/) 
+* [R/RStudio](https://www.rstudio.com/) 
+
+And Python packages,
+
+* [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
+* [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
+
+Upon completion of these steps, start a new R session and install the R dependency libraries.
+
+```
+install.packages("devtools")
+devtools::install_github("kkdey/CountClust")
+devtools::install_github("TaddyLab/maptpx")
+source("https://bioconductor.org/biocLite.R")
+biocLite("Logolas")
+```
+
+On completion of the above steps, install the R package **aRchaic**
 
 ```
 devtools::install_github("kkdey/aRchaic")
 ```
 
-To load the package in R
+Finally, load aRchaic into R
 
 ```
 library(aRchaic)
 ```
 
-## Methods
+## Tutorial
 
-We propose a model based approach to cluster ancient (UG/non UDG) and modern samples based on known DNA damage patterns like type of mismatch, the strand breaks and position of mismatch on the read. Our model is based on a fast and more efficient version of the Grade of Membership model and we present a novel way to interpret and visualize the clusters. Additionally we also provide functions to visualize DNA damage patterns for a single BAM file, methods to classify each read in the BAM file as modern or ancient, along with model based classification techniques for moderns and ancient samples.
+Get started with a short tutorial [here](https://kkdey.github.io/aRchaic/) 
 
+## Support
 
-Check our [Project Webpage](https://kkdey.github.io/aRchaic/)
-
-## Contact
-
-For any inquiries or questions related to the package, please open an issue in this repository. You can also contact us at [kkdey@uchicago.edu](kkdey@uchicago.edu) or [halasadi@uchicago.edu](halasadi@uchicago.edu)
-
+* Create a new [issue](https://github.com/kkdey/aRchaic/issues) to report bugs and/or request features.
+* Contact Kushal Dey (kkdey@uchicago.edu) or Hussein Al-Asadi (halasadi@uchicago.edu)
 
 Also users are welcome to contribute to the package by submitting pull request. 
+
+## Citation
+
+TBA
+
+## License
+
+Distributed under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The repository is distributed in the hope that it will be useful, but without any warranty; without even the implied warranty of merchantability or fitness for a particular purpose. Please see LICENSE for more details.
 
 ## Acknowledgements
 
