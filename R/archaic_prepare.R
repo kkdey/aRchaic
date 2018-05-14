@@ -7,6 +7,16 @@
 #' @param dirs The directory/directories containing the MFF files.
 #' @param max_pos The maximum position from the ends of the reads for which
 #'  mismatches are considered in aRchaic.
+#' @param one_mismatch Boolean indicating whether to use only reads containing
+#'                     one mismatch. Defaults to FALSE.
+#' @param from_scratch Boolean indicating whether to perform data preparation
+#'                     from scratch and regenerate the .RData file.
+#'                     The alternative would be look for the .RData file and
+#'                     update that file accordingly, based on the MFF (.csv)
+#'                     files present in the directory. Defaults to FALSE.
+#' @param delete Boolean indicating whether to delete from the .RData file,
+#'               if present, rows corresponding to the files that are not
+#'               present in the directory.
 #' @param output_rda If non-NULL, the processed data for each
 #'  directory in \code{dirs} is saved as a .Rdata file.
 #'
@@ -21,6 +31,7 @@
 
 archaic_prepare <- function(dirs,
                             max_pos = 20,
+                            one_mismatch = FALSE,
                             from_scratch = FALSE,
                             delete = FALSE,
                             output_rda = TRUE){
@@ -60,6 +71,7 @@ archaic_prepare <- function(dirs,
          for(numfile in 1:length(files_to_process)){
            tmp_dat <- damage_build_bin_counts(file = paste0(dirs[numdir], files_to_process[numfile]),
                                               max_pos = max_pos,
+                                              one_mismatch=one_mismatch,
                                               type=2)
            signature_counts_from_file[[numfile]] <- tmp_dat[,2]
            signatures_file[[numfile]] <- tmp_dat[,1]
@@ -234,10 +246,23 @@ archaic_prepare <- function(dirs,
 
 damage_build_bin_counts =  function(filename,
                                     max_pos = 20,
+                                    one_mismatch = FALSE,
                                     type=2)
 {
   breaks = c(-1, seq(1,max_pos,1))
-  file <- read.csv(filename, header = FALSE, stringsAsFactors = FALSE)
+  file1 <- read.csv(filename, header = FALSE, stringsAsFactors = FALSE)
+  if(one_mismatch){
+    multiple_mismatches <- as.numeric(names(which(table(file1$V7) > 1)))
+    if(length(multiple_mismatches) > 0){
+      file2 <- file1[-which(!is.na(match(file1$V7, multiple_mismatches))),]
+      file <- file2
+    }else{
+      file <- file1
+    }
+  }else{
+    file <- file1
+  }
+
   file[,7] <- rep(1, dim(file)[1])
   #file <- file[,-7] ## remove the read name
 

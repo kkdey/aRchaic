@@ -5,14 +5,27 @@
 \title{Prepare and aggregate the mismatch feature counts from one or multiple
 MFF files}
 \usage{
-archaic_prepare(dirs, max_pos = 20, from_scratch = FALSE, delete = FALSE,
-  output_rda = TRUE)
+archaic_prepare(dirs, max_pos = 20, one_mismatch = FALSE,
+  from_scratch = FALSE, delete = FALSE, output_rda = TRUE)
 }
 \arguments{
 \item{dirs}{The directory/directories containing the MFF files.}
 
 \item{max_pos}{The maximum position from the ends of the reads for which
 mismatches are considered in aRchaic.}
+
+\item{one_mismatch}{Boolean indicating whether to use only reads containing
+one mismatch. Defaults to FALSE.}
+
+\item{from_scratch}{Boolean indicating whether to perform data preparation
+from scratch and regenerate the .RData file.
+The alternative would be look for the .RData file and
+update that file accordingly, based on the MFF (.csv)
+files present in the directory. Defaults to FALSE.}
+
+\item{delete}{Boolean indicating whether to delete from the .RData file,
+if present, rows corresponding to the files that are not
+present in the directory.}
 
 \item{output_rda}{If non-NULL, the processed data for each
 directory in \code{dirs} is saved as a .Rdata file.}

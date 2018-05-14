@@ -66,7 +66,7 @@ archaic_plot <- function(model,
                                breaklogoport_x = 0.55, breaklogoport_y = 0.4, breaklogoport_width=0.7,
                                breaklogoport_height=1, lineport_x = 0.65, lineport_y=0.5,
                                lineport_width=0.8, lineport_height=1.3,
-                               output_width = 1200, output_height = 700)
+                               output_width = 18, output_height = 7)
 
   if(background == "null"){
     logo.control.default$base_probs_list = NULL
@@ -105,7 +105,7 @@ archaic_plot <- function(model,
                                                    annotation = annotation,
                                                    palette = topic_cols),
                                               structure.control.two))
-  ggplot2::ggsave(paste0(output_dir, "structure.png"),
+  ggplot2::ggsave(paste0(output_dir, "structure.pdf"),
                   width =  structure.control$structure_width,
                   height = structure.control$structure_height)
 
@@ -182,8 +182,8 @@ Logo_aRchaic_cluster <- function(theta_pool,
                                  lineport_height=1,
                                  output_dir = NULL,
                                  filename = NULL,
-                                 output_width = 1200,
-                                 output_height = 700){
+                                 output_width = 18,
+                                 output_height = 7){
 
   library(grid)
   library(gridBase)
@@ -286,7 +286,7 @@ Logo_aRchaic_cluster <- function(theta_pool,
 
   grob_list <- list()
   for(l in 1:length(prop_patterns_list)){
-    png(paste0(output_dir, "logo_clus_", l, ".png"), width=output_width, height = output_height)
+    pdf(paste0(output_dir, "logo_clus_", l, ".pdf"), width=output_width, height = output_height)
     damageLogo_six.skeleton(pwm = prop_patterns_list[[l]],
                             probs = prob_mutation[l,],
                             breaks_theta_vec = breaks_theta[,l, drop=FALSE],
