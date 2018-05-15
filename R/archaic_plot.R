@@ -65,7 +65,8 @@ archaic_plot <- function(model,
                                logoport_width= 1, logoport_height= 1.2,
                                breaklogoport_x = 0.55, breaklogoport_y = 0.4, breaklogoport_width=0.7,
                                breaklogoport_height=1, lineport_x = 0.65, lineport_y=0.5,
-                               lineport_width=0.8, lineport_height=1.3,
+                               lineport_width=0.8, lineport_height=1.3, panelname_x = 0.8,
+                               panelname_y= 0.6, panelname_width= 0.3, panelname_height= 0.3,
                                output_width = 18, output_height = 7)
 
   if(background == "null"){
@@ -114,7 +115,8 @@ archaic_plot <- function(model,
 
   plot.new()
   do.call(Logo_aRchaic_cluster, append(list(theta_pool = model$theta,
-                                            output_dir = output_dir),
+                                            output_dir = output_dir,
+                                            topic_cols = topic_cols),
                                        logo.control))
   graphics.off()
 
@@ -180,6 +182,13 @@ Logo_aRchaic_cluster <- function(theta_pool,
                                  lineport_y=0.5,
                                  lineport_width=1,
                                  lineport_height=1,
+                                 panelname_x = 0.8,
+                                 panelname_y= 0.6,
+                                 panelname_width= 0.3,
+                                 panelname_height= 0.3,
+                                 topic_cols = c("red","blue","darkgoldenrod1","cyan","firebrick", "green",
+                                                "hotpink","burlywood","yellow","darkgray","deepskyblue","darkkhaki",
+                                                "brown4","darkorchid","magenta","yellow", "azure1","azure4"),
                                  output_dir = NULL,
                                  filename = NULL,
                                  output_width = 18,
@@ -310,7 +319,13 @@ Logo_aRchaic_cluster <- function(theta_pool,
                             lineport_x = lineport_x,
                             lineport_y= lineport_y,
                             lineport_width=lineport_width,
-                            lineport_height=lineport_height)
+                            lineport_height=lineport_height,
+                            panelname_x = panelname_x,
+                            panelname_y= panelname_y,
+                            panelname_width= panelname_width,
+                            panelname_height= panelname_height,
+                            panelname_title = paste0("cluster ", l),
+                            panelname_color = topic_cols[l])
     dev.off()
   }
 }
@@ -338,7 +353,13 @@ damageLogo_six.skeleton <- function(pwm,
                                     lineport_x = 0.4,
                                     lineport_y=0.5,
                                     lineport_width=1,
-                                    lineport_height=1){
+                                    lineport_height=1,
+                                    panelname_x = 0.8,
+                                    panelname_y= 0.6,
+                                    panelname_width= 0.3,
+                                    panelname_height= 0.3,
+                                    panelname_title = "",
+                                    panelname_color = "black"){
 
   mut_lowrange = mut_ranges[1]
   mut_uprange =  mut_ranges[2]
@@ -431,11 +452,27 @@ damageLogo_six.skeleton <- function(pwm,
 
 
 
-  Logolas::get_viewport_logo(1, 3)
+  Logolas::get_viewport_logo(1, 4, widths.val = c(3,5,5,5))
 
   seekViewport(paste0("plotlogo", 1))
-  vp1 <- viewport(x=logoport_x, y=logoport_y, width=logoport_width, height=logoport_height)
-  pushViewport(vp1)
+  vp1 <- viewport(x=panelname_x, y=panelname_y, width=panelname_width, height=panelname_height)
+  df <- data.frame(x1 = -0.5, x2 = 0.5, y1 = -1, y2 = 1)
+  p <- ggplot() +
+    geom_rect(data=df, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2),  fill=panelname_color, color = panelname_color, alpha=1) +
+    ggtitle(panelname_title) +
+    theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),legend.position="none",
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank(),
+          plot.title = element_text(size = 30, face = "bold", hjust = 0.5))
+  print(p, vp = vp1)
+  upViewport(0)
+
+  seekViewport(paste0("plotlogo", 2))
+  vp2 <- viewport(x=logoport_x, y=logoport_y, width=logoport_width, height=logoport_height)
+  pushViewport(vp2)
   if(!is.null(background)){
     do.call(Logolas::nlogomaker, append(list(table = pwm1,
                                     color_profile = color_profile_1,
@@ -449,15 +486,13 @@ damageLogo_six.skeleton <- function(pwm,
   }
   upViewport(0)
 
+
   if(is.null(background)){
 
     pos_data <- data.frame(position = as.numeric(names(probs)),
                            val = as.numeric(probs))
-
-    seekViewport(paste0("plotlogo", 2))
-
-
-    vp2 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
+    seekViewport(paste0("plotlogo", 3))
+    vp3 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
     p <- ggplot(data=pos_data, aes(x=position,y=val)) +
       geom_point(size = 3, aes(colour = "red")) +
       geom_line(aes(colour = "red"))+
@@ -479,7 +514,7 @@ damageLogo_six.skeleton <- function(pwm,
       theme(legend.position="none") +
       theme(axis.ticks.length=unit(0.3,"cm"))
     # geom_hline(yintercept=0, linetype="dashed")
-    print(p, vp = vp2)
+    print(p, vp = vp3)
 
   }else{
     bg_pos_vec <- base_probs_list[[(2*flanking_bases+3)]]
@@ -488,8 +523,8 @@ damageLogo_six.skeleton <- function(pwm,
     num_pos <- length(as.numeric(probs1))
     pos_data <- data.frame(position = as.numeric(names(probs)[(clip+1):num_pos]),
                            val = as.numeric(probs1)[(clip+1):num_pos])
-    seekViewport(paste0("plotlogo", 2))
-    vp2 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
+    seekViewport(paste0("plotlogo", 3))
+    vp3 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
     p <- ggplot(data=pos_data, aes(x=position,y=val)) +
       geom_point(size = 3, aes(colour = "red")) +
       geom_line(aes(colour = "red"))+
@@ -511,14 +546,14 @@ damageLogo_six.skeleton <- function(pwm,
       theme(legend.position="none") +
       theme(axis.ticks.length=unit(0.3,"cm")) +
       geom_hline(yintercept=0, linetype="dashed")
-    print(p, vp = vp2)
+    print(p, vp = vp3)
 
   }
 
 
-  seekViewport(paste0("plotlogo", 3))
-  vp3 <- viewport(x=breaklogoport_x, y=breaklogoport_y, width=breaklogoport_width, height=breaklogoport_height)
-  pushViewport(vp3)
+  seekViewport(paste0("plotlogo", 4))
+  vp4 <- viewport(x=breaklogoport_x, y=breaklogoport_y, width=breaklogoport_width, height=breaklogoport_height)
+  pushViewport(vp4)
   if(!is.null(background)){
     bg_breaks_theta_vec <- matrix(base_probs_list[[(2*flanking_bases+2)]], ncol=1)
     rownames(bg_breaks_theta_vec) <- names(base_probs_list[[(2*flanking_bases+2)]])
@@ -533,6 +568,5 @@ damageLogo_six.skeleton <- function(pwm,
                                              bg = NULL),
                                         breaklogo.control))
   }
-
   upViewport(0)
 }
