@@ -380,13 +380,17 @@ damageLogo_six.skeleton <- function(pwm,
                                   pop_name = "Mismatch and \n flanking base composition",
                                   addlogos = NULL, addlogos_text = NULL, newpage = FALSE,
                                   yrange = NULL, xaxis=TRUE, yaxis=TRUE, xaxis_fontsize=23,
-                                  y_fontsize=20, main_fontsize = 25,
-                                  xlab_fontsize=25,
+                                  y_fontsize=22, main_fontsize = 25,
+                                  xlab_fontsize=22,
                                   start=0.001, xlab = "", ylab = "Enrichment Score",
                                   col_line_split="grey80", control = list(epsilon=0.25,gap_ylab=3.5, gap_xlab = 4,
-                                                                          round_off = 1, posbins = 3, negbins = 3,
-                                                                          lowrange = mut_lowrange, uprange = mut_uprange,
-                                                                          size_port = 1, symm = FALSE))
+                                                                          round_off = 1, posbins = 3,
+                                                                          negbins = 3,
+                                                                          lowrange = mut_lowrange,
+                                                                          uprange = mut_uprange,
+                                                                          size_port = 1, symm = FALSE,
+                                                                          npc_units_main = 1.5,
+                                                                          lines_units_main = 1))
 
   breaklogo.control.default <- list( ic = FALSE,
                                      score = "log",
@@ -395,13 +399,15 @@ damageLogo_six.skeleton <- function(pwm,
                                                      "three", "four", "five", "six", "seven", "eight", "nine", "dot", "comma",
                                                      "dash", "colon", "semicolon", "leftarrow", "rightarrow"),
                                      frame_width=NULL, yscale_change=TRUE,
-                                     pop_name = "base composition \n 5' of  strand break \n",
+                                     pop_name = "Base composition \n 5' of  strand break \n",
                                      addlogos = NULL, addlogos_text = NULL, newpage = FALSE,
                                      yrange = NULL, xaxis=FALSE, yaxis=TRUE, xaxis_fontsize=10,
-                                     xlab_fontsize=18, y_fontsize=18, main_fontsize=25,
+                                     xlab_fontsize=22, y_fontsize=22, main_fontsize=25,
                                      start=0.001, xlab = "", ylab = "Enrichment Score",
                                      col_line_split="white", control = list(gap_ylab=3.5, epsilon = 0.01,
                                                                             round_off = 1, symm = TRUE,
+                                                                            npc_units_main = 1.5,
+                                                                            lines_units_main = 1,
                                                                             lowrange = break_lowrange,
                                                                             uprange = break_uprange))
   mutlogo.control <- modifyList(mutlogo.control.default, mutlogo.control)
@@ -497,22 +503,30 @@ damageLogo_six.skeleton <- function(pwm,
       geom_point(size = 3, aes(colour = "red")) +
       geom_line(aes(colour = "red"))+
       ggtitle("Location of \n mismatch in read" ) +
+      theme(plot.title = element_text(lineheight=1.2, margin=margin(0,0,20,0),
+                                      hjust = 0.5, size = 25),
+            panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            axis.title.x = element_text(size = 22), axis.title.y = element_text(size = 22),
+            axis.text.x = element_text(colour="black", hjust=0.8, size = 18),
+            axis.text.y = element_text(size = 22, hjust=0.8, colour = "black"),
+            legend.position="none",
+            axis.ticks.length=unit(0.3,"cm"))+
       labs(x="position in read",y="probability of mismatch") +
       scale_x_continuous(limits = c(0, 20))  +
       scale_y_continuous(limits = prob_limits,
-                         breaks = prob_breaks) +
-      theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-      theme(axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20)) +
-      theme(axis.text.x = element_text(colour="black", hjust=0.8, size = 18),
-            axis.text.y = element_text(size = 18, hjust=0.8, colour = "black")) +
-      theme(axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
-      theme(axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0))) +
-      theme(plot.title = element_text(size = 25)) +
-      theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
-      theme(plot.title = element_text(hjust = 0.5))+
-      theme(legend.position="none") +
-      theme(axis.ticks.length=unit(0.3,"cm"))
+                         breaks = prob_breaks)
+     # theme_bw() + theme() +
+     # theme(axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20)) +
+     # theme(axis.text.x = element_text(colour="black", hjust=0.8, size = 18),
+     #       axis.text.y = element_text(size = 18, hjust=0.8, colour = "black")) +
+     # theme(axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
+     # theme(axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0))) +
+     # theme(plot.title = element_text(size = 25)) +
+     # theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
+     # theme(plot.title = element_text(lineheight=2, hjust = 0.5))+
+     # theme(legend.position="none") +
+     # theme(axis.ticks.length=unit(0.3,"cm"))
     # geom_hline(yintercept=0, linetype="dashed")
     print(p, vp = vp3)
 
@@ -529,22 +543,32 @@ damageLogo_six.skeleton <- function(pwm,
       geom_point(size = 3, aes(colour = "red")) +
       geom_line(aes(colour = "red"))+
       ggtitle("Location of \n mismatch in read" ) +
-      labs(x="position in read",y="enrichment in probability") +
+      theme(plot.title = element_text(lineheight=1.2, margin=margin(0,0,20,0),
+                                      hjust = 0.5, size = 25),
+            panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            axis.title.x = element_text(size = 22), axis.title.y = element_text(size = 22),
+            axis.text.x = element_text(colour="black", hjust=0.8, size = 18),
+            axis.text.y = element_text(size = 22, hjust=0.8, colour = "black"),
+            legend.position="none",
+            axis.ticks.length=unit(0.3,"cm"))+
+      labs(x="position in read",y="Enrichment in probability") +
       scale_x_continuous(limits = c(0, 20))  +
       scale_y_continuous(limits = prob_limits,
-                         breaks = prob_breaks) +
-      theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-      theme(axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20)) +
-      theme(axis.text.x = element_text(colour="black", hjust=0.8, size = 18),
-            axis.text.y = element_text(size = 18, hjust=0.8, colour = "black")) +
-      theme(axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
-      theme(axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0))) +
-      theme(plot.title = element_text(size = 25)) +
-      theme(plot.title = element_text(margin=margin(b = 30, unit = "pt"))) +
-      theme(plot.title = element_text(hjust = 0.5))+
-      theme(legend.position="none") +
-      theme(axis.ticks.length=unit(0.3,"cm")) +
+                         breaks = prob_breaks,
+                         expand = c(0,0)) +
+   #   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  #                       panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+   #   theme(axis.title.x = element_text(size = 22), axis.title.y = element_text(size = 22)) +
+  #    theme(axis.text.x = element_text(colour="black", hjust=0.8, size = 22),
+  #          axis.text.y = element_text(size = 22, hjust=0.8, colour = "black")) +
+  #    theme(axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
+  #    theme(axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0))) +
+  #    theme(plot.title = element_text(size = 25)) +
+  #    theme(plot.title = element_text(margin=margin(b = 40, unit = "pt"))) +
+  #    theme(plot.title = element_text(hjust = 0.5))+
+  #    theme(legend.position="none") +
+  #    theme(axis.ticks.length=unit(0.3,"cm")) +
       geom_hline(yintercept=0, linetype="dashed")
     print(p, vp = vp3)
 
