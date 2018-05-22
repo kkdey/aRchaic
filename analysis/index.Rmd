@@ -29,19 +29,10 @@ And Python packages,
 * [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
 * [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
 
-Upon completion of these steps, start a new R session and install the R dependency libraries.
-
-```{r echo=TRUE, eval = FALSE}
-install.packages("devtools")
-devtools::install_github("kkdey/CountClust")
-devtools::install_github("TaddyLab/maptpx")
-source("https://bioconductor.org/biocLite.R")
-biocLite("Logolas")
-```
-
-On completion of the above steps, install the R package **aRchaic**
+Upon completion of these steps, start a new R session and install the R package **aRchaic**
 
 ```{r echo=TRUE, eval=FALSE}
+install.packages("devtools")
 devtools::install_github("kkdey/aRchaic")
 ```
 

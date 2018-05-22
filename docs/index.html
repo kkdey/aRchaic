@@ -324,14 +324,9 @@ div.section {
 <li><a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a></li>
 <li><a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a></li>
 </ul>
-<p>Upon completion of these steps, start a new R session and install the R dependency libraries.</p>
+<p>Upon completion of these steps, start a new R session and install the R package <strong>aRchaic</strong></p>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;kkdey/CountClust&quot;)
-devtools::install_github(&quot;TaddyLab/maptpx&quot;)
-source(&quot;https://bioconductor.org/biocLite.R&quot;)
-biocLite(&quot;Logolas&quot;)</code></pre>
-<p>On completion of the above steps, install the R package <strong>aRchaic</strong></p>
-<pre class="r"><code>devtools::install_github(&quot;kkdey/aRchaic&quot;)</code></pre>
+devtools::install_github(&quot;kkdey/aRchaic&quot;)</code></pre>
 <p>Load aRchaic into R</p>
 <pre class="r"><code>library(aRchaic)</code></pre>
 </div>
@@ -389,7 +384,7 @@ model &lt;- archaic_fit(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 22417.6, 88.6, 17.9, 5, 3.2, 0.2, done.</code></pre>
+## log posterior increase: 19281.1, 160.2, 24.9, 12.8, 13.5, 2.2, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
