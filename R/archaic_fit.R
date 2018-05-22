@@ -1,26 +1,43 @@
-#' @title Grade of Membership (GoM) model clustering of aDNA samples using DNA damage patterns
+#' @title Grade of Membership (GoM) model clustering of aDNA samples
+#' using DNA damage patterns
 #'
-#' @description Performs GoM model clustering of aDNA samples using DNA damage
-#' patterns- mutation, flanking base, distance from read end and strand
-#' break information. The default implementation of this model follows the
-#' modeling framework of Shiraishi et al (2015).
+#' @description Performs a mixed membership model clustering of aDNA samples
+#' using DNA damage patterns- mutation, flanking base, distance from read end
+#' and strand break information. The default implementation of this model
+#' follows the modeling framework of Shiraishi et al (2015).
 #'
-#'
+#' @param dat Either
+#'            (a) output from \code{archaic_prepare} or
+#'            (b) a vector of directories hosting the MFF files that the user
+#'                wants to jointly model
+#'            (c) a matrix of counts with samples along the rows and the mismatch
+#'                signatures along the columns with entries reporting the counts.
 #' @param K the number of clusters to fit to the model.
 #' @param tol The tolerance level of convergence of the GoM model fit
 #' @param labs The factor of labels used to group the samples in visualization.
 #'             May be used to distinguish
 #'             samples from different labs, or different library prep.
 #' @param gom_method The GoM method type. Defaults to \code{independent} model proposed by
-#'                   Y. Shiraichi and M. Stephens. The other option is to use the \code{full}
-#'                   model which is uses the \code{maptpx} package by Matt Taddy.
+#'                   Shiraishi2015. The other option is to use the \code{full}
+#'                   model which is uses the implementation due to Taddy2012.
 #' @param gom.control Control parameters for the GoM model fit.
 #' @param output_dir The output directory where the model is saved.
 #'                   If NULL, it picks the current working directory.
 #'
-#' @return Fits the GoM model on the aggregated data from \code{archaic_prepare}
-#'   and then saves the model output as a .RData file. Also outputs model
-#'   assessment scores like the BIC.
+#' @return Fits a GoM model on the aggregated data from \code{archaic_prepare}
+#'   and outputs both the clusters (represented by mismatch signature frequencies)
+#'   and the mixing proportion of clusters represented in each sample/MFF file.
+#'   It also returns an assessment score like the BIC, to compare the models.
+#'
+#' @references
+#'      Taddy2012.
+#'      Taddy, M., 2012, March. On estimation and selection for topic models.
+#'      In Artificial Intelligence and Statistics (pp. 1184-1193).
+#'
+#'      Shiraishi2015.
+#'      Shiraishi, Y., Tremmel, G., Miyano, S. and Stephens, M., 2015.
+#'      A simple model-based approach to inferring and visualizing cancer
+#'      mutation signatures. PLoS genetics, 11(12), p.e1005657.
 #'
 #' @importFrom CountClust compGoM
 #' @import maptpx

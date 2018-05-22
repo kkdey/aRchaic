@@ -2,12 +2,20 @@
 % Please edit documentation in R/archaic_fit.R
 \name{archaic_fit}
 \alias{archaic_fit}
-\title{Grade of Membership (GoM) model clustering of aDNA samples using DNA damage patterns}
+\title{Grade of Membership (GoM) model clustering of aDNA samples
+using DNA damage patterns}
 \usage{
 archaic_fit(dat, K, tol = 0.1, labs = NULL, gom_method = "independent",
   gom.control = list(), output_dir = NULL)
 }
 \arguments{
+\item{dat}{Either
+(a) output from \code{archaic_prepare} or
+(b) a vector of directories hosting the MFF files that the user
+    wants to jointly model
+(c) a matrix of counts with samples along the rows and the mismatch
+    signatures along the columns with entries reporting the counts.}
+
 \item{K}{the number of clusters to fit to the model.}
 
 \item{tol}{The tolerance level of convergence of the GoM model fit}
@@ -17,8 +25,8 @@ May be used to distinguish
 samples from different labs, or different library prep.}
 
 \item{gom_method}{The GoM method type. Defaults to \code{independent} model proposed by
-Y. Shiraichi and M. Stephens. The other option is to use the \code{full}
-model which is uses the \code{maptpx} package by Matt Taddy.}
+Shiraishi2015. The other option is to use the \code{full}
+model which is uses the implementation due to Taddy2012.}
 
 \item{gom.control}{Control parameters for the GoM model fit.}
 
@@ -26,13 +34,24 @@ model which is uses the \code{maptpx} package by Matt Taddy.}
 If NULL, it picks the current working directory.}
 }
 \value{
-Fits the GoM model on the aggregated data from \code{archaic_prepare}
-  and then saves the model output as a .RData file. Also outputs model
-  assessment scores like the BIC.
+Fits a GoM model on the aggregated data from \code{archaic_prepare}
+  and outputs both the clusters (represented by mismatch signature frequencies)
+  and the mixing proportion of clusters represented in each sample/MFF file.
+  It also returns an assessment score like the BIC, to compare the models.
 }
 \description{
-Performs GoM model clustering of aDNA samples using DNA damage
-patterns- mutation, flanking base, distance from read end and strand
-break information. The default implementation of this model follows the
-modeling framework of Shiraishi et al (2015).
+Performs a mixed membership model clustering of aDNA samples
+using DNA damage patterns- mutation, flanking base, distance from read end
+and strand break information. The default implementation of this model
+follows the modeling framework of Shiraishi et al (2015).
+}
+\references{
+Taddy2012.
+     Taddy, M., 2012, March. On estimation and selection for topic models.
+     In Artificial Intelligence and Statistics (pp. 1184-1193).
+
+     Shiraishi2015.
+     Shiraishi, Y., Tremmel, G., Miyano, S. and Stephens, M., 2015.
+     A simple model-based approach to inferring and visualizing cancer
+     mutation signatures. PLoS genetics, 11(12), p.e1005657.
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/archaic_prepare.R
 \name{archaic_prepare}
 \alias{archaic_prepare}
-\title{Prepare and aggregate the mismatch feature counts from one or multiple
-MFF files}
+\title{Prepare and aggregate mismatch feature counts MFF files in a study}
 \usage{
 archaic_prepare(dirs, max_pos = 20, one_mismatch = FALSE,
   from_scratch = FALSE, delete = FALSE, output_rda = TRUE)
@@ -31,14 +30,17 @@ present in the directory.}
 directory in \code{dirs} is saved as a .Rdata file.}
 }
 \value{
-Returns a matrix with rows being the samples (each MFF file),
+Returns a list with number of elements same as the number of
+elements/directories in the directory vectors \code{dirs}. Each of these
+elements is a matrix with rows being samples (each MFF file), the
 columns representing the mismatch signatures (comprising of features like
-mismatch type, flanking bases and strand break information).
-The cells contain counts of the number of mutational signatures observed in
-that MFF file.
+mismatch type, flanking bases and strand break information) and the cells
+of the matrix reporting counts of the number of times a mutational signature
+of a given type is observed in an MFF file.
 }
 \description{
-For each file in the vector of directories \code{dirs},
-aggregates the mismatch feature counts data from the MFF files
+For each file in a directory in the directory vector \code{dirs},
+aggregates the mismatch feature counts data from the Mismatch Feature Format
+(MFF) files to form a single .RData file that is saved in the given directory.
 }
 \keyword{aggregate_counts}

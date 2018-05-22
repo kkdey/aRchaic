@@ -7,6 +7,10 @@
 #' @param file a MismatchFeatureFormat (MFF) .csv file.
 #' @param logo.control The control parameters for the logo plot representation of the sample.
 #'                     Check the input parameters of \code{damageLogo5()} for the control parameters.
+#' @param background if equals "modern", as in the default, compares enrichment
+#'                   of mismatch features against a modern background - else
+#'                   uses a background with equal probability of all mismatch
+#'                   features.
 #' @param title The name of the sample. If not provided, defaults to the filename.
 #' @param output_file The filename (with path) of the constructed logo plot.
 #'

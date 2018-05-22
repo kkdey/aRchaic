@@ -1,8 +1,8 @@
-#' @title Prepare and aggregate the mismatch feature counts from one or multiple
-#' MFF files
+#' @title Prepare and aggregate mismatch feature counts MFF files in a study
 #'
-#' @description For each file in the vector of directories \code{dirs},
-#' aggregates the mismatch feature counts data from the MFF files
+#' @description For each file in a directory in the directory vector \code{dirs},
+#' aggregates the mismatch feature counts data from the Mismatch Feature Format
+#' (MFF) files to form a single .RData file that is saved in the given directory.
 #'
 #' @param dirs The directory/directories containing the MFF files.
 #' @param max_pos The maximum position from the ends of the reads for which
@@ -20,11 +20,13 @@
 #' @param output_rda If non-NULL, the processed data for each
 #'  directory in \code{dirs} is saved as a .Rdata file.
 #'
-#' @return Returns a matrix with rows being the samples (each MFF file),
+#' @return Returns a list with number of elements same as the number of
+#' elements/directories in the directory vectors \code{dirs}. Each of these
+#' elements is a matrix with rows being samples (each MFF file), the
 #' columns representing the mismatch signatures (comprising of features like
-#' mismatch type, flanking bases and strand break information).
-#' The cells contain counts of the number of mutational signatures observed in
-#' that MFF file.
+#' mismatch type, flanking bases and strand break information) and the cells
+#' of the matrix reporting counts of the number of times a mutational signature
+#' of a given type is observed in an MFF file.
 #'
 #' @keywords aggregate_counts
 #' @export

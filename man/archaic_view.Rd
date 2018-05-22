@@ -13,6 +13,11 @@ archaic_view(file, logo.control = list(), background = "modern",
 \item{logo.control}{The control parameters for the logo plot representation of the sample.
 Check the input parameters of \code{damageLogo5()} for the control parameters.}
 
+\item{background}{if equals "modern", as in the default, compares enrichment
+of mismatch features against a modern background - else
+uses a background with equal probability of all mismatch
+features.}
+
 \item{title}{The name of the sample. If not provided, defaults to the filename.}
 
 \item{output_file}{The filename (with path) of the constructed logo plot.}
