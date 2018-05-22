@@ -24,15 +24,25 @@ First and foremost, the user is required to install
 * [python](https://www.python.org/downloads/) 
 * [R/RStudio](https://www.rstudio.com/) 
 
+**aRchaic** has been tested on systems with R (>= 3.4.3). 
+
 And Python packages,
 
 * [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
 * [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
 
-Upon completion of these steps, start a new R session and install the R package **aRchaic**
+Upon completion of these steps, start a new R session and install the dependency R packages.
+
+```{r}
+install.packages("devtools")
+devtools::install_github("kkdey/Logolas")
+devtools::install_github("kkdey/CountClust")
+devtools::install_github("TaddyLab/maptpx")
+```
+
+Next install the **aRchaic** R package*
 
 ```{r echo=TRUE, eval=FALSE}
-install.packages("devtools")
 devtools::install_github("kkdey/aRchaic")
 ```
 
@@ -99,7 +109,7 @@ list.files(ancients_dir, pattern = ".csv")
 Next we prepare the input data to **aRchaic** model from the above data folders.
 
 ```{r warning = FALSE, message = FALSE}
-out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
+out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir), )
 ```
 
 The output `out` should be a list with 2 elements - corresponding to 2 study 
