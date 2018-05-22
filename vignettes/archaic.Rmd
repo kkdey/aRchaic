@@ -82,22 +82,10 @@ Next, the user needs to install the Python packages
 [pysam](http://pysam.readthedocs.io/en/latest/installation.html) and
 [pyfaidx](https://pythonhosted.org/pyfaidx/#installation).
 
-Next, start a new R session and install the R dependency libraries.
-
-```{r echo=TRUE, eval = FALSE}
-install.packages("devtools")
-devtools::install_github("TaddyLab/maptpx")
-devtools::install_github("kkdey/CountClust")
-install.packages("ggplot2")
-install.packages("dplyr")
-install.packages("plyr")
-source("https://bioconductor.org/biocLite.R")
-biocLite("Logolas")
-```
-
-Once you have run through the above steps, install the R package **aRchaic**
+Next, start a new R session and install the R package **aRchaic**
 
 ```{r echo=TRUE, eval=FALSE}
+install.packages("devtools")
 devtools::install_github("kkdey/aRchaic")
 ```
 
@@ -212,10 +200,11 @@ archaic_plot(model, output_dir = output_dir, background = "modern")
 ```
 
 After running this, go to the output directory `output_dir`. 
-You should see there is a `structure.png` file for the stacked bar chart 
+You should see there is a `structure.pdf` file for the stacked bar chart 
 representation of the **omega** output from `archaic_fit` and for each 
-$k=1,2$, a `logo_clus_k.png` file visualizing the mismatch profile in 
+$k=1,2$, a `logo_clus_k.pdf` file visualizing the mismatch profile in 
 **theta** for each cluster. 
+
 Also notice that the method clearly separates out the example modern samples 
 from the ancient samples 
 

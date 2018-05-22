@@ -55,19 +55,25 @@ archaic_plot <- function(model,
                                     structure_height = 8)
 
   logo.control.default <- list(max_pos = 20, flanking_bases=1,
-                               mutlogo.control = list(), breaklogo.control = list(),
                                base_probs_list = NULL,
                                clip = 0,
                                mut_ranges = c(0,0),
                                break_ranges = c(0,0),
                                logoport_x = 0.7,
-                               logoport_y= 0.5,
-                               logoport_width= 1, logoport_height= 1.2,
-                               breaklogoport_x = 0.55, breaklogoport_y = 0.4, breaklogoport_width=0.7,
-                               breaklogoport_height=1, lineport_x = 0.65, lineport_y=0.5,
-                               lineport_width=0.8, lineport_height=1.3, panelname_x = 0.8,
+                               logoport_y= 0.50,
+                               logoport_width= 1, logoport_height= 1.3,
+                               breaklogoport_x = 0.60,
+                               breaklogoport_y = 0.467, breaklogoport_width=0.76,
+                               breaklogoport_height=1.25, lineport_x = 0.65, lineport_y=0.53,
+                               lineport_width=0.8, lineport_height=1.4, panelname_x = 0.75,
                                panelname_y= 0.6, panelname_width= 0.3, panelname_height= 0.3,
-                               output_width = 18, output_height = 7)
+                               mutlogo.control = list(main_fontsize = 25,
+                                                      control = list(npc_units_main = 0.985,
+                                                                     lines_units_main = 1)),
+                               breaklogo.control = list(main_fontsize = 25,
+                                                        control = list(npc_units_main = 0.98,
+                                                                       lines_units_main = 1)),
+                               output_width = 20, output_height = 7)
 
   if(background == "null"){
     logo.control.default$base_probs_list = NULL

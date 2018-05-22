@@ -147,7 +147,7 @@ the output `model` consists of
 The model output, in particular **omega** and **theta** can be visualized using 
 the `archaic_plot()` command.
 
-```{r warning = FALSE, message = FALSE, eval=FALSE}
+```{r warning = FALSE, message = FALSE, eval=TRUE}
 archaic_plot(model, output_dir = output_dir, background = "modern")
 ```
 
