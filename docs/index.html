@@ -332,15 +332,6 @@ source(&quot;https://bioconductor.org/biocLite.R&quot;)
 biocLite(&quot;Logolas&quot;)</code></pre>
 <p>On completion of the above steps, install the R package <strong>aRchaic</strong></p>
 <pre class="r"><code>devtools::install_github(&quot;kkdey/aRchaic&quot;)</code></pre>
-<pre><code>## Downloading GitHub repo kkdey/aRchaic@master
-## from URL https://api.github.com/repos/kkdey/aRchaic/zipball/master</code></pre>
-<pre><code>## Installing aRchaic</code></pre>
-<pre><code>## &#39;/Library/Frameworks/R.framework/Resources/bin/R&#39; --no-site-file  \
-##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-##   &#39;/private/var/folders/0f/v6kp3_hj7rd2wrhms9mf4h500000gn/T/RtmpsUSvgS/devtools716d7f6f795a/kkdey-aRchaic-12e0bce&#39;  \
-##   --library=&#39;/Library/Frameworks/R.framework/Versions/3.5/Resources/library&#39;  \
-##   --install-tests</code></pre>
-<pre><code>## </code></pre>
 <p>Load aRchaic into R</p>
 <pre class="r"><code>library(aRchaic)</code></pre>
 </div>
@@ -398,7 +389,7 @@ model &lt;- archaic_fit(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 14602.8, 88.5, 27.6, 14, 14.1, 8.7, 3.9, done.</code></pre>
+## log posterior increase: 22417.6, 88.6, 17.9, 5, 3.2, 0.2, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
@@ -410,9 +401,8 @@ model &lt;- archaic_fit(out, K = 2, output_dir = output_dir)</code></pre>
 <h2>archaic_plot()</h2>
 <p>The model output, in particular <strong>omega</strong> and <strong>theta</strong> can be visualized using the <code>archaic_plot()</code> command.</p>
 <pre class="r"><code>archaic_plot(model, output_dir = output_dir, background = &quot;modern&quot;)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>Once the run finishes (a few seconds), go to the output directory <code>output_dir</code>. You should see there is a <code>structure.png</code> file that represents the cluster memberships in <strong>omega</strong> in a stacked bar chart (see Fig 1 left).</p>
-<p>Also, the <code>output_dir</code> should contain for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.png</code> file visualizing the mismatch profile for each cluster as in <strong>theta</strong>. If <code>background = &quot;modern&quot;</code> in <code>archaic_plot</code> code above, this reresentation will plot enrichment of the mismatch profiles with respect to a modern background.</p>
+<p>Once the run finishes (a few seconds), go to the output directory <code>output_dir</code>. You should see there is a <code>structure.pdf</code> file that represents the cluster memberships in <strong>omega</strong> in a stacked bar chart (see Fig 1 left).</p>
+<p>Also, the <code>output_dir</code> should contain for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.pdf</code> file visualizing the mismatch profile for each cluster as in <strong>theta</strong>. If <code>background = &quot;modern&quot;</code> in <code>archaic_plot</code> code above, this reresentation will plot enrichment of the mismatch profiles with respect to a modern background.</p>
 <p>The following is a summary of these visualizations</p>
 <div style="width:750px; height:750px">
 <div class="figure">

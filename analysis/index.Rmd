@@ -147,15 +147,15 @@ the output `model` consists of
 The model output, in particular **omega** and **theta** can be visualized using 
 the `archaic_plot()` command.
 
-```{r warning = FALSE, message = FALSE, eval=TRUE}
+```{r warning = FALSE, message = FALSE, eval=FALSE}
 archaic_plot(model, output_dir = output_dir, background = "modern")
 ```
 
 Once the run finishes (a few seconds), go to the output directory `output_dir`. 
-You should see there is a `structure.png` file that represents the cluster
+You should see there is a `structure.pdf` file that represents the cluster
 memberships in **omega** in a stacked bar chart (see Fig 1 left).
 
-Also, the `output_dir` should contain for each $k=1,2$, a `logo_clus_k.png` file
+Also, the `output_dir` should contain for each $k=1,2$, a `logo_clus_k.pdf` file
 visualizing the mismatch profile for each cluster as in **theta**. If
 `background = "modern"` in `archaic_plot` code above, this reresentation will
 plot enrichment of the mismatch profiles with respect to a modern background.
