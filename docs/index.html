@@ -319,14 +319,19 @@ div.section {
 <li><a href="https://www.python.org/downloads/">python</a></li>
 <li><a href="https://www.rstudio.com/">R/RStudio</a></li>
 </ul>
+<p><strong>aRchaic</strong> has been tested on systems with R (&gt;= 3.4.3).</p>
 <p>And Python packages,</p>
 <ul>
 <li><a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a></li>
 <li><a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a></li>
 </ul>
-<p>Upon completion of these steps, start a new R session and install the R package <strong>aRchaic</strong></p>
+<p>Upon completion of these steps, start a new R session and install the dependency R packages.</p>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;kkdey/aRchaic&quot;)</code></pre>
+devtools::install_github(&quot;kkdey/Logolas&quot;)
+devtools::install_github(&quot;kkdey/CountClust&quot;)
+devtools::install_github(&quot;TaddyLab/maptpx&quot;)</code></pre>
+<p>Next install the <strong>aRchaic</strong> R package*</p>
+<pre class="r"><code>devtools::install_github(&quot;kkdey/aRchaic&quot;)</code></pre>
 <p>Load aRchaic into R</p>
 <pre class="r"><code>library(aRchaic)</code></pre>
 </div>
@@ -369,7 +374,7 @@ list.files(ancients_dir, pattern = &quot;.csv&quot;)</code></pre>
 <pre><code>## [1] &quot;NE2_subsampled.csv&quot; &quot;NE3_subsampled.csv&quot; &quot;NE4_subsampled.csv&quot;
 ## [4] &quot;NE5_subsampled.csv&quot; &quot;NE6_subsampled.csv&quot;</code></pre>
 <p>Next we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
-<pre class="r"><code>out &lt;- archaic_prepare(dirs = c(moderns_dir, ancients_dir))</code></pre>
+<pre class="r"><code>out &lt;- archaic_prepare(dirs = c(moderns_dir, ancients_dir), )</code></pre>
 <p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, and a cell in the matrix record counts of the number of times a coded mismatch pattern occurs in a sample.</p>
 </div>
 <div id="archaic_fit" class="section level2">
@@ -384,7 +389,7 @@ model &lt;- archaic_fit(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 19281.1, 160.2, 24.9, 12.8, 13.5, 2.2, done.</code></pre>
+## log posterior increase: 19586.2, 75.8, 13.7, 9.5, 3.9, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>

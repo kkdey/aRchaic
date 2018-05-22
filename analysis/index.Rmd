@@ -33,7 +33,7 @@ And Python packages,
 
 Upon completion of these steps, start a new R session and install the dependency R packages.
 
-```{r}
+```{r echo=TRUE, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("kkdey/Logolas")
 devtools::install_github("kkdey/CountClust")
