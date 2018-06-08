@@ -76,7 +76,7 @@ Figure 1) starting from the BAM files for the samples.
 
 First and foremost, the user is required to install 
 [python](https://www.python.org/downloads/) and 
-[R/RStudio](https://www.rstudio.com/).
+[R/RStudio](https://www.rstudio.com/) . The version of R must be $>=3.5$.
 
 Next, the user needs to install the Python packages 
 [pysam](http://pysam.readthedocs.io/en/latest/installation.html) and

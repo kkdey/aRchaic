@@ -319,7 +319,7 @@ div.section {
 <li><a href="https://www.python.org/downloads/">python</a></li>
 <li><a href="https://www.rstudio.com/">R/RStudio</a></li>
 </ul>
-<p><strong>aRchaic</strong> has been tested on systems with R (&gt;= 3.4.3).</p>
+<p><strong>aRchaic</strong> has been tested on systems with R (&gt;= 3.5).</p>
 <p>And Python packages,</p>
 <ul>
 <li><a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a></li>
@@ -375,16 +375,6 @@ list.files(ancients_dir, pattern = &quot;.csv&quot;)</code></pre>
 ## [4] &quot;NE5_subsampled.csv&quot; &quot;NE6_subsampled.csv&quot;</code></pre>
 <p>Next we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
 <pre class="r"><code>out &lt;- archaic_prepare(dirs = c(moderns_dir, ancients_dir), )</code></pre>
-<pre><code>## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/moderns/NA19788_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/moderns/NA19789_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/moderns/NA19792_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/moderns/NA19794_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/moderns/NA19795_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/ancients/NE2_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/ancients/NE3_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/ancients/NE4_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/ancients/NE5_subsampled.csv 
-## Reading file  /Library/Frameworks/R.framework/Versions/3.5/Resources/library/aRchaic/extdata/ancients/NE6_subsampled.csv</code></pre>
 <p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, and a cell in the matrix record counts of the number of times a coded mismatch pattern occurs in a sample.</p>
 </div>
 <div id="archaic_fit" class="section level2">
@@ -399,7 +389,7 @@ model &lt;- archaic_fit(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 21328.1, 85, 17.9, 6.1, 3.2, done.</code></pre>
+## log posterior increase: 61121.6, 1530.3, 21.4, 12.8, 3.6, 6, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>
