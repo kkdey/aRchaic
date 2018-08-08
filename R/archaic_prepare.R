@@ -109,13 +109,18 @@ archaic_prepare <- function(dirs,
 
          indices2 <- Reduce(union, temp)
          indices <- union(indices1, indices2)
-         ancient_counts_filtered <- matrix(ancient_counts[, -indices],
-                                           nrow = nrow(ancient_counts))
 
-         rownames(ancient_counts_filtered) <- csvnames2
          if(length(indices) > 0){
+           ancient_counts_filtered <- matrix(ancient_counts[, -indices],
+                                             nrow = nrow(ancient_counts))
+
+           rownames(ancient_counts_filtered) <- csvnames2
            colnames(ancient_counts_filtered) <- merged_signatures[-indices]
          }else{
+           ancient_counts_filtered <- matrix(ancient_counts,
+                                             nrow = nrow(ancient_counts))
+
+           rownames(ancient_counts_filtered) <- csvnames2
            colnames(ancient_counts_filtered) <- merged_signatures
          }
 
@@ -211,13 +216,18 @@ archaic_prepare <- function(dirs,
 
           indices2 <- Reduce(union, temp)
           indices <- union(indices1, indices2)
-          ancient_counts_filtered <- matrix(ancient_counts[, -indices],
-                                            nrow = nrow(ancient_counts))
 
-          rownames(ancient_counts_filtered) <- csvnames2[absent_ids]
           if(length(indices) > 0){
+            ancient_counts_filtered <- matrix(ancient_counts[, -indices],
+                                              nrow = nrow(ancient_counts))
+
+            rownames(ancient_counts_filtered) <- csvnames2[absent_ids]
             colnames(ancient_counts_filtered) <- merged_signatures[-indices]
           }else{
+            ancient_counts_filtered <- matrix(ancient_counts,
+                                              nrow = nrow(ancient_counts))
+
+            rownames(ancient_counts_filtered) <- csvnames2
             colnames(ancient_counts_filtered) <- merged_signatures
           }
 

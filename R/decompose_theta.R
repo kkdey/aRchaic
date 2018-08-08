@@ -26,7 +26,7 @@
 
 
 decompose_theta = function (theta_out, max_pos = 20) {
-
+  flanking_bases <- 1
   signature_set <- rownames(theta_out)
   signature_patterns <- substring(signature_set, 1, 4+2*flanking_bases)
 
