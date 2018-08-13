@@ -23,6 +23,9 @@ And Python packages,
 * [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
 * [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
 
+**aRchaic** requires R version to be $>=3.5$. If your R version is lower than that,
+please upgrade. 
+
 Upon completion of these steps, start a new R session and install the R dependency libraries.
 
 ```

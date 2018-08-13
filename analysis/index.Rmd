@@ -24,7 +24,8 @@ First and foremost, the user is required to install
 * [python](https://www.python.org/downloads/) 
 * [R/RStudio](https://www.rstudio.com/) 
 
-**aRchaic** has been tested on systems with R (>= 3.5). 
+**aRchaic** requires R version to be (>= 3.5). If your R version is lower, please
+upgrade.
 
 And Python packages,
 

@@ -277,7 +277,7 @@ Logo_aRchaic_cluster <- function(theta_pool,
   clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
 
   max_prob <- max(prob_mutation);
-  clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
+ # clipped_bases <- setdiff(0:20, as.numeric(colnames(prob_mutation)))
 
   if(is.null(base_probs_list)){
     prob_limits = c(round(min(prob_mutation, na.rm=TRUE), 2)-0.01, round(max(prob_mutation, na.rm=TRUE), 2) + 0.01)
@@ -291,10 +291,12 @@ Logo_aRchaic_cluster <- function(theta_pool,
       prob1_mutation <- prob_mutation - t(replicate(dim(prob_mutation)[1], as.numeric(base_probs_list[[(2 * flanking_bases + 3)]])))
     }
     colnames(prob1_mutation) <- colnames(prob_mutation)
-    prob_limits = c(round(min(prob1_mutation), 2)-0.01, round(max(prob1_mutation), 2) + 0.01)
-    prob_breaks = c(0, round(min(prob1_mutation),2)-0.01,
-                    round(0.5*(min(prob1_mutation)+max(prob1_mutation)), 2),
-                    round(max(prob1_mutation), 2)+0.01)
+    prob_mutation_after_clipping <- prob1_mutation[,(clip+1):(dim(prob1_mutation)[2])]
+    prob_limits = c(round(min(prob_mutation_after_clipping), 2)-0.01,
+                    round(max(prob_mutation_after_clipping), 2) + 0.01)
+    prob_breaks = c(0, round(min(prob_mutation_after_clipping),2)-0.01,
+                    round(0.5*(min(prob_mutation_after_clipping)+max(prob_mutation_after_clipping)), 2),
+                    round(max(prob_mutation_after_clipping), 2)+0.01)
   }
 
   sig_split <- do.call(rbind,
@@ -531,6 +533,7 @@ damageLogo_six.skeleton <- function(pwm,
 
     pos_data <- data.frame(position = as.numeric(names(probs)),
                            val = as.numeric(probs))
+
     seekViewport(paste0("plotlogo", 3))
     vp3 = viewport(x = lineport_x, y = lineport_y, width=lineport_width, height=lineport_height)
     p <- ggplot(data=pos_data, aes(x=position,y=val)) +
