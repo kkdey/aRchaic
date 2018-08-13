@@ -36,17 +36,18 @@ devtools::install_github("TaddyLab/maptpx")
 
 aRchaic requires the package **Logolas** for visualization. 
 
-If you are using R version >=3.5, please install **Logolas** from Bioconductor.
-
-```
-source("https://bioconductor.org/biocLite.R")
-biocLite("Logolas")
-```
-
 If you are using R version 3.4, you can install **Logolas** from Github.
 
 ```
 devtools::install_github("kkdey/Logolas")
+```
+
+If you are using R version >=3.5, you may install **Logolas** from Bioconductor
+as well.
+
+```
+source("https://bioconductor.org/biocLite.R")
+biocLite("Logolas")
 ```
 
 On completion of the above steps, install the R package **aRchaic**
