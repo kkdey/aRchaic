@@ -84,6 +84,16 @@ Next, the user needs to install the Python packages
 [pysam](http://pysam.readthedocs.io/en/latest/installation.html) and
 [pyfaidx](https://pythonhosted.org/pyfaidx/#installation).
 
+Upon completion of these steps, start a new R session and install the dependency R packages.
+
+```{r echo=TRUE, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("kkdey/Logolas")
+devtools::install_github("kkdey/CountClust")
+devtools::install_github("TaddyLab/maptpx")
+```
+
+
 Next, start a new R session and install the R package **aRchaic**
 
 ```{r echo=TRUE, eval=FALSE}

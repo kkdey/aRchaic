@@ -23,7 +23,7 @@ And Python packages,
 * [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
 * [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
 
-**aRchaic** requires R version to be >=3.5. If your R version is lower than that,
+**aRchaic** requires R version to be >=3.4. If your R version is lower than that,
 please upgrade. 
 
 Upon completion of these steps, start a new R session and install the R dependency libraries.
@@ -32,8 +32,21 @@ Upon completion of these steps, start a new R session and install the R dependen
 install.packages("devtools")
 devtools::install_github("kkdey/CountClust")
 devtools::install_github("TaddyLab/maptpx")
+```
+
+aRchaic requires the package **Logolas** for visualization. 
+
+If you are using R version >=3.5, please install **Logolas** from Bioconductor.
+
+```
 source("https://bioconductor.org/biocLite.R")
 biocLite("Logolas")
+```
+
+If you are using R version 3.4, you can install **Logolas** from Github.
+
+```
+devtools::install_github("kkdey/Logolas")
 ```
 
 On completion of the above steps, install the R package **aRchaic**
