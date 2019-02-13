@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -93,6 +95,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -374,8 +379,9 @@ list.files(ancients_dir, pattern = &quot;.csv&quot;)</code></pre>
 <pre><code>## [1] &quot;NE2_subsampled.csv&quot; &quot;NE3_subsampled.csv&quot; &quot;NE4_subsampled.csv&quot;
 ## [4] &quot;NE5_subsampled.csv&quot; &quot;NE6_subsampled.csv&quot;</code></pre>
 <p>Next we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
-<pre class="r"><code>out &lt;- archaic_prepare(dirs = c(moderns_dir, ancients_dir), )</code></pre>
+<pre class="r"><code>out &lt;- archaic_prepare(dirs = c(moderns_dir, ancients_dir))</code></pre>
 <p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, and a cell in the matrix record counts of the number of times a coded mismatch pattern occurs in a sample.</p>
+<p>We provide <a href="https://github.com/halasadi/modern_lite_data">here</a> the modern MFF files used in Figure 2 of our <a href="https://www.ncbi.nlm.nih.gov/pubmed/30192911">paper</a> for reproducing the analysis.</p>
 </div>
 <div id="archaic_fit" class="section level2">
 <h2>archaic_fit()</h2>
@@ -389,7 +395,7 @@ model &lt;- archaic_fit(out, K = 2, output_dir = output_dir)</code></pre>
 <pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
-## log posterior increase: 21421.9, 71.2, 11.9, 10.2, 5, done.</code></pre>
+## log posterior increase: 22752.2, 63.6, 22.8, 5.8, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li><strong>omega</strong> : the grades of membership to be plotted by stacked bar chart</li>

@@ -75,7 +75,8 @@ Also users are welcome to contribute to the package by submitting pull request.
 
 ## Citation
 
-TBA
+Al-Asadi, H., Dey, K., Novembre, J. and Stephens, M., 2018. Inference and visualization of DNA damage patterns using a grade of membership model. bioRxiv, p.327684.
+
 
 ## License
 

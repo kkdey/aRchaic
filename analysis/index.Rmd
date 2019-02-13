@@ -110,13 +110,15 @@ list.files(ancients_dir, pattern = ".csv")
 Next we prepare the input data to **aRchaic** model from the above data folders.
 
 ```{r warning = FALSE, message = FALSE}
-out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir), )
+out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
 ```
 
 The output `out` should be a list with 2 elements - corresponding to 2 study 
 folders. Each element is a matrix with samples along the rows, coded 
 mismatch features along columns, and a cell in the matrix record counts 
 of the number of times a coded mismatch pattern occurs in a sample. 
+
+We provide [here](https://github.com/halasadi/modern_lite_data) the modern MFF files used in Figure 2 of our [paper](https://www.ncbi.nlm.nih.gov/pubmed/30192911) for reproducing the analysis. 
 
 ## archaic_fit() 
 

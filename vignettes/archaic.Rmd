@@ -171,6 +171,7 @@ out3 <- archaic_prepare(dirs = moderns_dir)
 you will see that `out2` or `out3` no longer process the .csv files in the folders
 and directly read from the .Rdata file.
 
+We provide [here](https://github.com/halasadi/modern_lite_data) the modern MFF files used in Figure 2 of our [paper](https://www.ncbi.nlm.nih.gov/pubmed/30192911) for reproducing the analysis. 
 
 ## archaic_fit() 
 
@@ -182,6 +183,10 @@ We choose the number of clusters $K=2$
 
 ```{r}
 output_dir <- system.file("extdata","archaic_results", package = "aRchaic")
+## Check if the above line works, if it does not create a folder, say archaic_results at an appropriate location on the machine $PATH_TO_DIRECTORY, and then use 
+## for example : output_dir = "$PATH_TO_DIRECTORY/archaic_results"
+## my case 
+output_dir = "/Users/kushaldey/Library/R/3.5/library/aRchaic/extdata/archaic_results"
 model <- archaic_fit(out, K = 2, output_dir = output_dir)
 ```
 
