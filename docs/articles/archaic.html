@@ -56,9 +56,6 @@
 <li>
       <a href="../articles/archaic.html">Model based visualization of ancient DNA damage using *aRchaic*</a>
     </li>
-    <li>
-      <a href="../articles/index.html">Model based visualization of ancient DNA damage using *aRchaic*</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -97,42 +94,43 @@
 
     
     
+<div class="figure">
+<img src="logo_design.svg" alt="."><p class="caption">.</p>
+</div>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><strong>aRchaic</strong> is a R/python software environment that performs model based clustering and visualization of ancient and modern DNA samples from one or more studies. This model can be used to identify distinct patterns of DNA damage and is capable of reflecting relative rates of contamination in contaminated aDNA samples.</p>
-<p>Here is a visual representation of <strong>aRchaic</strong> on <em>moderns</em>, ancient samples treated with UDG library protocol and ancient samples not treated with UDG library protocol.</p>
-<div class="figure">
-<img src="fig.001.png" alt="Figure1"><p class="caption">Figure1</p>
-</div>
-</div>
-<div id="archaic-workflow" class="section level2">
-<h2 class="hasAnchor">
-<a href="#archaic-workflow" class="anchor"></a>aRchaic workflow</h2>
-<p>For every mismatch in a BAM file with respect to a reference genome, <strong>aRchaic</strong> records the various features of the mismatch - mismatch type, flanking bases, strand break base, strand and position of mismatch from the ends of read - into a .csv file which we call the <em>Mismatch Feature Format (MFF)</em> file.</p>
-<p>Next, <strong>aRchaic</strong> fits a mixed membership model on the mismatch feature data that allows each sample to have partial memberships in more than one cluster where the clusters represent distinct mismatch feature profiles.</p>
-<p>The cluster memberships from model fit are represented in a stacked bar chart grouped by studies (Figure 1 left), while the clusters are represented as logo plots of enrichment of their mismatch profiles against a modern background (Figure 1 right).</p>
-<p>For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns and shows no enrichment in mismatch profile with respect to modern background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and highlghts enrichment of C-to-G mismatches happening at the ends of the reads, with a depletion of G on right flanking base - due to scarcity of CpG sites in genome. Cluster 3 (orange) is represented in UDG ancients and shows enrichment of C-to-G mismatches at mainly the terminal position of read with further enrichment of these mismatches at CpG sites.</p>
-<p>In the next sections, we present a tutorial on how to generate images (like in Figure 1) starting from the BAM files for the samples.</p>
+<p><strong>aRchaic</strong> is an R package that performs model based clustering and visualization of ancient and modern DNA samples (see <code><a href="../reference/archaic_plot.html">archaic_plot()</a></code> section for example visualization). This model can be used to identify distinct patterns of DNA damage and is capable of reflecting relative rates of contamination in contaminated aDNA samples.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>First and foremost, the user is required to install <a href="https://www.python.org/downloads/">python</a> and <a href="https://www.rstudio.com/">R/RStudio</a> . The version of R must be <span class="math inline">\(&gt;=3.5\)</span>. If your R version is lower, please upgrade.</p>
-<p>Next, the user needs to install the Python packages <a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a> and <a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a>.</p>
+<p>First and foremost, the user is required to install</p>
+<ul>
+<li><a href="https://www.python.org/downloads/">python</a></li>
+<li><a href="https://www.rstudio.com/">R/RStudio</a></li>
+</ul>
+<p><strong>aRchaic</strong> requires R version to be (&gt;= 3.4). If your R version is lower, please upgrade.</p>
+<p>And Python packages,</p>
+<ul>
+<li><a href="http://pysam.readthedocs.io/en/latest/installation.html">pysam</a></li>
+<li><a href="https://pythonhosted.org/pyfaidx/#installation">pyfaidx</a></li>
+</ul>
 <p>Upon completion of these steps, start a new R session and install aRchaic:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>)
 <span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"kkdey/aRchaic"</span>)</pre></body></html></div>
-<p>Now you can load aRchaic into R.</p>
+<p>Now you should be able to load aRchaic into R.</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">aRchaic</span>)</pre></body></html></div>
 <p>To ensure reproducible results, we set the seed:</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)</pre></body></html></div>
 </div>
-<div id="archaic-input---mff-file" class="section level2">
+<div id="generate-archaic-input-mff-file" class="section level2">
 <h2 class="hasAnchor">
-<a href="#archaic-input---mff-file" class="anchor"></a>aRchaic input - MFF file</h2>
-<p>The <strong>aRchaic</strong> R package requires as input a MismatchFeatureFormat (MFF) file, which is a special type of .csv formatted file. A typical example MFF file looks like the following</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">mff</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>,<span class="st">"ancients"</span>,<span class="st">"NE2_subsampled.csv"</span>,<span class="kw">package</span> <span class="kw">=</span> <span class="st">"aRchaic"</span>), <span class="kw">header</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<a href="#generate-archaic-input-mff-file" class="anchor"></a>Generate aRchaic input (MFF file)</h2>
+<p>For every mismatch in a BAM file with respect to a reference genome, <strong>aRchaic</strong> records various features of the mismatch - mismatch type, flanking bases, strand break base, strand and position of mismatch from the ends of read - into a .csv file which we call the <em>Mismatch Feature Format (MFF)</em> file.</p>
+<p>A typical example MFF file looks like the following</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">mff</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>,<span class="st">"ancients"</span>,<span class="st">"NE2_subsampled.csv"</span>,<span class="kw">package</span> <span class="kw">=</span> <span class="st">"aRchaic"</span>),
+                <span class="kw">header</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">mff</span>)</pre></body></html></div>
 <pre><code>##       V1 V2 V3 V4 V5 V6      V7
 ## 1 AC-&gt;TC 17 48  A  A  - 1557694
@@ -141,68 +139,61 @@
 ## 4 TC-&gt;TT 16 50  G  G  - 4581952
 ## 5 AC-&gt;TG 48 31  A  C  +  207160
 ## 6 GG-&gt;AG 33  5  G  G  - 2912042</code></pre>
-<p>The first column represents mismatch type and flanking bases : (left flank base)(mismatch)(right flank base) &lt;-&gt; (A)(C-&gt;T)(C). The second and third columns represent the position of mismatch from 5’ and 3’ ends of reads after mapped to reference. The fourth and 5th columns represent the base 1 base upstream from 5’ end of read and 1 base downstream from 3’ end of read respectively. The 6th column contains information of which strand the read comes from, and the 7th column is an identifier for the read containing the mismatch.</p>
+<p>The first column represents mismatch type and flanking bases : (left flank base)(mismatch)(right flank base) &lt;-&gt; (A)(C-&gt;T)(C). The second and third columns represent the position of mismatch from 5’ and 3’ ends of reads after mapped to reference. The 4th (5th) columns represent the base 1 base upstream (downstream) from 5’ (3’) end of read respectively. The 6th column contains information of which strand the read comes from, and the 7th column is an identifier for the read containing the mismatch.</p>
+<p>We provide a script to generate the MFF files from the BAM/SAM files <a href="https://github.com/kkdey/aRchaic/tree/master/bin">here</a>. This linked folder also contains a small example BAM file for testing. The simple two-line code to create the MFF file from this BAM file is as follows</p>
+<pre><code>samtools index example.bam
+python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5
+.fa -o example_mff.csv</code></pre>
 </div>
 <div id="archaic_prepare" class="section level2">
 <h2 class="hasAnchor">
 <a href="#archaic_prepare" class="anchor"></a>archaic_prepare()</h2>
-<p>Suppose you have two folders of MFF files corresponding to two studies - one for moderns and one for ancients. We incorporate them as part of the R package itself - lets call them <code>moderns</code> and <code>ancients</code>.</p>
+<p>The user is expected to organize the MFF files in seperate folders per study. Here, we provide an example with two studies, one with 5 ancient samples derived from <a href="https://www.nature.com/articles/ncomms6257">Gamba et. al. 2014</a> and a second study with 5 modern samples derived from the 1000 Genomes Project. These two folders are automatically downloaded and saved under <code>inst/extdata/moderns</code> and <code>inst/extdata/ancients</code> when aRchaic is installed.</p>
 <ul>
 <li>
-<strong>Modern files</strong> :</li>
+<strong>Modern study</strong> :</li>
 </ul>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">moderns_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>,<span class="st">"moderns"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"aRchaic"</span>)
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">moderns_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>,<span class="st">"moderns"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"aRchaic"</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span>(<span class="no">moderns_dir</span>, <span class="kw">pattern</span> <span class="kw">=</span> <span class="st">".csv"</span>)</pre></body></html></div>
 <pre><code>## [1] "NA19788_subsampled.csv" "NA19789_subsampled.csv" "NA19792_subsampled.csv"
 ## [4] "NA19794_subsampled.csv" "NA19795_subsampled.csv"</code></pre>
 <ul>
 <li>
-<strong>Ancient files</strong> :</li>
+<strong>Ancient study</strong> :</li>
 </ul>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">ancients_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>,<span class="st">"ancients"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"aRchaic"</span>)
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">ancients_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>,<span class="st">"ancients"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"aRchaic"</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span>(<span class="no">ancients_dir</span>, <span class="kw">pattern</span> <span class="kw">=</span> <span class="st">".csv"</span>)</pre></body></html></div>
 <pre><code>## [1] "NE2_subsampled.csv" "NE3_subsampled.csv" "NE4_subsampled.csv"
 ## [4] "NE5_subsampled.csv" "NE6_subsampled.csv"</code></pre>
-<p>Each of the folders has 5 MFF files corresponding to 5 samples.</p>
-<p>First we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">out</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/archaic_prepare.html">archaic_prepare</a></span>(<span class="kw">dirs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">moderns_dir</span>, <span class="no">ancients_dir</span>))</pre></body></html></div>
-<pre><code>## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/moderns/NA19788_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/moderns/NA19789_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/moderns/NA19792_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/moderns/NA19794_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/moderns/NA19795_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/ancients/NE2_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/ancients/NE3_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/ancients/NE4_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/ancients/NE5_subsampled.csv 
-## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/ancients/NE6_subsampled.csv</code></pre>
-<p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, with cells of the matrix recording counts of the number of times a coded mismatch pattern occurs in a sample.</p>
-<p><code>archaic_prepare</code> also saves these elements as separate .RData files in each study folder, so they can be re-used for similar analysis downstream more easily without needing to process the MFF files everytime. In fact, if you run</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">out2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/archaic_prepare.html">archaic_prepare</a></span>(<span class="kw">dirs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">moderns_dir</span>, <span class="no">ancients_dir</span>))
-<span class="no">out3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/archaic_prepare.html">archaic_prepare</a></span>(<span class="kw">dirs</span> <span class="kw">=</span> <span class="no">moderns_dir</span>)</pre></body></html></div>
-<p>you will see that <code>out2</code> or <code>out3</code> no longer process the .csv files in the folders and directly read from the .Rdata file.</p>
+<p>Next we prepare the input data to <strong>aRchaic</strong> model from the above data folders.</p>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">out</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/archaic_prepare.html">archaic_prepare</a></span>(<span class="kw">dirs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">moderns_dir</span>, <span class="no">ancients_dir</span>))</pre></body></html></div>
+<pre><code>## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/moderns/NA19788_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/moderns/NA19789_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/moderns/NA19792_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/moderns/NA19794_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/moderns/NA19795_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/ancients/NE2_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/ancients/NE3_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/ancients/NE4_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/ancients/NE5_subsampled.csv 
+## Reading file  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d3f32698b/aRchaic/extdata/ancients/NE6_subsampled.csv</code></pre>
+<p>The output <code>out</code> should be a list with 2 elements - corresponding to 2 study folders. Each element is a matrix with samples along the rows, coded mismatch features along columns, and a cell in the matrix record counts of the number of times a coded mismatch pattern occurs in a sample.</p>
 <p>We provide <a href="https://github.com/halasadi/modern_lite_data">here</a> the modern MFF files used in Figure 2 of our <a href="https://www.ncbi.nlm.nih.gov/pubmed/30192911">paper</a> for reproducing the analysis.</p>
 </div>
 <div id="archaic_fit" class="section level2">
 <h2 class="hasAnchor">
 <a href="#archaic_fit" class="anchor"></a>archaic_fit()</h2>
-<p>Before modeling and visualization, we choose a directory - <code>output_dir</code> - to save the model output and the visualization.</p>
-<p>We fit the mixed membership model in <strong>aRchaic</strong> onthe output from <code><a href="../reference/archaic_prepare.html">archaic_prepare()</a></code>. We choose the number of clusters <span class="math inline">\(K=2\)</span></p>
+<p><strong>aRchaic</strong> fits a mixed membership model on the prepared mismatch feature data from <code><a href="../reference/archaic_prepare.html">archaic_prepare()</a></code> that allows each sample to have partial memberships in more than one cluster where the clusters represent distinct mismatch feature profiles.</p>
+<p>We first choose a directory - <code>output_dir</code> - to save the model output and visualization.</p>
+<p>Next we run the <code>archaic_fit</code> function to fit the mixed membership model. We choose the number of clusters <span class="math inline">\(K=2\)</span></p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">output_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span>()
 <span class="no">model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/archaic_fit.html">archaic_fit</a></span>(<span class="no">out</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">output_dir</span> <span class="kw">=</span> <span class="no">output_dir</span>)</pre></body></html></div>
-<pre><code>## The data is read as a list of matrices - processed by archaic_prepare() 
-## 
+<pre><code>## The data is read as a list of matrices - processed by archaic_prepare()</code></pre>
+<pre><code>## Fitting the Grade of Membership Model - independent version - due to Y. Shiraichi and M. Stephens</code></pre>
+<pre><code>## 
 ## Estimating on a 10 samples collection.
 ## Fitting the 2 clusters/topics model.
 ## log posterior increase: 21212.8, done.</code></pre>
-<p>Alternatively, one can also input the study folder vector directly into <code><a href="../reference/archaic_fit.html">archaic_fit()</a></code>.</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/archaic_fit.html">archaic_fit</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">moderns_dir</span>, <span class="no">ancients_dir</span>), <span class="kw">K</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">output_dir</span> <span class="kw">=</span> <span class="no">output_dir</span>)</pre></body></html></div>
-<pre><code>## Successfully read .RData file from the folder,  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/moderns/ CHECK : 
-## Successfully read .RData file from the folder,  /private/var/folders/9b/ck4lp8s140lcksryyh4dppdr0000gn/T/RtmpzwN1lw/temp_libpath708d7f009463/aRchaic/extdata/ancients/ CHECK : 
-## 
-## Estimating on a 10 samples collection.
-## Fitting the 2 clusters/topics model.
-## log posterior increase: 20124, done.</code></pre>
 <p>the output <code>model</code> consists of</p>
 <ul>
 <li>
@@ -218,54 +209,12 @@
 <a href="#archaic_plot" class="anchor"></a>archaic_plot()</h2>
 <p>The model output, in particular <strong>omega</strong> and <strong>theta</strong> can be visualized using the <code><a href="../reference/archaic_plot.html">archaic_plot()</a></code> command.</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/archaic_plot.html">archaic_plot</a></span>(<span class="no">model</span>, <span class="kw">output_dir</span> <span class="kw">=</span> <span class="no">output_dir</span>, <span class="kw">background</span> <span class="kw">=</span> <span class="st">"modern"</span>)</pre></body></html></div>
-<p>After running this, go to the output directory <code>output_dir</code>. You should see there is a <code>structure.pdf</code> file for the stacked bar chart representation of the <strong>omega</strong> output from <code>archaic_fit</code> and for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.pdf</code> file visualizing the mismatch profile in <strong>theta</strong> for each cluster.</p>
-<p>Also notice that the method clearly separates out the example modern samples from the ancient samples</p>
+<p>Once the run finishes (a few seconds), go to the output directory <code>output_dir</code>. You should see there is a <code>structure.pdf</code> file that represents the cluster memberships in <strong>omega</strong> in a stacked bar chart (see Fig 1 left).</p>
+<p>Also, the <code>output_dir</code> should contain for each <span class="math inline">\(k=1,2\)</span>, a <code>logo_clus_k.pdf</code> file visualizing the mismatch profile for each cluster as in <strong>theta</strong>. If <code>background = "modern"</code> in <code>archaic_plot</code> code above, this reresentation will plot enrichment of the mismatch profiles with respect to a modern background.</p>
+<p>The following is a summary of these visualizations</p>
+<div style="width:750px; height:750px">
+<p><img src="vignette_fig.png"></p>
 </div>
-<div id="sessioninfo" class="section level2">
-<h2 class="hasAnchor">
-<a href="#sessioninfo" class="anchor"></a>SessionInfo</h2>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
-<pre><code>## R version 3.6.2 (2019-12-12)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
-## 
-## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-## 
-## attached base packages:
-## [1] grid      stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
-## 
-## other attached packages:
-## [1] ggplot2_3.3.0  gridBase_0.4-7 plyr_1.8.5     dplyr_0.8.3    aRchaic_0.1.3 
-## [6] knitr_1.26    
-## 
-## loaded via a namespace (and not attached):
-##  [1] bit64_0.9-7        splines_3.6.2      gtools_3.8.1       assertthat_0.2.1  
-##  [5] mixsqp_0.3-44      stats4_3.6.2       yaml_2.2.0         progress_1.2.2    
-##  [9] slam_0.1-47        pillar_1.4.3       backports_1.1.5    lattice_0.20-38   
-## [13] glue_1.3.1         limma_3.42.2       digest_0.6.23      RColorBrewer_1.1-2
-## [17] colorspace_1.4-1   picante_1.8.1      cowplot_1.0.0      htmltools_0.4.0   
-## [21] CVXR_1.0-8         Matrix_1.2-18      pkgconfig_2.0.3    invgamma_1.1      
-## [25] purrr_0.3.3        scales_1.1.0       Rtsne_0.15         tibble_2.1.3      
-## [29] mgcv_1.8-31        gmp_0.6-2          farver_2.0.1       withr_2.1.2       
-## [33] ashr_2.2-51        nnet_7.3-12        Rmpfr_0.8-1        magrittr_1.5      
-## [37] crayon_1.3.4       memoise_1.1.0      evaluate_0.14      fs_1.3.1          
-## [41] nlme_3.1-142       MASS_7.3-51.4      truncnorm_1.0-8    vegan_2.5-6       
-## [45] prettyunits_1.1.1  tools_3.6.2        hms_0.5.2          lifecycle_0.1.0   
-## [49] stringr_1.4.0      munsell_0.5.0      irlba_2.3.3        cluster_2.1.0     
-## [53] ade4_1.7-16        compiler_3.6.2     pkgdown_1.5.1      mapplots_1.5.1    
-## [57] rlang_0.4.5        labeling_0.3       rmarkdown_2.3      boot_1.3-23       
-## [61] Logolas_1.3.1      CountClust_1.6.2   gtable_0.3.0       flexmix_2.3-15    
-## [65] reshape2_1.4.3     R6_2.4.1           zeallot_0.1.0      seqinr_4.2-5      
-## [69] bit_1.1-15.2       rprojroot_1.3-2    maptpx_1.9-6       permute_0.9-5     
-## [73] desc_1.2.0         ape_5.3            modeltools_0.2-22  stringi_1.4.3     
-## [77] parallel_3.6.2     SQUAREM_2017.10-1  Rcpp_1.0.5         vctrs_0.2.1       
-## [81] tidyselect_0.2.5   xfun_0.11</code></pre>
 </div>
   </div>
 

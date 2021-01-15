@@ -7,15 +7,15 @@ damage patterns.
 
 ## Authors
 
-[Kushal K Dey*](http://kkdey.github.io/), [Hussein Al-Asadi
-*](https://halasadi.wordpress.com/), [John Novembre](http://jnpopgen.org/), [Matthew Stephens](http://stephenslab.uchicago.edu/)
+[Kushal K Dey*](http://kkdey.github.io), [Hussein Al-Asadi
+*](https://halasadi.wordpress.com), [John Novembre](http://jnpopgen.org), [Matthew Stephens](http://stephenslab.uchicago.edu)
 
 ## Installation
 
 First and foremost, the user is required to install 
 
-* [python](https://www.python.org/downloads/) 
-* [R/RStudio](https://www.rstudio.com/) 
+* [python](https://www.python.org/downloads) 
+* [R/RStudio](https://www.rstudio.co/) 
 
 And Python packages,
 
@@ -41,7 +41,7 @@ library(aRchaic)
 
 ## Tutorial
 
-Get started with a short tutorial [here](https://kkdey.github.io/aRchaic/) 
+Get started with a short tutorial [here](https://kkdey.github.io/aRchaic) 
 
 ## Support
 
