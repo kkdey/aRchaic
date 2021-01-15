@@ -4,8 +4,13 @@
 \alias{archaic_view}
 \title{Logo plot representation of an MFF file.}
 \usage{
-archaic_view(file, logo.control = list(), background = "modern",
-  title = NULL, output_file = NULL)
+archaic_view(
+  file,
+  logo.control = list(),
+  background = "modern",
+  title = NULL,
+  output_file = NULL
+)
 }
 \arguments{
 \item{file}{a MismatchFeatureFormat (MFF) .csv file.}

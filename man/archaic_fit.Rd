@@ -5,8 +5,15 @@
 \title{Grade of Membership (GoM) model clustering of aDNA samples
 using DNA damage patterns}
 \usage{
-archaic_fit(dat, K, tol = 0.1, labs = NULL, gom_method = "independent",
-  gom.control = list(), output_dir = NULL)
+archaic_fit(
+  dat,
+  K,
+  tol = 0.1,
+  labs = NULL,
+  gom_method = "independent",
+  gom.control = list(),
+  output_dir = NULL
+)
 }
 \arguments{
 \item{dat}{Either
