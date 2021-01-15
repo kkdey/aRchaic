@@ -29,34 +29,11 @@ please upgrade.
 Upon completion of these steps, start a new R session and install the R dependency libraries.
 
 ```
-install.packages("devtools")
-devtools::install_github("kkdey/CountClust")
-devtools::install_github("TaddyLab/maptpx")
+install.packages("remotes")
+remotes::install_github("kkdey/aRchaic")
 ```
 
-aRchaic requires the package **Logolas** for visualization. 
-
-If you are using R version (>=3.4), you can install **Logolas** from Github.
-
-```
-devtools::install_github("kkdey/Logolas")
-```
-
-If you are using R version (>=3.5), you may install **Logolas** from Bioconductor
-as well.
-
-```
-source("https://bioconductor.org/biocLite.R")
-biocLite("Logolas")
-```
-
-On completion of the above steps, install the R package **aRchaic**
-
-```
-devtools::install_github("kkdey/aRchaic")
-```
-
-Finally, load aRchaic into R
+Now you should be able to load aRchaic into R.
 
 ```
 library(aRchaic)

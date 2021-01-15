@@ -4,8 +4,14 @@
 \alias{archaic_prepare}
 \title{Prepare and aggregate mismatch feature counts MFF files in a study}
 \usage{
-archaic_prepare(dirs, max_pos = 20, one_mismatch = FALSE,
-  from_scratch = FALSE, delete = FALSE, output_rda = TRUE)
+archaic_prepare(
+  dirs,
+  max_pos = 20,
+  one_mismatch = FALSE,
+  from_scratch = FALSE,
+  delete = FALSE,
+  output_rda = TRUE
+)
 }
 \arguments{
 \item{dirs}{The directory/directories containing the MFF files.}

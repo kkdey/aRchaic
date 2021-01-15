@@ -5,11 +5,16 @@
 \title{STRUCTURE plot and logo plot representation of the clusterring
 model from archaic_fit}
 \usage{
-archaic_plot(model, topic_cols = c("red", "blue", "darkgoldenrod1", "cyan",
-  "firebrick", "green", "hotpink", "burlywood", "yellow", "darkgray",
-  "deepskyblue", "darkkhaki", "brown4", "darkorchid", "magenta", "yellow",
-  "azure1", "azure4"), background = "modern", structure.control = list(),
-  logo.control = list(), output_dir = NULL)
+archaic_plot(
+  model,
+  topic_cols = c("red", "blue", "darkgoldenrod1", "cyan", "firebrick", "green",
+    "hotpink", "burlywood", "yellow", "darkgray", "deepskyblue", "darkkhaki", "brown4",
+    "darkorchid", "magenta", "yellow", "azure1", "azure4"),
+  background = "modern",
+  structure.control = list(),
+  logo.control = list(),
+  output_dir = NULL
+)
 }
 \arguments{
 \item{model}{Fitted model from \code{archaic_fit}.}
