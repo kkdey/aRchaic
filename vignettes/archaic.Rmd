@@ -84,27 +84,24 @@ Next, the user needs to install the Python packages
 [pysam](http://pysam.readthedocs.io/en/latest/installation.html) and
 [pyfaidx](https://pythonhosted.org/pyfaidx/#installation).
 
-Upon completion of these steps, start a new R session and install the dependency R packages.
+Upon completion of these steps, start a new R session and install
+aRchaic:
 
 ```{r echo=TRUE, eval=FALSE}
-install.packages("devtools")
-devtools::install_github("kkdey/Logolas")
-devtools::install_github("kkdey/CountClust")
-devtools::install_github("TaddyLab/maptpx")
+install.packages("remotes")
+remotes::install_github("kkdey/aRchaic")
 ```
 
-
-Next, start a new R session and install the R package **aRchaic**
-
-```{r echo=TRUE, eval=FALSE}
-install.packages("devtools")
-devtools::install_github("kkdey/aRchaic")
-```
-
-Finally, load aRchaic into R
+Now you can load aRchaic into R.
 
 ```{r}
 library(aRchaic)
+```
+
+To ensure reproducible results, we set the seed:
+
+```{r set-seed}
+set.seed(1)
 ```
 
 ## aRchaic input - MFF file
@@ -182,11 +179,7 @@ We fit the mixed membership model in **aRchaic** onthe output from `archaic_prep
 We choose the number of clusters $K=2$
 
 ```{r}
-output_dir <- system.file("extdata","archaic_results", package = "aRchaic")
-## Check if the above line works, if it does not create a folder, say archaic_results at an appropriate location on the machine $PATH_TO_DIRECTORY, and then use 
-## for example : output_dir = "$PATH_TO_DIRECTORY/archaic_results"
-## my case 
-output_dir = "/Users/kushaldey/Library/R/3.5/library/aRchaic/extdata/archaic_results"
+output_dir <- tempdir()
 model <- archaic_fit(out, K = 2, output_dir = output_dir)
 ```
 
