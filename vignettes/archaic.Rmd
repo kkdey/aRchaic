@@ -15,84 +15,46 @@ output:
     toc: true
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Model based visualization of ancient DNA damage using aRchaic}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8} ---
   date: "`r Sys.Date()`"
 ---
 
-```{r knitr, echo=FALSE, results="hide"}
-library("knitr")
-opts_chunk$set(tidy=FALSE,tidy.opts=list(width.cutoff=30),dev="png",fig.show="hide",
-               fig.width=4,fig.height=7,
-               message=FALSE, warning = FALSE)
-```
+![.](logo_design.svg)
 
 ## Introduction 
 
-**aRchaic** is a R/python software environment that performs model based 
-clustering and visualization of ancient and modern DNA samples from one or more 
-studies. This model can be used to identify distinct patterns of DNA damage and
+**aRchaic** is an R package that performs model based 
+clustering and visualization of ancient and modern DNA samples (see `archaic_plot()` section for example visualization). 
+This model can be used to identify distinct patterns of DNA damage and
 is capable of reflecting relative rates of contamination in contaminated aDNA
 samples. 
 
-
-Here is a visual representation of **aRchaic** on *moderns*, 
-ancient samples treated with UDG library protocol and ancient samples not 
-treated with UDG library protocol.
-
-![Figure1](fig.001.png)
-
-## aRchaic workflow
-
-For every mismatch in a BAM file with respect to a reference genome, **aRchaic**
-records the various features of the mismatch - mismatch type, flanking bases,
-strand break base, strand and position of mismatch from the ends of read - into 
-a .csv file which we call the *Mismatch Feature Format (MFF)* file. 
-
-Next, **aRchaic** fits a mixed membership  model on the mismatch feature data 
-that allows each sample to have partial memberships in more than one cluster 
-where the clusters represent distinct mismatch feature profiles. 
-
-The cluster memberships from model fit are represented in a stacked bar chart 
-grouped by studies (Figure 1 left), while the clusters are represented as logo
-plots of enrichment of their mismatch profiles against a modern background
-(Figure 1 right).
-
-For example, in Figure 1, Cluster 1 (red) is primarily represented in moderns
-and shows no enrichment in mismatch profile with respect to modern 
-background. Cluster 2 (blue) is represented mainly in non UDG-ancients, and 
-highlghts enrichment of C-to-G mismatches happening at the ends of the reads,
-with a depletion of G on right flanking base - due to scarcity of CpG sites in
-genome.  Cluster 3 (orange) is represented in UDG ancients and shows enrichment
-of C-to-G mismatches at mainly the terminal position of read with further
-enrichment of these mismatches at CpG sites.
-
-
-In the next sections, we present a tutorial on how to generate images  (like in
-Figure 1) starting from the BAM files for the samples.
-
 ## Installation
 
-First and foremost, the user is required to install 
-[python](https://www.python.org/downloads/) and 
-[R/RStudio](https://www.rstudio.com/) . The version of R must be $>=3.5$.
-If your R version is lower, please
-upgrade.
+First and foremost, the user is required to install
 
-Next, the user needs to install the Python packages 
-[pysam](http://pysam.readthedocs.io/en/latest/installation.html) and
-[pyfaidx](https://pythonhosted.org/pyfaidx/#installation).
+* [python](https://www.python.org/downloads/) 
+* [R/RStudio](https://www.rstudio.com/) 
+
+**aRchaic** requires R version to be (>= 3.4). If your R version is
+lower, please upgrade.
+
+And Python packages,
+
+* [pysam](http://pysam.readthedocs.io/en/latest/installation.html) 
+* [pyfaidx](https://pythonhosted.org/pyfaidx/#installation)
 
 Upon completion of these steps, start a new R session and install
 aRchaic:
 
-```{r echo=TRUE, eval=FALSE}
+```{r, eval=FALSE}
 install.packages("remotes")
 remotes::install_github("kkdey/aRchaic")
 ```
 
-Now you can load aRchaic into R.
+Now you should be able to load aRchaic into R.
 
 ```{r}
 library(aRchaic)
@@ -104,48 +66,61 @@ To ensure reproducible results, we set the seed:
 set.seed(1)
 ```
 
-## aRchaic input - MFF file
+## Generate aRchaic input (MFF file)
 
-The **aRchaic** R package requires as input a MismatchFeatureFormat (MFF) file, which is
-a special type of .csv formatted file. A typical example MFF file looks like the 
-following 
+For every mismatch in a BAM file with respect to a reference genome, **aRchaic**
+records various features of the mismatch - mismatch type, flanking bases,
+strand break base, strand and position of mismatch from the ends of read - into 
+a .csv file which we call the *Mismatch Feature Format (MFF)* file. 
+
+A typical example MFF file looks like the following 
 
 ```{r}
-mff <- read.csv(system.file("extdata","ancients","NE2_subsampled.csv",package = "aRchaic"), header = FALSE)
+mff <- read.csv(system.file("extdata","ancients","NE2_subsampled.csv",package = "aRchaic"),
+                header = FALSE)
 head(mff)
 ```
 
 The first column represents mismatch type and flanking bases :
 (left flank base)(mismatch)(right flank base) <-> (A)(C->T)(C).
 The second and third columns represent the position of mismatch from 5' and 3' ends
-of reads after mapped to reference. The fourth and 5th columns represent the base
-1 base upstream from 5' end of read and 1 base downstream from 3' end of read 
+of reads after mapped to reference. The 4th (5th) columns represent the base
+1 base upstream (downstream) from 5' (3') end of read 
 respectively. The 6th column contains information of which strand the read comes
 from, and the 7th column is an identifier for the read containing the mismatch.
 
+We provide a script to generate the MFF files from the BAM/SAM files
+[here](https://github.com/kkdey/aRchaic/tree/master/bin). This linked folder
+also contains a small example BAM file for testing. The simple two-line 
+code to create the MFF file from this BAM file is as follows
+
+
+```
+samtools index example.bam
+python generate_summary_bams.py -b example.bam -f /path/to/reference/FASTA/hs37d5
+.fa -o example_mff.csv
+```
+
+
 ## archaic_prepare()
 
-Suppose you have two folders of MFF files corresponding to two studies - one for moderns
-and one for ancients. We incorporate them as part of the R package itself - lets call them
-`moderns` and `ancients`.
+The user is expected to organize the MFF files in seperate folders per study. Here, we provide an example with two studies, one with 5 ancient samples derived from [Gamba et. al. 2014](https://www.nature.com/articles/ncomms6257) and a second study with 5 modern samples derived from the 1000 Genomes Project. These two folders are automatically downloaded and saved under `inst/extdata/moderns` and `inst/extdata/ancients` when aRchaic is installed.
 
-- **Modern files** :
+- **Modern study** :
 
 ```{r}
 moderns_dir <- system.file("extdata","moderns", package = "aRchaic")
 list.files(moderns_dir, pattern = ".csv")
 ```
 
-- **Ancient files** :
+- **Ancient study** :
 
 ```{r}
 ancients_dir <- system.file("extdata","ancients", package = "aRchaic")
 list.files(ancients_dir, pattern = ".csv")
 ```
 
-Each of the folders has 5 MFF files corresponding to 5 samples. 
-
-First we prepare the input data to **aRchaic** model from the above data folders.
+Next we prepare the input data to **aRchaic** model from the above data folders.
 
 ```{r warning = FALSE, message = FALSE}
 out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
@@ -153,42 +128,27 @@ out <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
 
 The output `out` should be a list with 2 elements - corresponding to 2 study 
 folders. Each element is a matrix with samples along the rows, coded 
-mismatch features along columns, with cells of the matrix recording counts 
+mismatch features along columns, and a cell in the matrix record counts 
 of the number of times a coded mismatch pattern occurs in a sample. 
-
-`archaic_prepare` also saves these elements as separate .RData files in each 
-study folder, so they can be re-used for similar analysis downstream more easily
-without needing to process the MFF files everytime. In fact, if you run
-
-```{r}
-out2 <- archaic_prepare(dirs = c(moderns_dir, ancients_dir))
-out3 <- archaic_prepare(dirs = moderns_dir)
-```
-
-you will see that `out2` or `out3` no longer process the .csv files in the folders
-and directly read from the .Rdata file.
 
 We provide [here](https://github.com/halasadi/modern_lite_data) the modern MFF files used in Figure 2 of our [paper](https://www.ncbi.nlm.nih.gov/pubmed/30192911) for reproducing the analysis. 
 
 ## archaic_fit() 
 
-Before modeling and visualization, we choose a directory - `output_dir` -
-to save the model output and the visualization.
+**aRchaic** fits a mixed membership  model on the prepared 
+mismatch feature data from `archaic_prepare()`  that allows each sample to 
+have partial memberships in more than one cluster 
+where the clusters represent distinct mismatch feature profiles. 
 
-We fit the mixed membership model in **aRchaic** onthe output from `archaic_prepare()`.
+We first choose a directory - `output_dir` - to save the model output and 
+visualization.
+
+Next we run the `archaic_fit` function to fit the mixed membership model.
 We choose the number of clusters $K=2$
 
 ```{r}
 output_dir <- tempdir()
 model <- archaic_fit(out, K = 2, output_dir = output_dir)
-```
-
-
-Alternatively, one can also input the study folder vector directly into 
-`archaic_fit()`.
-
-```{r}
-model <- archaic_fit(c(moderns_dir, ancients_dir), K = 2, output_dir = output_dir) 
 ```
 
 the output `model` consists of 
@@ -199,38 +159,27 @@ the output `model` consists of
 - **assessment** : assessment of model fit : BIC and loglikelihood
 
 
-              
 ## archaic_plot()
 
 The model output, in particular **omega** and **theta** can be visualized using 
 the `archaic_plot()` command.
 
-```{r warning = FALSE, message = FALSE}
+```{r warning = FALSE, message = FALSE, fig.show="hide"}
 archaic_plot(model, output_dir = output_dir, background = "modern")
 ```
 
-After running this, go to the output directory `output_dir`. 
-You should see there is a `structure.pdf` file for the stacked bar chart 
-representation of the **omega** output from `archaic_fit` and for each 
-$k=1,2$, a `logo_clus_k.pdf` file visualizing the mismatch profile in 
-**theta** for each cluster. 
+Once the run finishes (a few seconds), go to the output directory `output_dir`. 
+You should see there is a `structure.pdf` file that represents the cluster
+memberships in **omega** in a stacked bar chart (see Fig 1 left).
 
-Also notice that the method clearly separates out the example modern samples 
-from the ancient samples 
+Also, the `output_dir` should contain for each $k=1,2$, a `logo_clus_k.pdf` file
+visualizing the mismatch profile for each cluster as in **theta**. If
+`background = "modern"` in `archaic_plot` code above, this reresentation will
+plot enrichment of the mismatch profiles with respect to a modern background.
 
+The following is a summary of these visualizations
 
-## SessionInfo
-
-```{r}
-sessionInfo()
-```
-
-
-
-
-
-
-
-
-
+<div style="width:750px; height:750px">
+![](vignette_fig.png)
+</div>
 
